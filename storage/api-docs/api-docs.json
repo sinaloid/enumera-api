@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Laravel OpenApi Demo Documentation",
+        "title": "ENUMERA API",
         "description": "L5 Swagger OpenApi description",
         "contact": {
             "name": "DIONOU Sinali",
@@ -26,7 +26,7 @@
                 "tags": [
                     "Autentification"
                 ],
-                "description": "API Endpoint pour la création d'un compte utilisateur: Parent, Eleve, Enseignant",
+                "description": "API Endpoint pour la création d'un compte utilisateur",
                 "operationId": "7ecd7c28fcfcd716e0ae2749140be51b",
                 "responses": {
                     "200": {
@@ -35,13 +35,27 @@
                 }
             }
         },
-        "/projects": {
+        "/users": {
             "get": {
                 "tags": [
-                    "Projects"
+                    "Users"
+                ],
+                "description": "API Endpoints of utilisateur",
+                "operationId": "4a25481332894bd8d19ff5d51065b4b6",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/classes": {
+            "get": {
+                "tags": [
+                    "Classes"
                 ],
                 "description": "API Endpoints of Projects",
-                "operationId": "7f63a8e15c714cabd5403e3da5595599",
+                "operationId": "8d52fc56e7ae3198d2941bb1a6a85e07",
                 "responses": {
                     "200": {
                         "description": "Successful operation"

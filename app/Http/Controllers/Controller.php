@@ -11,7 +11,7 @@ use OpenApi\Attributes as OA;
  /**
      * @OA\Info(
      *      version="1.0.0",
-     *      title="Laravel OpenApi Demo Documentation",
+     *      title="ENUMERA API",
      *      description="L5 Swagger OpenApi description",
      *      @OA\Contact(
      *          name="DIONOU Sinali",
@@ -36,11 +36,12 @@ use OpenApi\Attributes as OA;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * @OA\Get(
-     *      tags={"Projects"},
-     *      description="API Endpoints of Projects",
-     *      path="/projects",
+     *      tags={"Users"},
+     *      description="API Endpoints of utilisateur",
+     *      path="/users",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -50,8 +51,29 @@ class Controller extends BaseController
      * )
      */
 
-     public function projets(){
+     public function utilisateurs(){
 
         return null;
      }
+
+    /**
+     * @OA\Get(
+     *      tags={"Classes"},
+     *      description="API Endpoints of Projects",
+     *      path="/classes",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *     @OA\PathItem (
+     *     )
+     * )
+     */
+
+     public function classes(){
+
+        return null;
+     }
+
+
 }
