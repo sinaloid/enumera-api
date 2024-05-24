@@ -4,9 +4,9 @@
         "title": "ENUMERA API",
         "description": "L5 Swagger OpenApi description",
         "contact": {
-            "name": "DIONOU Sinali",
-            "url": "https://dionousinali.com",
-            "email": "admin@admin.com"
+            "name": "ENUMERA",
+            "url": "https://enumera.tech",
+            "email": "enumera@gmail.com"
         },
         "license": {
             "name": "Apache 2.0",
@@ -16,21 +16,222 @@
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
+            "url": "http://127.0.0.1:8000/",
             "description": "Demo API Server"
         }
     ],
     "paths": {
-        "/Register": {
-            "get": {
+        "/api/register": {
+            "post": {
                 "tags": [
                     "Autentification"
                 ],
-                "description": "API Endpoint pour la création d'un compte utilisateur",
-                "operationId": "7ecd7c28fcfcd716e0ae2749140be51b",
+                "summary": "Données JSON",
+                "description": "Création d'un nouveau compte utilisateur",
+                "operationId": "receiveJson",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nom",
+                                    "prenom",
+                                    "date_de_naissance",
+                                    "genre",
+                                    "telephone",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "prenom": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "date_de_naissance": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1990-01-01"
+                                    },
+                                    "genre": {
+                                        "type": "string",
+                                        "example": "M"
+                                    },
+                                    "profile": {
+                                        "type": "string",
+                                        "example": "ELEVE"
+                                    },
+                                    "telephone": {
+                                        "type": "string",
+                                        "example": "75000000"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "@test@password#2024"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Votre compte a été crée avec succès"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "nom": {
+                                                    "type": "string",
+                                                    "example": "Doe"
+                                                },
+                                                "prenom": {
+                                                    "type": "string",
+                                                    "example": "John"
+                                                },
+                                                "date_de_naissance": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "1990-01-01"
+                                                },
+                                                "genre": {
+                                                    "type": "string",
+                                                    "example": "M"
+                                                },
+                                                "profile": {
+                                                    "type": "string",
+                                                    "example": "ELEVE"
+                                                },
+                                                "telephone": {
+                                                    "type": "string",
+                                                    "example": "75000000"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "john.doe@example.com"
+                                                },
+                                                "password": {
+                                                    "type": "string",
+                                                    "example": "@test@password#2024"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autentification"
+                ],
+                "summary": "Données JSON",
+                "description": "Connexion d'un utilisateur à son compte",
+                "operationId": "c373bc4cffa4a56fc64e3979b8ee7b96",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "user": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com ou 75000000"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "@test@password#2024"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Connexion réussi avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }

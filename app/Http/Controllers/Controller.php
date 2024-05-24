@@ -14,10 +14,9 @@ use OpenApi\Attributes as OA;
      *      title="ENUMERA API",
      *      description="L5 Swagger OpenApi description",
      *      @OA\Contact(
-     *          name="DIONOU Sinali",
-     *          email="admin@admin.com",
-     *          x="+226 75 63 82 03",
-     *          url="https://dionousinali.com"
+     *          name="ENUMERA",
+     *          email="enumera@gmail.com",
+     *          url="https://enumera.tech"
      *      ),
      *      @OA\License(
      *          name="Apache 2.0",
