@@ -16,7 +16,7 @@
     },
     "servers": [
         {
-            "url": "https://api.enumera.tech/",
+            "url": "http://127.0.0.1:8000/",
             "description": "Demo API Server"
         }
     ],
@@ -26,7 +26,7 @@
                 "tags": [
                     "Autentification"
                 ],
-                "summary": "Données JSON",
+                "summary": "Création d'un compte utilisateur",
                 "description": "Création d'un nouveau compte utilisateur",
                 "operationId": "receiveJson",
                 "requestBody": {
@@ -167,7 +167,7 @@
                 "tags": [
                     "Autentification"
                 ],
-                "summary": "Données JSON",
+                "summary": "Connexion d'un utilisateur",
                 "description": "Connexion d'un utilisateur à son compte",
                 "operationId": "c373bc4cffa4a56fc64e3979b8ee7b96",
                 "requestBody": {
@@ -479,7 +479,7 @@
                     {
                         "name": "slug",
                         "in": "path",
-                        "description": "slug de la classe à récupérer",
+                        "description": "slug de la classe à supprimer",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -793,14 +793,14 @@
                 "tags": [
                     "Matieres"
                 ],
-                "summary": "Supprime une matière par son slug",
+                "summary": "Suppression d'une matière par son slug",
                 "description": "Retourne la matière supprimée",
                 "operationId": "fff2980252fd5625516808ce0cfd4a60",
                 "parameters": [
                     {
                         "name": "slug",
                         "in": "path",
-                        "description": "slug de la matière à récupérer",
+                        "description": "slug de la matière à supprimer",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -836,6 +836,313 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Matière non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/periodes": {
+            "get": {
+                "tags": [
+                    "Periodes"
+                ],
+                "summary": "Liste des periodes",
+                "description": "Retourne la liste des periodes",
+                "operationId": "e957bf9d9ea8e92803cd515f4f9ca151",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Periodes"
+                ],
+                "summary": "Création d'une periode",
+                "description": "Crée une nouvelle periode et retourne la periode créée",
+                "operationId": "3706bc438c9d77f88e51926c77e1acf0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Trimestre 1"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "T1"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Trimestre 1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Periode créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/periodes/{slug}": {
+            "get": {
+                "tags": [
+                    "Periodes"
+                ],
+                "summary": "Récupération d'une periode par son slug",
+                "description": "Retourne une periode",
+                "operationId": "72a10ce8c98221c9794db4339df44228",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la periode à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Periodes"
+                ],
+                "summary": "Modification d'une periode",
+                "description": "Modifie une periode et retourne la periode modifiée",
+                "operationId": "3766e82d6a6488d1f9f0b6ef841d4df3",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la periode à modifiée",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Trimestre 1"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "T1"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Trimestre 1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Periode modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Periode non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Periodes"
+                ],
+                "summary": "Suppression d'une periode par son slug",
+                "description": "Retourne la periode supprimée",
+                "operationId": "c86107da4ddd254a379a1313963fb8dd",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la periode à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Periode supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Periode non trouvée"
                                         },
                                         "errors": {
                                             "type": "object"

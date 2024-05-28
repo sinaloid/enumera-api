@@ -214,7 +214,7 @@ class MatiereController extends Controller
     /**
      * @OA\Delete(
      *      tags={"Matieres"},
-     *      summary="Supprime une matière par son slug",
+     *      summary="Suppression d'une matière par son slug",
      *      description="Retourne la matière supprimée",
      *      path="/api/matieres/{slug}",
      *      @OA\Response(
@@ -236,7 +236,7 @@ class MatiereController extends Controller
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la matière à récupérer",
+     *          description="slug de la matière à supprimer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Classe;
+use App\Models\Periode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class ClasseController extends Controller
+class PeriodeController extends Controller
 {
     /**
      * @OA\Get(
-     *      tags={"Classes"},
-     *      summary="Liste des classes",
-     *      description="Retourne la liste des classes",
-     *      path="/api/classes",
+     *      tags={"Periodes"},
+     *      summary="Liste des periodes",
+     *      description="Retourne la liste des periodes",
+     *      path="/api/periodes",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -29,34 +29,35 @@ class ClasseController extends Controller
      */
     public function index()
     {
-        $data = Classe::where("is_deleted",false)->get();
+        $data = Periode::where("is_deleted",false)->get();
 
         if ($data->isEmpty()) {
-            return response()->json(['message' => 'Aucune classe trouvée'], 404);
+            return response()->json(['message' => 'Aucune periode trouvée'], 404);
         }
 
-        return response()->json(['message' => 'Classes récupérées', 'data' => $data], 200);
+        return response()->json(['message' => 'Periodes récupérées', 'data' => $data], 200);
     }
 
     /**
      * @OA\Post(
-     *     tags={"Classes"},
-     *     description="Crée une nouvelle classe et retourne la classe créée",
-     *     path="/api/classes",
-     *     summary="Création d'une classe",
+     *     tags={"Periodes"},
+     *     description="Crée une nouvelle periode et retourne la periode créée",
+     *     path="/api/periodes",
+     *     summary="Création d'une periode",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label"},
-     *             @OA\Property(property="label", type="string", example="6 ième"),
-     *             @OA\Property(property="description", type="string", example="La classe de 6 ième")
+     *             required={"label","abreviation"},
+     *             @OA\Property(property="label", type="string", example="Trimestre 1"),
+     *             @OA\Property(property="abreviation", type="string", example="T1"),
+     *             @OA\Property(property="description", type="string", example="Trimestre 1")
      *         ),
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe créée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Periode créée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         ),
      *     ),
@@ -76,6 +77,7 @@ class ClasseController extends Controller
 
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
+            'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
         ]);
@@ -85,21 +87,22 @@ class ClasseController extends Controller
         }
 
 
-        $data = Classe::create([
+        $data = Periode::create([
             'label' => $request->input('label'),
+            'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
             'slug' => Str::random(10),
         ]);
 
-        return response()->json(['message' => 'Classe créée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Periodes créée avec succès', 'data' => $data], 200);
     }
 
     /**
      * @OA\Get(
-     *      tags={"Classes"},
-     *      summary="Récupère une classe par son slug",
-     *      description="Retourne une classe",
-     *      path="/api/classes/{slug}",
+     *      tags={"Periodes"},
+     *      summary="Récupération d'une periode par son slug",
+     *      description="Retourne une periode",
+     *      path="/api/periodes/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -107,7 +110,7 @@ class ClasseController extends Controller
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la classe à récupérer",
+     *          description="slug de la periode à récupérer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -118,33 +121,34 @@ class ClasseController extends Controller
      */
     public function show($slug)
     {
-        $data = Classe::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = Periode::where(["slug"=> $slug, "is_deleted" => false])->first();
 
         if (!$data) {
-            return response()->json(['message' => 'Classe non trouvée'], 404);
+            return response()->json(['message' => 'Matière non trouvée'], 404);
         }
 
-        return response()->json(['message' => 'Classe trouvée', 'data' => $data], 200);
+        return response()->json(['message' => 'Matière trouvée', 'data' => $data], 200);
     }
 
     /**
      * @OA\Put(
-     *     tags={"Classes"},
-     *     description="Modifie une classe et retourne la classe modifiée",
-     *     path="/api/classes/{slug}",
-     *     summary="Modification d'une classe",
+     *     tags={"Periodes"},
+     *     description="Modifie une periode et retourne la periode modifiée",
+     *     path="/api/periodes/{slug}",
+     *     summary="Modification d'une periode",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label"},
-     *             @OA\Property(property="label", type="string", example="6 ième"),
-     *             @OA\Property(property="description", type="string", example="La classe de 6 ième")
+     *             required={"label","abreviation"},
+     *             @OA\Property(property="label", type="string", example="Trimestre 1"),
+     *             @OA\Property(property="abreviation", type="string", example="T1"),
+     *             @OA\Property(property="description", type="string", example="Trimestre 1")
      *         ),
      *     ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la classe à modifiée",
+     *          description="slug de la periode à modifiée",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -155,7 +159,7 @@ class ClasseController extends Controller
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe modifiée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Periode modifiée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         ),
      *     ),
@@ -163,7 +167,7 @@ class ClasseController extends Controller
      *         response=404,
      *         description="Slug validation error",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe non trouvée"),
+     *             @OA\Property(property="message", type="string", example="Periode non trouvée"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     ),
@@ -182,6 +186,7 @@ class ClasseController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
+            'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
         ]);
@@ -190,32 +195,33 @@ class ClasseController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $data = Classe::where("slug", $slug)->where("is_deleted",false)->first();
+        $data = Periode::where("slug", $slug)->where("is_deleted",false)->first();
 
         if (!$data) {
-            return response()->json(['message' => 'Classe non trouvée'], 404);
+            return response()->json(['message' => 'Periode non trouvée'], 404);
         }
 
         $data->update([
             'label' => $request->input('label'),
+            'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
         ]);
 
-        return response()->json(['message' => 'Classe modifiée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Periode modifiée avec succès', 'data' => $data], 200);
 
     }
 
     /**
      * @OA\Delete(
-     *      tags={"Classes"},
-     *      summary="Supprime une classe par son slug",
-     *      description="Retourne la classe supprimée",
-     *      path="/api/classes/{slug}",
+     *      tags={"Periodes"},
+     *      summary="Suppression d'une periode par son slug",
+     *      description="Retourne la periode supprimée",
+     *      path="/api/periodes/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="'Classe supprimée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Periode supprimée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         )
      *      ),
@@ -223,14 +229,14 @@ class ClasseController extends Controller
      *          response=404,
      *          description="Slug validation error",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe non trouvée"),
+     *             @OA\Property(property="message", type="string", example="Periode non trouvée"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *      ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la classe à supprimer",
+     *          description="slug de la periode à supprimer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -242,14 +248,14 @@ class ClasseController extends Controller
     public function destroy($slug)
     {
 
-        $data = Classe::where("slug",$slug)->where("is_deleted",false)->first();
+        $data = Periode::where("slug",$slug)->where("is_deleted",false)->first();
         if (!$data) {
-            return response()->json(['message' => 'Classe non trouvée'], 404);
+            return response()->json(['message' => 'Periode non trouvée'], 404);
         }
 
 
         $data->update(["is_deleted" => true]);
 
-        return response()->json(['message' => 'Classe supprimée avec succès',"data" => $data]);
+        return response()->json(['message' => 'Periode supprimée avec succès',"data" => $data]);
     }
 }

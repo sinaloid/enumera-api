@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\MatiereController;
+use App\Http\Controllers\PeriodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::resources([
             'classes' => ClasseController::class,
             'matieres' => MatiereController::class,
+            'periodes' => PeriodeController::class,
 
         ]);
     });

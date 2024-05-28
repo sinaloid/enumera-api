@@ -17,7 +17,7 @@ class AuthController extends Controller
      /**
      * @OA\Post(
      *     path="/api/register",
-     *     summary="Données JSON",
+     *     summary="Création d'un compte utilisateur",
      *     description="Création d'un nouveau compte utilisateur",
      *     operationId="receiveJson",
      *     tags={"Autentification"},
@@ -128,7 +128,7 @@ class AuthController extends Controller
      /**
      * @OA\Post(
      *     path="/api/login",
-     *     summary="Données JSON",
+     *     summary="Connexion d'un utilisateur",
      *     description="Connexion d'un utilisateur à son compte",
      *     tags={"Autentification"},
      *     @OA\RequestBody(
