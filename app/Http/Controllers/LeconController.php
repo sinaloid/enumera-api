@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Matiere;
+use App\Models\Lecon;
+use App\Models\Chapitre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -10,14 +11,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class MatiereController extends Controller
+class LeconController extends Controller
 {
     /**
      * @OA\Get(
-     *      tags={"Matières"},
-     *      summary="Liste des matières",
-     *      description="Retourne la liste des matières",
-     *      path="/api/matieres",
+     *      tags={"Leçons"},
+     *      summary="Liste des leçons",
+     *      description="Retourne la liste des leçons",
+     *      path="/api/lecons",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -29,35 +30,37 @@ class MatiereController extends Controller
      */
     public function index()
     {
-        $data = Matiere::where("is_deleted",false)->get();
+        $data = Lecon::where("is_deleted",false)->get();
 
         if ($data->isEmpty()) {
-            return response()->json(['message' => 'Aucune matière trouvée'], 404);
+            return response()->json(['message' => 'Aucune leçon trouvée'], 404);
         }
 
-        return response()->json(['message' => 'Matières récupérées', 'data' => $data], 200);
+        return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
     }
 
     /**
      * @OA\Post(
-     *     tags={"Matières"},
-     *     description="Crée une nouvelle matière et retourne la matière créée",
-     *     path="/api/matieres",
-     *     summary="Création d'une matière",
+     *     tags={"Leçons"},
+     *     description="Crée une nouvelle leçon et retourne la leçon créée",
+     *     path="/api/lecons",
+     *     summary="Création d'une leçon",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label","abreviation"},
-     *             @OA\Property(property="label", type="string", example="Histoire Gréographie"),
-     *             @OA\Property(property="abreviation", type="string", example="HG"),
-     *             @OA\Property(property="description", type="string", example="Histoire Gréographie")
+     *             required={"label","abreviation","type","chapitre"},
+     *             @OA\Property(property="label", type="string", example="Histoire des royaumes moose"),
+     *             @OA\Property(property="abreviation", type="string", example="Histoire des royaumes moose"),
+     *             @OA\Property(property="type", type="string", example="pdf"),
+     *             @OA\Property(property="chapitre", type="string", example="Slug du chapitre"),
+     *             @OA\Property(property="description", type="string", example="Lorem ipsum lores ipomd")
      *         ),
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe créée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Leçon créée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         ),
      *     ),
@@ -77,6 +80,8 @@ class MatiereController extends Controller
 
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'chapitre' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
@@ -86,23 +91,29 @@ class MatiereController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
+        $chapitre = Chapitre::where(["slug" => $request->chapitre,"is_deleted" => false])->first();
+        if (!$chapitre) {
+            return response()->json(['message' => 'Chapitre non trouvé'], 404);
+        }
 
-        $data = Matiere::create([
+        $data = Lecon::create([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
+            'type' => $request->input('type'),
+            'chapitre_id' => $chapitre->id,
             'description' => $request->input('description'),
             'slug' => Str::random(10),
         ]);
 
-        return response()->json(['message' => 'Matières créée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Leçon créée avec succès', 'data' => $data], 200);
     }
 
     /**
      * @OA\Get(
-     *      tags={"Matières"},
-     *      summary="Récupère une matière par son slug",
-     *      description="Retourne une matière",
-     *      path="/api/matieres/{slug}",
+     *      tags={"Leçons"},
+     *      summary="Récupère une leçon par son slug",
+     *      description="Retourne une leçon",
+     *      path="/api/lecons/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -110,7 +121,7 @@ class MatiereController extends Controller
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la matière à récupérer",
+     *          description="slug de la leçon à récupérer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -121,34 +132,36 @@ class MatiereController extends Controller
      */
     public function show($slug)
     {
-        $data = Matiere::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->first();
 
         if (!$data) {
-            return response()->json(['message' => 'Matière non trouvée'], 404);
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
         }
 
-        return response()->json(['message' => 'Matière trouvée', 'data' => $data], 200);
+        return response()->json(['message' => 'Leçon trouvée', 'data' => $data], 200);
     }
 
     /**
      * @OA\Put(
-     *     tags={"Matières"},
-     *     description="Modifie une matière et retourne la matière modifiée",
-     *     path="/api/matieres/{slug}",
-     *     summary="Modification d'une matière",
+     *     tags={"Leçons"},
+     *     description="Modifie une leçon et retourne la leçon modifiée",
+     *     path="/api/lecons/{slug}",
+     *     summary="Modification d'une leçon",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label","abreviation"},
-     *             @OA\Property(property="label", type="string", example="Histoire Gréographie"),
-     *             @OA\Property(property="abreviation", type="string", example="HG"),
-     *             @OA\Property(property="description", type="string", example="Histoire Gréographie")
+     *             required={"label","abreviation","type","chapitre"},
+     *             @OA\Property(property="label", type="string", example="Histoire des royaumes moose"),
+     *             @OA\Property(property="abreviation", type="string", example="Histoire des royaumes moose"),
+     *             @OA\Property(property="type", type="string", example="pdf"),
+     *             @OA\Property(property="chapitre", type="string", example="Slug du chapitre"),
+     *             @OA\Property(property="description", type="string", example="Lorem ipsum lores ipomd")
      *         ),
      *     ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la matière à modifiée",
+     *          description="slug de la matière à leçon",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -159,7 +172,7 @@ class MatiereController extends Controller
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Matière modifiée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Leçon modifiée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         ),
      *     ),
@@ -167,7 +180,7 @@ class MatiereController extends Controller
      *         response=404,
      *         description="Slug validation error",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Matière non trouvée"),
+     *             @OA\Property(property="message", type="string", example="Leçon non trouvée"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     ),
@@ -186,6 +199,8 @@ class MatiereController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'chapitre' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
@@ -195,33 +210,41 @@ class MatiereController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $data = Matiere::where("slug", $slug)->where("is_deleted",false)->first();
+        $chapitre = Chapitre::where(["slug" => $request->chapitre,"is_deleted" => false])->first();
+        if (!$chapitre) {
+            return response()->json(['message' => 'Chapitre non trouvé'], 404);
+        }
+
+
+        $data = Lecon::where("slug", $slug)->where("is_deleted",false)->first();
 
         if (!$data) {
-            return response()->json(['message' => 'Classe non trouvée'], 404);
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
         }
 
         $data->update([
             'label' => $request->input('label'),
+            'type' => $request->input('type'),
+            'chapitre_id' => $chapitre->id,
             'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
         ]);
 
-        return response()->json(['message' => 'Matière modifiée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Leçon modifiée avec succès', 'data' => $data], 200);
 
     }
 
     /**
      * @OA\Delete(
-     *      tags={"Matières"},
-     *      summary="Suppression d'une matière par son slug",
-     *      description="Retourne la matière supprimée",
-     *      path="/api/matieres/{slug}",
+     *      tags={"Leçons"},
+     *      summary="Suppression d'une leçon par son slug",
+     *      description="Retourne la leçon supprimée",
+     *      path="/api/lecons/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Matière supprimée avec succès"),
+     *             @OA\Property(property="message", type="string", example="leçon supprimée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         )
      *      ),
@@ -229,14 +252,14 @@ class MatiereController extends Controller
      *          response=404,
      *          description="Slug validation error",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Matière non trouvée"),
+     *             @OA\Property(property="message", type="string", example="leçon non trouvée"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *      ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la matière à supprimer",
+     *          description="slug de la leçon à supprimer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -248,14 +271,14 @@ class MatiereController extends Controller
     public function destroy($slug)
     {
 
-        $data = Matiere::where("slug",$slug)->where("is_deleted",false)->first();
+        $data = Lecon::where("slug",$slug)->where("is_deleted",false)->first();
         if (!$data) {
-            return response()->json(['message' => 'Matière non trouvée'], 404);
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
         }
 
 
         $data->update(["is_deleted" => true]);
 
-        return response()->json(['message' => 'Matière supprimée avec succès',"data" => $data]);
+        return response()->json(['message' => 'Leçon supprimée avec succès',"data" => $data]);
     }
 }

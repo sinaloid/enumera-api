@@ -872,10 +872,337 @@
                 }
             }
         },
+        "/api/lecons": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Liste des leçons",
+                "description": "Retourne la liste des leçons",
+                "operationId": "12a1b8efbcc2ebc43c259ee054aaf2fa",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Création d'une leçon",
+                "description": "Crée une nouvelle leçon et retourne la leçon créée",
+                "operationId": "08d693e0aea9c5e2167e57da00c0f6ff",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation",
+                                    "type",
+                                    "chapitre"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Histoire des royaumes moose"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "Histoire des royaumes moose"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "pdf"
+                                    },
+                                    "chapitre": {
+                                        "type": "string",
+                                        "example": "Slug du chapitre"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Lorem ipsum lores ipomd"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Leçon créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/lecons/{slug}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Récupère une leçon par son slug",
+                "description": "Retourne une leçon",
+                "operationId": "91da330640508186bb44de591a12e5df",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la leçon à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Modification d'une leçon",
+                "description": "Modifie une leçon et retourne la leçon modifiée",
+                "operationId": "965d2bd15f19debc642b3c3eda930b7f",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la matière à leçon",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation",
+                                    "type",
+                                    "chapitre"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Histoire des royaumes moose"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "Histoire des royaumes moose"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "pdf"
+                                    },
+                                    "chapitre": {
+                                        "type": "string",
+                                        "example": "Slug du chapitre"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Lorem ipsum lores ipomd"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Leçon modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Leçon non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Suppression d'une leçon par son slug",
+                "description": "Retourne la leçon supprimée",
+                "operationId": "0f842e7375c4329aa208bd1d0d73de4a",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la leçon à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "leçon supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "leçon non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/matieres": {
             "get": {
                 "tags": [
-                    "Matieres"
+                    "Matières"
                 ],
                 "summary": "Liste des matières",
                 "description": "Retourne la liste des matières",
@@ -893,7 +1220,7 @@
             },
             "post": {
                 "tags": [
-                    "Matieres"
+                    "Matières"
                 ],
                 "summary": "Création d'une matière",
                 "description": "Crée une nouvelle matière et retourne la matière créée",
@@ -976,7 +1303,7 @@
         "/api/matieres/{slug}": {
             "get": {
                 "tags": [
-                    "Matieres"
+                    "Matières"
                 ],
                 "summary": "Récupère une matière par son slug",
                 "description": "Retourne une matière",
@@ -1005,7 +1332,7 @@
             },
             "put": {
                 "tags": [
-                    "Matieres"
+                    "Matières"
                 ],
                 "summary": "Modification d'une matière",
                 "description": "Modifie une matière et retourne la matière modifiée",
@@ -1116,7 +1443,7 @@
             },
             "delete": {
                 "tags": [
-                    "Matieres"
+                    "Matières"
                 ],
                 "summary": "Suppression d'une matière par son slug",
                 "description": "Retourne la matière supprimée",

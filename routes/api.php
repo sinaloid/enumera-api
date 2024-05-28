@@ -8,6 +8,7 @@ use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ChapitreController;
 use App\Http\Controllers\MatiereDeLaClasseController;
+use App\Http\Controllers\LeconController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'periodes' => PeriodeController::class,
             'matiere-de-la-classe' => MatiereDeLaClasseController::class,
             'chapitres' => ChapitreController::class,
+            'lecons' => LeconController::class,
 
         ]);
     });
