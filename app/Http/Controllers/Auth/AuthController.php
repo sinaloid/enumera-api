@@ -80,6 +80,7 @@ class AuthController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
+            $matricule = $this->matriculeGenerator("ENA");
             $user = User::create([
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
@@ -88,6 +89,7 @@ class AuthController extends Controller
                 'profile' => $request->profile,
                 'genre' => $request->genre,
                 'telephone' => $request->telephone,
+                'matricule' => $matricule,
                 'email' => $request->email,
                 'slug' => Str::random(10),
                 //'isActive' => ($request->type === "livreur") ? false : true,
@@ -112,6 +114,15 @@ class AuthController extends Controller
 
             return response()->json(['data' => $user, 'access_token' => $token],200);
 
+    }
+
+    public function matriculeGenerator($prefixe){
+
+        $last_user = User::orderBy("id",'desc')->first();
+        $id = isset($last_user) ? $last_user->id : 0;
+        $order = str_pad('', 4 - strlen($id), '0', STR_PAD_LEFT);
+
+        return $prefixe."-".date('y')."-".$order."".$id;
     }
 
      /**
@@ -150,8 +161,20 @@ class AuthController extends Controller
     {
         // Validation des données de la requête
         $validator = Validator::make($request->all(), [
-            'user' => 'required_without:telephone|email',
-            'telephone' => 'required_without:user|string',
+            'user' => [
+                'required',
+                'string',
+                    function ($attribute, $value, $fail) {
+                        // Vérification pour email
+                        if (!filter_var($value, FILTER_VALIDATE_EMAIL) &&
+                            // Vérification pour numéro de téléphone à 8 chiffres
+                            !preg_match('/^[0-9]{8}$/', $value) &&
+                            // Vérification pour chaîne de 8 caractères maximum (sans le séparateur '-')
+                            !preg_match('/^[A-Z]{3}-[0-9]{2}-[0-9]{4}$/', $value)) {
+                            $fail('Le ' . $attribute . ' doit être un email valide, un numéro de téléphone à 8 chiffres, ou un numéro matricule de type XXX-XX-XXXX.');
+                        }
+                    },
+            ],
             'password' => 'required|string|min:6',
         ]);
 
@@ -161,10 +184,11 @@ class AuthController extends Controller
 
         // Préparer les identifiants pour l'authentification
         $credentialsEmail = ['email' => $request->user, 'password' => $request->password];
-        $credentialsTelephone = ['telephone' => $request->telephone, 'password' => $request->password];
+        $credentialsTelephone = ['telephone' => $request->user, 'password' => $request->password];
+        $credentialsMatricule = ['matricule' => $request->user, 'password' => $request->password];
 
         // Essayer de se connecter avec l'email ou le téléphone
-        if (Auth::attempt($credentialsEmail) || Auth::attempt($credentialsTelephone)) {
+        if (Auth::attempt($credentialsEmail) || Auth::attempt($credentialsTelephone) || Auth::attempt($credentialsMatricule)) {
             $user = Auth::user();
 
             // Vérifier si le compte est actif

@@ -27,8 +27,14 @@ use OpenApi\Attributes as OA;
      * @OA\Server(
      *      url=L5_SWAGGER_CONST_HOST,
      *      description="Demo API Server"
-     * )
-
+     * ),
+     *
+    * @OA\SecurityScheme(
+    *   type="http",
+    *   securityScheme="bearerAuth",
+    *   scheme="bearer",
+    *   bearerFormat="JWT"
+    * )
      *
      */
 
@@ -55,19 +61,7 @@ class Controller extends BaseController
         return null;
      }
 
-    /**
-     * @OA\Get(
-     *      tags={"Classes"},
-     *      description="API Endpoints of Projects",
-     *      path="/classes",
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *      ),
-     *     @OA\PathItem (
-     *     )
-     * )
-     */
+
 
      public function classes(){
 

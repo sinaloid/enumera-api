@@ -24,9 +24,11 @@ class User extends Authenticatable
         "genre",
         "profile",
         "telephone",
+        "matricule",
         "email",
         "password",
-        "slug"
+        "slug",
+        "is_deleted"
     ];
 
     /**
