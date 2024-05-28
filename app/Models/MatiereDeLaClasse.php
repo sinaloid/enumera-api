@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class MatiereDeLaClasse extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        "slug",
+        "is_deleted",
+        "matiere_id",
+        "classe_id",
+    ];
 }

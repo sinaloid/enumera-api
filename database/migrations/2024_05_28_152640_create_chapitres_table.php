@@ -15,6 +15,25 @@ return new class extends Migration
     {
         Schema::create('chapitres', function (Blueprint $table) {
             $table->id();
+            $table->string("label");
+            $table->string("abreviation")->nullable();
+            $table->longtext("description")->nullable();
+            $table->string("slug");
+            $table->boolean('is_deleted')->default(false);
+
+            $table->unsignedBigInteger('matiere_de_la_classe_id');
+            $table->foreign('matiere_de_la_classe_id')
+                    ->references('id')
+                    ->on('matiere_de_la_classes')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
+
+            $table->unsignedBigInteger('periode_id');
+            $table->foreign('periode_id')
+                    ->references('id')
+                    ->on('periodes')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
             $table->timestamps();
         });
     }

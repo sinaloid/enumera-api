@@ -16,7 +16,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/",
+            "url": "https://api.enumera.tech/",
             "description": "Demo API Server"
         }
     ],
@@ -234,6 +234,331 @@
                         }
                     }
                 }
+            }
+        },
+        "/api/chapitres": {
+            "get": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Liste des chapitres",
+                "description": "Retourne la liste des chapitres",
+                "operationId": "8767f1c3416fdae05f9c959eb4f7c7be",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Création d'un chapitre",
+                "description": "Crée un nouveau chapitre et retourne le chapitre créé",
+                "operationId": "748fb52f0660b3047501807b91d67d57",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "periode",
+                                    "matiereClasse"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Histoire du Burkina Faso"
+                                    },
+                                    "periode": {
+                                        "type": "string",
+                                        "example": "slug de la periode"
+                                    },
+                                    "matiereClasse": {
+                                        "type": "string",
+                                        "example": "slug de la matiereClasse"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "abreviation du chapitre"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Lorem ipsum ipsom lores"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chapitre créé avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chapitres/{slug}": {
+            "get": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Récupération d'un chapitre par son slug",
+                "description": "Retourne un chapitre",
+                "operationId": "1680613e252943287c7ef7437167b3fb",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du chapitre à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Modification d'un chapitre",
+                "description": "Modifie un chapitre et retourne le chapitre modifié",
+                "operationId": "bb803b446b09ddec8583dd1a8d5130e3",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du chapitre à modifié",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "periode",
+                                    "matiereClasse"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Histoire du Burkina Faso"
+                                    },
+                                    "periode": {
+                                        "type": "string",
+                                        "example": "slug de la periode"
+                                    },
+                                    "matiereClasse": {
+                                        "type": "string",
+                                        "example": "slug de la matiereClasse"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "abreviation du chapitre"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Lorem ipsum ipsom lores"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chapitre modifié avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chapitre non trouvé"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Suppression d'un chapitre par son slug",
+                "description": "Retourne le chapitre supprimé",
+                "operationId": "28bf8d9cbd486c52f99357663d013d05",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du chapitre à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chapitre supprimé avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chapitre non trouvé"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/classes": {
@@ -836,6 +1161,305 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Matière non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/matiere-de-la-classe": {
+            "get": {
+                "tags": [
+                    "Matières de la classe"
+                ],
+                "summary": "Liste des matières de la classe",
+                "description": "Retourne la liste des matières de la classe",
+                "operationId": "f3601d4d82ea99b3c829d16396f73f62",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Matières de la classe"
+                ],
+                "summary": "Création d'une matière de la classe",
+                "description": "Crée une nouvelle matière de la classe et retourne la matière de la classe créée",
+                "operationId": "48d3860baafbc11de33f8be6ca8392c2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "classe",
+                                    "matiere"
+                                ],
+                                "properties": {
+                                    "classe": {
+                                        "type": "string",
+                                        "example": "slug de la classe"
+                                    },
+                                    "matiere": {
+                                        "type": "string",
+                                        "example": "slug de la matière"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Matière de la classe créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/matiere-de-la-classe/{slug}": {
+            "get": {
+                "tags": [
+                    "Matières de la classe"
+                ],
+                "summary": "Récupération d'une matière de la classe par son slug",
+                "description": "Retourne une matière de la classe",
+                "operationId": "d7435686ca246644e877a0574d12dc95",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la Matière de la classe à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Matières de la classe"
+                ],
+                "summary": "Modification d'une matière de la classe",
+                "description": "Modifie une matière de la classe et retourne la matière de la classe modifiée",
+                "operationId": "1ff359853b9191597cc2ce49ceac8102",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la matière de la classe à modifiée",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "classe",
+                                    "matiere"
+                                ],
+                                "properties": {
+                                    "classe": {
+                                        "type": "string",
+                                        "example": "slug de la classe"
+                                    },
+                                    "matiere": {
+                                        "type": "string",
+                                        "example": "slug de la matiere"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Matière de la classe modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Matière de la classe non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Matières de la classe"
+                ],
+                "summary": "Suppression d'une matière de la classe par son slug",
+                "description": "Retourne la matière de la classe supprimée",
+                "operationId": "122b2e37c444750c6cc5bca278456f4d",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la matière de la classe à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Matière de la classe supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Matière de la classe non trouvée"
                                         },
                                         "errors": {
                                             "type": "object"

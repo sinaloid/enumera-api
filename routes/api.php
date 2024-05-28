@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\ChapitreController;
+use App\Http\Controllers\MatiereDeLaClasseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +37,8 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'classes' => ClasseController::class,
             'matieres' => MatiereController::class,
             'periodes' => PeriodeController::class,
+            'matiere-de-la-classe' => MatiereDeLaClasseController::class,
+            'chapitres' => ChapitreController::class,
 
         ]);
     });
