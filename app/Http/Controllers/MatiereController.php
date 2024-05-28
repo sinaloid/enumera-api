@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Classe;
+use App\Models\Matiere;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class ClasseController extends Controller
+class MatiereController extends Controller
 {
     /**
      * @OA\Get(
-     *      tags={"Classes"},
-     *      summary="Liste des classes",
-     *      description="Retourne la liste des classes",
-     *      path="/api/classes",
+     *      tags={"Matieres"},
+     *      summary="Liste des matières",
+     *      description="Retourne la liste des matières",
+     *      path="/api/matieres",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -29,27 +29,28 @@ class ClasseController extends Controller
      */
     public function index()
     {
-        $data = Classe::where("is_deleted",false)->get();
+        $data = Matiere::where("is_deleted",false)->get();
 
         if ($data->isEmpty()) {
-            return response()->json(['message' => 'Aucune classe trouvée'], 404);
+            return response()->json(['message' => 'Aucune matière trouvée'], 404);
         }
 
-        return response()->json(['message' => 'Classes récupérées', 'data' => $data], 200);
+        return response()->json(['message' => 'Matières récupérées', 'data' => $data], 200);
     }
 
     /**
      * @OA\Post(
-     *     tags={"Classes"},
-     *     description="Crée une nouvelle classe et retourne la classe créée",
-     *     path="/api/classes",
-     *     summary="Création d'une classe",
+     *     tags={"Matieres"},
+     *     description="Crée une nouvelle matière et retourne la matière créée",
+     *     path="/api/matieres",
+     *     summary="Création d'une matière",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label"},
-     *             @OA\Property(property="label", type="string", example="6 ième"),
-     *             @OA\Property(property="description", type="string", example="La classe de 6 ième")
+     *             required={"label","abreviation"},
+     *             @OA\Property(property="label", type="string", example="Histoire Gréographie"),
+     *             @OA\Property(property="abreviation", type="string", example="HG"),
+     *             @OA\Property(property="description", type="string", example="Histoire Gréographie")
      *         ),
      *     ),
      *     @OA\Response(
@@ -76,6 +77,7 @@ class ClasseController extends Controller
 
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
+            'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
         ]);
@@ -85,21 +87,22 @@ class ClasseController extends Controller
         }
 
 
-        $data = Classe::create([
+        $data = Matiere::create([
             'label' => $request->input('label'),
+            'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
             'slug' => Str::random(10),
         ]);
 
-        return response()->json(['message' => 'Classe créée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Matières créée avec succès', 'data' => $data], 200);
     }
 
     /**
      * @OA\Get(
-     *      tags={"Classes"},
-     *      summary="Récupère une classe par son slug",
-     *      description="Retourne une classe",
-     *      path="/api/classes/{slug}",
+     *      tags={"Matieres"},
+     *      summary="Récupère une matière par son slug",
+     *      description="Retourne une matière",
+     *      path="/api/matieres/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -107,7 +110,7 @@ class ClasseController extends Controller
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la classe à récupérer",
+     *          description="slug de la matière à récupérer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -118,33 +121,34 @@ class ClasseController extends Controller
      */
     public function show($slug)
     {
-        $data = Classe::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = Matiere::where(["slug"=> $slug, "is_deleted" => false])->first();
 
         if (!$data) {
-            return response()->json(['message' => 'Classe non trouvée'], 404);
+            return response()->json(['message' => 'Matière non trouvée'], 404);
         }
 
-        return response()->json(['message' => 'Classe trouvée', 'data' => $data], 200);
+        return response()->json(['message' => 'Matière trouvée', 'data' => $data], 200);
     }
 
     /**
      * @OA\Put(
-     *     tags={"Classes"},
-     *     description="Modifie une classe et retourne la classe modifiée",
-     *     path="/api/classes/{slug}",
-     *     summary="Modification d'une classe",
+     *     tags={"Matieres"},
+     *     description="Modifie une matière et retourne la matière modifiée",
+     *     path="/api/matieres/{slug}",
+     *     summary="Modification d'une matière",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label"},
-     *             @OA\Property(property="label", type="string", example="6 ième"),
-     *             @OA\Property(property="description", type="string", example="La classe de 6 ième")
+     *             required={"label","abreviation"},
+     *             @OA\Property(property="label", type="string", example="Histoire Gréographie"),
+     *             @OA\Property(property="abreviation", type="string", example="HG"),
+     *             @OA\Property(property="description", type="string", example="Histoire Gréographie")
      *         ),
      *     ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la classe à modifiée",
+     *          description="slug de la matière à modifiée",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -155,7 +159,7 @@ class ClasseController extends Controller
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe modifiée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Matière modifiée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         ),
      *     ),
@@ -163,7 +167,7 @@ class ClasseController extends Controller
      *         response=404,
      *         description="Slug validation error",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe non trouvée"),
+     *             @OA\Property(property="message", type="string", example="Matière non trouvée"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     ),
@@ -182,6 +186,7 @@ class ClasseController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
+            'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
         ]);
@@ -190,7 +195,7 @@ class ClasseController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $data = Classe::where("slug", $slug)->where("is_deleted",false)->first();
+        $data = Matiere::where("slug", $slug)->where("is_deleted",false)->first();
 
         if (!$data) {
             return response()->json(['message' => 'Classe non trouvée'], 404);
@@ -198,24 +203,25 @@ class ClasseController extends Controller
 
         $data->update([
             'label' => $request->input('label'),
+            'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
         ]);
 
-        return response()->json(['message' => 'Classe modifiée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Matière modifiée avec succès', 'data' => $data], 200);
 
     }
 
     /**
      * @OA\Delete(
-     *      tags={"Classes"},
-     *      summary="Supprime une classe par son slug",
-     *      description="Retourne la classe supprimée",
-     *      path="/api/classes/{slug}",
+     *      tags={"Matieres"},
+     *      summary="Supprime une matière par son slug",
+     *      description="Retourne la matière supprimée",
+     *      path="/api/matieres/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="'Classe supprimée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Matière supprimée avec succès"),
      *             @OA\Property(property="data", type="object")
      *         )
      *      ),
@@ -223,14 +229,14 @@ class ClasseController extends Controller
      *          response=404,
      *          description="Slug validation error",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Classe non trouvée"),
+     *             @OA\Property(property="message", type="string", example="Matière non trouvée"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *      ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la classe à récupérer",
+     *          description="slug de la matière à récupérer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -242,14 +248,14 @@ class ClasseController extends Controller
     public function destroy($slug)
     {
 
-        $data = Classe::where("slug",$slug)->where("is_deleted",false)->first();
+        $data = Matiere::where("slug",$slug)->where("is_deleted",false)->first();
         if (!$data) {
-            return response()->json(['message' => 'Classe non trouvée'], 404);
+            return response()->json(['message' => 'Matière non trouvée'], 404);
         }
 
 
         $data->update(["is_deleted" => true]);
 
-        return response()->json(['message' => 'Classe supprimée avec succès',"data" => $data]);
+        return response()->json(['message' => 'Matière supprimée avec succès',"data" => $data]);
     }
 }
