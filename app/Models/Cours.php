@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Lecon extends Model
+class Cours extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         "label",
         "abreviation",
-        //"type",
+        "type",
         "description",
         "slug",
         "is_deleted",
-        "chapitre_id",
+        "lecon_id",
     ];
 }

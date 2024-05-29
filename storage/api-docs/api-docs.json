@@ -872,6 +872,333 @@
                 }
             }
         },
+        "/api/cours": {
+            "get": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Liste des cours",
+                "description": "Retourne la liste des cours",
+                "operationId": "1e958664e8f761cc671e219f58e2efc2",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Création d'un cours",
+                "description": "Crée une nouveau cours et retourne le cours créé",
+                "operationId": "af2ee7a8fad944b7401cb222e6b59d1f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Intitulé du cours"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "Intitulé du cours"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "pdf"
+                                    },
+                                    "lecon": {
+                                        "type": "string",
+                                        "example": "Slug de la leçon"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Lorem ipsum lores ipomd"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cours créé avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cours/{slug}": {
+            "get": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Récupère un cours par son slug",
+                "description": "Retourne un cours",
+                "operationId": "4fd1ce64c61240009065701bba8a654f",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du cours à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Modification d'un cours",
+                "description": "Modifie un cours et retourne le cours modifié",
+                "operationId": "74db7982f5d60d22a23b20aa9c06ce5d",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du cours à modifié",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Intitulé du cours"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "Intitulé du cours"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "pdf"
+                                    },
+                                    "lecon": {
+                                        "type": "string",
+                                        "example": "Slug de la leçon"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Lorem ipsum lores ipomd"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cours modifié avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cours non trouvé"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Suppression d'un cours par son slug",
+                "description": "Retourne le cours supprimé",
+                "operationId": "9661fd5439739ec646c54fffc3e76d00",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du cours à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cours supprimé avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cours non trouvé"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/lecons": {
             "get": {
                 "tags": [
@@ -917,10 +1244,6 @@
                                     "abreviation": {
                                         "type": "string",
                                         "example": "Histoire des royaumes moose"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "pdf"
                                     },
                                     "chapitre": {
                                         "type": "string",
@@ -1024,7 +1347,7 @@
                     {
                         "name": "slug",
                         "in": "path",
-                        "description": "slug de la matière à leçon",
+                        "description": "slug de la leçon à modifiée",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1039,7 +1362,6 @@
                                 "required": [
                                     "label",
                                     "abreviation",
-                                    "type",
                                     "chapitre"
                                 ],
                                 "properties": {
@@ -1050,10 +1372,6 @@
                                     "abreviation": {
                                         "type": "string",
                                         "example": "Histoire des royaumes moose"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "pdf"
                                     },
                                     "chapitre": {
                                         "type": "string",

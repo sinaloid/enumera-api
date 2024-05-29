@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cours;
 use App\Models\Lecon;
-use App\Models\Chapitre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class LeconController extends Controller
+class CoursController extends Controller
 {
     /**
      * @OA\Get(
-     *      tags={"Leçons"},
-     *      summary="Liste des leçons",
-     *      description="Retourne la liste des leçons",
-     *      path="/api/lecons",
+     *      tags={"Cours"},
+     *      summary="Liste des cours",
+     *      description="Retourne la liste des cours",
+     *      path="/api/cours",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -30,28 +30,29 @@ class LeconController extends Controller
      */
     public function index()
     {
-        $data = Lecon::where("is_deleted",false)->get();
+        $data = Cours::where("is_deleted",false)->get();
 
         if ($data->isEmpty()) {
-            return response()->json(['message' => 'Aucune leçon trouvée'], 404);
+            return response()->json(['message' => 'Aucun cours trouvé'], 404);
         }
 
-        return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
+        return response()->json(['message' => 'Cours récupérés', 'data' => $data], 200);
     }
 
     /**
      * @OA\Post(
-     *     tags={"Leçons"},
-     *     description="Crée une nouvelle leçon et retourne la leçon créée",
-     *     path="/api/lecons",
-     *     summary="Création d'une leçon",
+     *     tags={"Cours"},
+     *     description="Crée une nouveau cours et retourne le cours créé",
+     *     path="/api/cours",
+     *     summary="Création d'un cours",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label","abreviation","type","chapitre"},
-     *             @OA\Property(property="label", type="string", example="Histoire des royaumes moose"),
-     *             @OA\Property(property="abreviation", type="string", example="Histoire des royaumes moose"),
-     *             @OA\Property(property="chapitre", type="string", example="Slug du chapitre"),
+     *             required={"label","abreviation","type","lecon"},
+     *             @OA\Property(property="label", type="string", example="Intitulé du cours"),
+     *             @OA\Property(property="abreviation", type="string", example="Intitulé du cours"),
+     *             @OA\Property(property="type", type="string", example="pdf"),
+     *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
      *             @OA\Property(property="description", type="string", example="Lorem ipsum lores ipomd")
      *         ),
      *     ),
@@ -59,7 +60,7 @@ class LeconController extends Controller
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Leçon créée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Cours créé avec succès"),
      *             @OA\Property(property="data", type="object")
      *         ),
      *     ),
@@ -79,7 +80,8 @@ class LeconController extends Controller
 
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
-            'chapitre' => 'required|string|max:10',
+            'type' => 'required|string|max:255',
+            'lecon' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
@@ -89,28 +91,29 @@ class LeconController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $chapitre = Chapitre::where(["slug" => $request->chapitre,"is_deleted" => false])->first();
-        if (!$chapitre) {
-            return response()->json(['message' => 'Chapitre non trouvé'], 404);
+        $lecon = Lecon::where(["slug" => $request->lecon,"is_deleted" => false])->first();
+        if (!$lecon) {
+            return response()->json(['message' => 'Leçon non trouvé'], 404);
         }
 
-        $data = Lecon::create([
+        $data = Cours::create([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
-            'chapitre_id' => $chapitre->id,
+            'type' => $request->input('type'),
+            'lecon_id' => $lecon->id,
             'description' => $request->input('description'),
             'slug' => Str::random(10),
         ]);
 
-        return response()->json(['message' => 'Leçon créée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Cours créé avec succès', 'data' => $data], 200);
     }
 
     /**
      * @OA\Get(
-     *      tags={"Leçons"},
-     *      summary="Récupère une leçon par son slug",
-     *      description="Retourne une leçon",
-     *      path="/api/lecons/{slug}",
+     *      tags={"Cours"},
+     *      summary="Récupère un cours par son slug",
+     *      description="Retourne un cours",
+     *      path="/api/cours/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -118,7 +121,7 @@ class LeconController extends Controller
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la leçon à récupérer",
+     *          description="slug du cours à récupérer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -129,35 +132,36 @@ class LeconController extends Controller
      */
     public function show($slug)
     {
-        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = Cours::where(["slug"=> $slug, "is_deleted" => false])->first();
 
         if (!$data) {
-            return response()->json(['message' => 'Leçon non trouvée'], 404);
+            return response()->json(['message' => 'Cours non trouvé'], 404);
         }
 
-        return response()->json(['message' => 'Leçon trouvée', 'data' => $data], 200);
+        return response()->json(['message' => 'Cours trouvé', 'data' => $data], 200);
     }
 
     /**
      * @OA\Put(
-     *     tags={"Leçons"},
-     *     description="Modifie une leçon et retourne la leçon modifiée",
-     *     path="/api/lecons/{slug}",
-     *     summary="Modification d'une leçon",
+     *     tags={"Cours"},
+     *     description="Modifie un cours et retourne le cours modifié",
+     *     path="/api/cours/{slug}",
+     *     summary="Modification d'un cours",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"label","abreviation","chapitre"},
-     *             @OA\Property(property="label", type="string", example="Histoire des royaumes moose"),
-     *             @OA\Property(property="abreviation", type="string", example="Histoire des royaumes moose"),
-     *             @OA\Property(property="chapitre", type="string", example="Slug du chapitre"),
+     *             required={"label","abreviation","type","lecon"},
+     *             @OA\Property(property="label", type="string", example="Intitulé du cours"),
+     *             @OA\Property(property="abreviation", type="string", example="Intitulé du cours"),
+     *             @OA\Property(property="type", type="string", example="pdf"),
+     *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
      *             @OA\Property(property="description", type="string", example="Lorem ipsum lores ipomd")
      *         ),
      *     ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la leçon à modifiée",
+     *          description="slug du cours à modifié",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -168,7 +172,7 @@ class LeconController extends Controller
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Leçon modifiée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Cours modifié avec succès"),
      *             @OA\Property(property="data", type="object")
      *         ),
      *     ),
@@ -176,7 +180,7 @@ class LeconController extends Controller
      *         response=404,
      *         description="Slug validation error",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Leçon non trouvée"),
+     *             @OA\Property(property="message", type="string", example="Cours non trouvé"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     ),
@@ -195,7 +199,8 @@ class LeconController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
-            'chapitre' => 'required|string|max:10',
+            'type' => 'required|string|max:255',
+            'lecon' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
@@ -205,40 +210,41 @@ class LeconController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $chapitre = Chapitre::where(["slug" => $request->chapitre,"is_deleted" => false])->first();
-        if (!$chapitre) {
-            return response()->json(['message' => 'Chapitre non trouvé'], 404);
+        $lecon = Lecon::where(["slug" => $request->lecon,"is_deleted" => false])->first();
+        if (!$lecon) {
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
         }
 
 
-        $data = Lecon::where("slug", $slug)->where("is_deleted",false)->first();
+        $data = Cours::where("slug", $slug)->where("is_deleted",false)->first();
 
         if (!$data) {
-            return response()->json(['message' => 'Leçon non trouvée'], 404);
+            return response()->json(['message' => 'Cours non trouvé'], 404);
         }
 
         $data->update([
             'label' => $request->input('label'),
-            'chapitre_id' => $chapitre->id,
+            'type' => $request->input('type'),
+            'lecon_id' => $lecon->id,
             'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
         ]);
 
-        return response()->json(['message' => 'Leçon modifiée avec succès', 'data' => $data], 200);
+        return response()->json(['message' => 'Cours modifié avec succès', 'data' => $data], 200);
 
     }
 
     /**
      * @OA\Delete(
-     *      tags={"Leçons"},
-     *      summary="Suppression d'une leçon par son slug",
-     *      description="Retourne la leçon supprimée",
-     *      path="/api/lecons/{slug}",
+     *      tags={"Cours"},
+     *      summary="Suppression d'un cours par son slug",
+     *      description="Retourne le cours supprimé",
+     *      path="/api/cours/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="leçon supprimée avec succès"),
+     *             @OA\Property(property="message", type="string", example="Cours supprimé avec succès"),
      *             @OA\Property(property="data", type="object")
      *         )
      *      ),
@@ -246,14 +252,14 @@ class LeconController extends Controller
      *          response=404,
      *          description="Slug validation error",
      *          @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="leçon non trouvée"),
+     *             @OA\Property(property="message", type="string", example="Cours non trouvé"),
      *             @OA\Property(property="errors", type="object")
      *         )
      *      ),
      *      @OA\Parameter(
      *          name="slug",
      *          in="path",
-     *          description="slug de la leçon à supprimer",
+     *          description="slug du cours à supprimer",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -265,14 +271,14 @@ class LeconController extends Controller
     public function destroy($slug)
     {
 
-        $data = Lecon::where("slug",$slug)->where("is_deleted",false)->first();
+        $data = Cours::where("slug",$slug)->where("is_deleted",false)->first();
         if (!$data) {
-            return response()->json(['message' => 'Leçon non trouvée'], 404);
+            return response()->json(['message' => 'Cours non trouvé'], 404);
         }
 
 
         $data->update(["is_deleted" => true]);
 
-        return response()->json(['message' => 'Leçon supprimée avec succès',"data" => $data]);
+        return response()->json(['message' => 'Cours supprimé avec succès',"data" => $data]);
     }
 }

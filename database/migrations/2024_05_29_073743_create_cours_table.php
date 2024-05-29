@@ -13,19 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('lecons', function (Blueprint $table) {
+        Schema::create('cours', function (Blueprint $table) {
             $table->id();
             $table->string("label");
             $table->string("abreviation")->nullable();
-            //$table->string("type");
+            $table->string("type");
             $table->longtext("description")->nullable();
             $table->string("slug");
             $table->boolean('is_deleted')->default(false);
 
-            $table->unsignedBigInteger('chapitre_id');
-            $table->foreign('chapitre_id')
+            $table->unsignedBigInteger('lecon_id');
+            $table->foreign('lecon_id')
                     ->references('id')
-                    ->on('chapitres')
+                    ->on('lecons')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
             $table->timestamps();
@@ -39,6 +39,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lecons');
+        Schema::dropIfExists('cours');
     }
 };
