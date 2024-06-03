@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\OtpController;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -11,10 +12,11 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
-     /**
+    /**
      * @OA\Post(
      *     path="/api/register",
      *     summary="Création d'un compte utilisateur",
@@ -80,6 +82,9 @@ class AuthController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
+            $otpController = app(OtpController::class);
+            $response = $otpController->generateOTP($request);
+
             $matricule = $this->matriculeGenerator("ENA");
             $user = User::create([
                 'nom' => $request->nom,
@@ -92,7 +97,7 @@ class AuthController extends Controller
                 'matricule' => $matricule,
                 'email' => $request->email,
                 'slug' => Str::random(10),
-                //'isActive' => ($request->type === "livreur") ? false : true,
+                'isActive' => false,
                 'password' => bcrypt($request->password),
             ]);
 
@@ -125,7 +130,96 @@ class AuthController extends Controller
         return $prefixe."-".date('y')."-".$order."".$id;
     }
 
-     /**
+    /**
+     * @OA\Post(
+     *     path="/api/verify-otp",
+     *     summary="Verification du code otp",
+     *     description="Validation de l'adresse mail à travers le code OTP",
+     *     tags={"Autentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"user","password"},
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com ou 75000000"),
+     *             @OA\Property(property="otp", type="string", example="0000")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Code OTP vérifié avec succès"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
+
+    public function verifyOtp(Request $request){
+
+        $otpController = app(OtpController::class);
+        $response = $otpController->verifyEmailOTP($request);
+
+        if($response->getStatusCode() === 200){
+            $user = User::where("email",$request->email)->first();
+            $user->update([
+                "isActive" => true,
+                "email_verified_at" => Carbon::now()
+            ]);
+
+        }
+
+        return $response;
+    }
+    /**
+     * @OA\Post(
+     *     path="/api/get-otp",
+     *     summary="Envoi d'un nouveau code otp",
+     *     description="Envoi un nouveau code otp à l'adresse mail d'inscription",
+     *     tags={"Autentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com ou 75000000"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Le code OTP a été généré et envoyé avec succès à votre adresse e-mail"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+    */
+
+     public function getOtp(Request $request){
+
+        $otpController = app(OtpController::class);
+        $response = $otpController->generateOTP($request);
+
+        return $response;
+    }
+
+    /**
      * @OA\Post(
      *     path="/api/login",
      *     summary="Connexion d'un utilisateur",
@@ -193,7 +287,7 @@ class AuthController extends Controller
 
             // Vérifier si le compte est actif
             if (!$user->isActive) {
-                return response()->json(['errors' => 'Votre compte a été désactivé temporairement'], 401);
+                return response()->json(['errors' => "Votre compte n'est pas actif, veuillez vérifier votre adresse mail"], 401);
             }
 
             // Vérifier si l'email est vérifié
@@ -210,6 +304,40 @@ class AuthController extends Controller
         return response()->json(['error' => 'Identifiants de connexion invalides'], 401);
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/edit-password",
+     *     summary="Modification du mot de passe",
+     *     description="Modifier le mot de passe en utilisant votre email et un code otp généré",
+     *     tags={"Autentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"user","password"},
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com ou 75000000"),
+     *             @OA\Property(property="password", type="string", example="@test@password#2024"),
+     *             @OA\Property(property="otp", type="string", example="0000")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Votre mot de passe à bien été modifier, vous pouvez vous connecter maintenant"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function editPassword(Request $request)
     {
 
@@ -222,23 +350,32 @@ class AuthController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
+        $otpController = app(OtpController::class);
+        $response = $otpController->verifyEmailOTP($request);
 
-        $user = User::where('email', $request->email)->first();
+        if($response->getStatusCode() === 200){
+            $user = User::where('email', $request->email)->first();
 
-        if ($user) {
+            if ($user) {
 
-            $user->update([
-                'password' => bcrypt($request->password),
-            ]);
+                $user->update([
+                    'password' => bcrypt($request->password),
+                ]);
 
-            return response()->json(['message' => 'Votre mot de passe à bien été modifier, vous pouvez vous connecter maintenant'], 200);
+                return response()->json(['message' => 'Votre mot de passe à bien été modifier, vous pouvez vous connecter maintenant'], 200);
 
-        } else {
-            // Réponse d'erreur
-            return response()->json(['error' => "Votre adresse e-mail ou votre numéro de téléphone est incorrect"], 422);
+            } else {
+                // Réponse d'erreur
+                return response()->json(['error' => "Votre adresse e-mail ou votre numéro de téléphone est incorrect"], 422);
+            }
+
         }
 
+        return $response;
+
     }
+
+
 
 
 }

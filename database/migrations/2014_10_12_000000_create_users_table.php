@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('matricule');
             $table->string('slug');
             $table->string('email')->unique();
-            $table->boolean('isActive')->default(true);
+            $table->boolean('isActive')->default(false);
+            $table->boolean('isBlocked')->default(false);
             $table->boolean('is_deleted')->default(false);
             $table->timestamp('telephone_verified_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();

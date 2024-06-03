@@ -16,7 +16,7 @@
     },
     "servers": [
         {
-            "url": "https://api.enumera.tech/",
+            "url": "http://127.0.0.1:8000/",
             "description": "Demo API Server"
         }
     ],
@@ -162,6 +162,149 @@
                 }
             }
         },
+        "/api/verify-otp": {
+            "post": {
+                "tags": [
+                    "Autentification"
+                ],
+                "summary": "Verification du code otp",
+                "description": "Validation de l'adresse mail à travers le code OTP",
+                "operationId": "7ffdcc2529f1d1bbbbac715c91b1c809",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com ou 75000000"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "0000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Code OTP vérifié avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/get-otp": {
+            "post": {
+                "tags": [
+                    "Autentification"
+                ],
+                "summary": "Envoi d'un nouveau code otp",
+                "description": "Envoi un nouveau code otp à l'adresse mail d'inscription",
+                "operationId": "414612235eea6dd8ed170a75974d93c7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com ou 75000000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le code OTP a été généré et envoyé avec succès à votre adresse e-mail"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
@@ -204,6 +347,84 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Connexion réussi avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/edit-password": {
+            "post": {
+                "tags": [
+                    "Autentification"
+                ],
+                "summary": "Modification du mot de passe",
+                "description": "Modifier le mot de passe en utilisant votre email et un code otp généré",
+                "operationId": "e882883c487b56befbd7b426f1a54b13",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com ou 75000000"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "@test@password#2024"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "0000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Votre mot de passe à bien été modifier, vous pouvez vous connecter maintenant"
                                         },
                                         "data": {
                                             "type": "object"

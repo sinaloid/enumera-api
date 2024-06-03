@@ -25,10 +25,14 @@ class User extends Authenticatable
         "profile",
         "telephone",
         "matricule",
+        "isActive",
+        "isBlocked",
         "email",
         "password",
         "slug",
-        "is_deleted"
+        "is_deleted",
+        "telephone_verified_at",
+        "email_verified_at"
     ];
 
     /**

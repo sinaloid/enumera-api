@@ -10,6 +10,7 @@ use App\Http\Controllers\ChapitreController;
 use App\Http\Controllers\MatiereDeLaClasseController;
 use App\Http\Controllers\LeconController;
 use App\Http\Controllers\CoursController;
+use App\Http\Controllers\OtpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,10 @@ use App\Http\Controllers\CoursController;
 
 Route::group(['middleware' => ['cors','json.response']], function () {
     Route::post('/register', [AuthController::class,'register']);
+    Route::post('/verify-otp', [AuthController::class,'verifyOtp']);
+    Route::post('/get-otp', [AuthController::class,'getOtp']);
     Route::post('/login', [AuthController::class,'login']);
+    Route::post('/edit-password', [AuthController::class,'editPassword']);
 
     Route::middleware(['auth:api'])->group(function () {
         Route::get('/users', [AuthController::class,'index']);
