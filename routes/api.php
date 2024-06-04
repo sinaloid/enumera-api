@@ -39,6 +39,9 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::post('/users/get', [AuthController::class,'userBy']);
         Route::post('/users/disable', [AuthController::class,'disable']);
 
+        Route::post('/users/change-active-statut', [AuthController::class,'changeActiveStatus']);
+        Route::post('/users/change-block-statut', [AuthController::class,'changeActiveStatus']);
+
         Route::resources([
             'classes' => ClasseController::class,
             'matieres' => MatiereController::class,

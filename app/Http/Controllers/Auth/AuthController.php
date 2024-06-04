@@ -375,6 +375,130 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/users/change-active-statut",
+     *     summary="Active ou desactive le compte",
+     *     description="Modifier le statut du compte en l'activant ou en le désactivant",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com ou 75000000"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Compte utilisateur activé ou désactivé"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function changeActiveStatus(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+            if ($user) {
+
+                $user->update([
+                    'isActive' => !$user->isActive,
+                ]);
+                $msg = $user->isActive ? "Compte utilisateur activé" : "Compte utilisateur désactivé";
+                return response()->json(['message' => $msg, "data" => $user], 200);
+
+            } else {
+                // Réponse d'erreur
+                return response()->json(['error' => "Les données fournies ne sont pas valides."], 422);
+            }
+
+        return $response;
+
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/users/change-block-statut",
+     *     summary="Bloque ou debloque le compte",
+     *     description="Modifier le statut du compte en le bloquant ou en le débloquant",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com ou 75000000"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Compte utilisateur bloqué ou débloqué"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function changeBlockStatus(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+            if ($user) {
+
+                $user->update([
+                    'isBlocked' => !$user->isBlocked,
+                ]);
+                $msg = $user->isActive ? "Compte utilisateur bloqué" : "Compte utilisateur débloqué";
+                return response()->json(['message' => $msg, "data" => $user], 200);
+
+            } else {
+                // Réponse d'erreur
+                return response()->json(['error' => "Les données fournies ne sont pas valides."], 422);
+            }
+
+        return $response;
+
+    }
+
 
 
 
