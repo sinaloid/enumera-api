@@ -31,7 +31,7 @@ class ChapitreController extends Controller
      */
     public function index()
     {
-        $data = Chapitre::where("is_deleted",false)->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe")->get();
+        $data = Chapitre::where("is_deleted",false)->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe","periode")->get();
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucun chapitre trouvé'], 404);

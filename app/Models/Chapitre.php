@@ -23,4 +23,8 @@ class Chapitre extends Model
 
         return $this->belongsTo(MatiereDeLaClasse::class);
     }
+    public function periode() {
+
+        return $this->belongsTo(Periode::class);
+    }
 }
