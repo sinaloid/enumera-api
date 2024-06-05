@@ -31,7 +31,7 @@ class MatiereDeLaClasseController extends Controller
      */
     public function index()
     {
-        $data = MatiereDeLaClasse::where("is_deleted",false)->get();
+        $data = MatiereDeLaClasse::where("is_deleted",false)->with("classe","matiere")->get();
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune matière de la classe trouvée'], 404);
