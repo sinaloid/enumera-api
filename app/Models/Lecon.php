@@ -18,4 +18,9 @@ class Lecon extends Model
         "is_deleted",
         "chapitre_id",
     ];
+
+    public function chapitre() {
+
+        return $this->belongsTo(Chapitre::class);
+    }
 }

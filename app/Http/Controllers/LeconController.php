@@ -30,7 +30,7 @@ class LeconController extends Controller
      */
     public function index()
     {
-        $data = Lecon::where("is_deleted",false)->get();
+        $data = Lecon::where("is_deleted",false)->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe")->get();
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune leçon trouvée'], 404);
