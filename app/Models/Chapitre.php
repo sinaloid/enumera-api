@@ -18,4 +18,9 @@ class Chapitre extends Model
         "matiere_de_la_classe_id",
         "periode_id",
     ];
+
+    public function matiereDeLaClasse() {
+
+        return $this->belongsTo(MatiereDeLaClasse::class);
+    }
 }
