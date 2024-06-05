@@ -15,4 +15,14 @@ class MatiereDeLaClasse extends Model
         "matiere_id",
         "classe_id",
     ];
+
+    public function matiere(){
+
+        return $this->belongsTo(Matiere::class);
+    }
+
+    public function classe(){
+
+        return $this->belongsTo(Classe::class);
+    }
 }
