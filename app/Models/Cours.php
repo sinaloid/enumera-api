@@ -18,4 +18,9 @@ class Cours extends Model
         "is_deleted",
         "lecon_id",
     ];
+
+    public function lecon() {
+
+        return $this->belongsTo(Lecon::class);
+    }
 }

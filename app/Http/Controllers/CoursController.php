@@ -30,7 +30,7 @@ class CoursController extends Controller
      */
     public function index()
     {
-        $data = Cours::where("is_deleted",false)->get();
+        $data = Cours::where("is_deleted",false)->with("lecon.chapitre", "lecon.chapitre.periode","lecon.chapitre.matiereDeLaClasse.classe","lecon.chapitre.matiereDeLaClasse.matiere")->get();
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucun cours trouvé'], 404);
