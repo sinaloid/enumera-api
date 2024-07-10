@@ -16,7 +16,7 @@
     },
     "servers": [
         {
-            "url": "https://api.enumera.tech/",
+            "url": "http://127.0.0.1:8000/",
             "description": "Demo API Server"
         }
     ],
@@ -650,9 +650,13 @@
                                         "type": "string",
                                         "example": "slug de la periode"
                                     },
-                                    "matiereClasse": {
+                                    "matiere": {
                                         "type": "string",
-                                        "example": "slug de la matiereClasse"
+                                        "example": "slug de la matiere"
+                                    },
+                                    "classe": {
+                                        "type": "string",
+                                        "example": "slug de la classe"
                                     },
                                     "abreviation": {
                                         "type": "string",
@@ -1218,6 +1222,77 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/classes/{slug}/matieres": {
+            "get": {
+                "tags": [
+                    "Classes"
+                ],
+                "summary": "Récupération d'une classe par son slug avec la liste des matières de la classe",
+                "description": "Retourne une matière de la classe",
+                "operationId": "7e7bc25ff34a690157eb381f5d0417f8",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la Matière de la classe à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/classes/{classe}/matieres/{matiere}/chapitres": {
+            "get": {
+                "tags": [
+                    "Classes"
+                ],
+                "summary": "Récupération d'une matière par son slug avec la liste des chapitres de la matière",
+                "description": "Retourne une matière avec la liste des chapitres de la matière",
+                "operationId": "b35432d57ac67224a72c28ee0e2660df",
+                "parameters": [
+                    {
+                        "name": "classe",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "matiere",
+                        "in": "path",
+                        "description": "slug de la Matière",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
                     }
                 },
                 "security": [

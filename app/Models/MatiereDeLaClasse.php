@@ -25,4 +25,9 @@ class MatiereDeLaClasse extends Model
 
         return $this->belongsTo(Classe::class);
     }
+
+    public function chapitres(){
+
+        return $this->hasMany(Chapitre::class);
+    }
 }

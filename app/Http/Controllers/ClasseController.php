@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classe;
+use App\Models\Matiere;
+use App\Models\MatiereDeLaClasse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -251,5 +253,113 @@ class ClasseController extends Controller
         $data->update(["is_deleted" => true]);
 
         return response()->json(['message' => 'Classe supprimée avec succès',"data" => $data]);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Classes"},
+     *      summary="Récupération d'une classe par son slug avec la liste des matières de la classe",
+     *      description="Retourne une matière de la classe",
+     *      path="/api/classes/{slug}/matieres",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slug",
+     *          in="path",
+     *          description="slug de la Matière de la classe à récupérer",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getClasseMatiere($slug)
+    {
+        $data = Classe::where(["slug"=> $slug, "is_deleted" => false])->with([
+            "matiereDeLaClasse" => function($query){
+                $query->where([
+                    "is_deleted" => false
+                ]);
+            },
+            "matiereDeLaClasse.matiere" => function($query){
+                $query->where([
+                    "is_deleted" => false
+                ]);
+            }
+        ])->first();
+
+        if (!$data) {
+            return response()->json(['message' => 'Matière de la classe non trouvée'], 404);
+        }
+
+        return response()->json(['message' => 'Matière de la classe trouvée', 'data' => $data], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Classes"},
+     *      summary="Récupération d'une matière par son slug avec la liste des chapitres de la matière",
+     *      description="Retourne une matière avec la liste des chapitres de la matière",
+     *      path="/api/classes/{classe}/matieres/{matiere}/chapitres",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="classe",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="matiere",
+     *          in="path",
+     *          description="slug de la Matière",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getClasseMatiereChapitres($classe, $matiere)
+    {
+        $dataClasse = Classe::where(["slug"=> $classe, "is_deleted" => false])->first();
+        if (!$dataClasse) {
+            return response()->json(['message' => 'Classe non trouvée'], 404);
+        }
+
+        $dataMatiere = Matiere::where(["slug"=> $matiere, "is_deleted" => false])->first();
+        if (!$dataMatiere) {
+            return response()->json(['message' => 'Matière non trouvée'], 404);
+        }
+
+        $data = MatiereDeLaClasse::where([
+            "classe_id"=> $dataClasse->id,
+            "matiere_id"=> $dataMatiere->id,
+            "is_deleted" => false
+        ])->with([
+            "chapitres" => function($query){
+                $query->where([
+                    "is_deleted" => false,
+                ]);
+            }
+        ])->first();
+
+        if (!$data) {
+            return response()->json(['message' => 'Matière de la classe non trouvée'], 404);
+        }
+
+        $data['classe'] = $dataClasse;
+        $data['matiere'] = $dataMatiere;
+        return response()->json(['message' => 'Matière de la classe trouvée', 'data' => $data], 200);
     }
 }

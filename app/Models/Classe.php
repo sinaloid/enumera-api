@@ -15,4 +15,9 @@ class Classe extends Model
         "slug",
         "is_deleted",
     ];
+
+    public function matiereDeLaClasse(){
+
+        return $this->hasMany(MatiereDeLaClasse::class);
+    }
 }

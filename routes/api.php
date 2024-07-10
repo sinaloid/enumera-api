@@ -42,6 +42,9 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::post('/users/change-active-statut', [AuthController::class,'changeActiveStatus']);
         Route::post('/users/change-block-statut', [AuthController::class,'changeActiveStatus']);
 
+        Route::get('/classes/{slug}/matieres', [ClasseController::class,'getClasseMatiere']);
+        Route::get('/classes/{classe}/matieres/{matiere}/chapitres', [ClasseController::class,'getClasseMatiereChapitres']);
+
         Route::resources([
             'classes' => ClasseController::class,
             'matieres' => MatiereController::class,

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\OtpController;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Notifications\OtpCode;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -84,6 +85,7 @@ class AuthController extends Controller
 
             $otpController = app(OtpController::class);
             $response = $otpController->generateOTP($request);
+            $response = $response->getData();
 
             $matricule = $this->matriculeGenerator("ENA");
             $user = User::create([
@@ -115,10 +117,10 @@ class AuthController extends Controller
                 }
             }
 
-            $token = $user->createToken('my-app-token')->accessToken;
+            $token = null;//$user->createToken('my-app-token')->accessToken;
+            $user->notify(new OtpCode(["slug" => $user->slug, "code" => $response->code]));
 
-            return response()->json(['data' => $user, 'access_token' => $token],200);
-
+            return response()->json(['message' => "Votre compte a été créé. Un code de vérification a été envoyé à votre adresse email.",'data' => $user, 'access_token' => $token],200);
     }
 
     public function matriculeGenerator($prefixe){
@@ -213,9 +215,30 @@ class AuthController extends Controller
 
      public function getOtp(Request $request){
 
+        $user = User::where('slug',$request->slug)->first();
+        if($user){
+            $request['email'] = $user->email;
+        }
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+        $user = User::where([
+            "email" => $request->email,
+            "is_deleted" => false
+        ])->first();
+
+        if(!$user){
+            return response()->json(['message' => "Vous n'avez pas de compte sur notre plateforme"],401);
+        }
         $otpController = app(OtpController::class);
         $response = $otpController->generateOTP($request);
+        $response = $response->getData();
 
+        $user->notify(new OtpCode(["slug" => $user->slug, "code" => $response->code]));
         return $response;
     }
 
@@ -297,7 +320,7 @@ class AuthController extends Controller
 
             // Générer un token d'accès
             $token = $user->createToken('my-app-token')->accessToken;
-            return response()->json(['user' => $user, 'access_token' => $token]);
+            return response()->json(["message" => "Connexion réussi avec succès", 'user' => $user, 'access_token' => $token]);
         }
 
         // Retourner une réponse en cas d'identifiants invalides

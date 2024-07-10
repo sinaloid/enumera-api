@@ -65,28 +65,28 @@ class OtpController extends Controller
         }
 
         // Génération du code OTP
-        $otpCode = rand(1000, 9999);
+        $otpCode = rand(100000, 999999);
         $otp = Otp::where('email', $request->email)->first();
 
         if ($otp) {
             $otp->update([
                 'is_verified' => false,
                 'code' => $otpCode,
-                'expires_at' => now()->addMinutes(5)
+                'expires_at' => now()->addMinutes(15)
             ]);
         } else {
-            Otp::create([
+            $otp = Otp::create([
                 'email' => $request->email,
                 'code' => $otpCode,
                 'is_verified' => false,
-                'expires_at' => now()->addMinutes(5), // Expiration du code après 5 minutes
+                'expires_at' => now()->addMinutes(15), // Expiration du code après 15 minutes
             ]);
         }
 
         // Envoyer le code OTP à l'utilisateur (par e-mail, SMS, etc.)
-        $this->sendEmail($request->email,$otpCode);
+        //$this->sendEmail($request->email,$otpCode);
         // Réponse de succès
-        return response()->json(['message' => 'Le code OTP a été généré et envoyé avec succès à votre adresse e-mail']);
+        return response()->json(['message' => 'Le code OTP a été généré et envoyé avec succès à votre adresse e-mail','code' => $otp->code]);
     }
 
     /*public function generateNumberOTP(Request $request)
@@ -132,7 +132,7 @@ class OtpController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255',
-            'otp' => 'required|string|max:4',
+            'otp' => 'required|string|max:8',
         ]);
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);

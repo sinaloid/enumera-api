@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Chapitre;
 use App\Models\Periode;
 use App\Models\MatiereDeLaClasse;
+use App\Models\Classe;
+use App\Models\Matiere;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -52,7 +54,8 @@ class ChapitreController extends Controller
      *             required={"label","periode","matiereClasse"},
      *             @OA\Property(property="label", type="string", example="Histoire du Burkina Faso"),
      *             @OA\Property(property="periode", type="string", example="slug de la periode"),
-     *             @OA\Property(property="matiereClasse", type="string", example="slug de la matiereClasse"),
+     *             @OA\Property(property="matiere", type="string", example="slug de la matiere"),
+     *             @OA\Property(property="classe", type="string", example="slug de la classe"),
      *             @OA\Property(property="abreviation", type="string", example="abreviation du chapitre"),
      *             @OA\Property(property="description", type="string", example="Lorem ipsum ipsom lores")
      *         ),
@@ -82,7 +85,8 @@ class ChapitreController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'periode' => 'required|string|max:10',
-            'matiereClasse' => 'required|string|max:10',
+            'matiere' => 'required|string|max:10',
+            'classe' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
@@ -92,8 +96,22 @@ class ChapitreController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
+        $matiere = Matiere::where(["slug" => $request->matiere,"is_deleted" => false])->first();
+        if(!$matiere){
+            return response()->json(['message' => 'Matière non trouvée'], 404);
+        }
+        $classe = Classe::where(["slug" => $request->classe,"is_deleted" => false])->first();
+        if(!$classe){
+            return response()->json(['message' => 'Classe non trouvée'], 404);
+        }
+
+
         $periode = Periode::where(["slug" => $request->periode,"is_deleted" => false])->first();
-        $matiereClasse = MatiereDeLaClasse::where(["slug" => $request->matiereClasse,"is_deleted" => false])->first();
+        $matiereClasse = MatiereDeLaClasse::where([
+            "classe_id" => $classe->id,
+            "matiere_id" => $matiere->id,
+            "is_deleted" => false
+        ])->first();
 
         if(!$periode){
             return response()->json(['message' => 'Periode non trouvée'], 404);
@@ -208,7 +226,8 @@ class ChapitreController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'periode' => 'required|string|max:10',
-            'matiereClasse' => 'required|string|max:10',
+            'matiere' => 'required|string|max:10',
+            'classe' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
@@ -218,8 +237,21 @@ class ChapitreController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
+        $matiere = Matiere::where(["slug" => $request->matiere,"is_deleted" => false])->first();
+        if(!$matiere){
+            return response()->json(['message' => 'Matière non trouvée'], 404);
+        }
+        $classe = Classe::where(["slug" => $request->classe,"is_deleted" => false])->first();
+        if(!$classe){
+            return response()->json(['message' => 'Classe non trouvée'], 404);
+        }
+
         $periode = Periode::where(["slug" => $request->periode,"is_deleted" => false])->first();
-        $matiereClasse = MatiereDeLaClasse::where(["slug" => $request->matiereClasse,"is_deleted" => false])->first();
+        $matiereClasse = MatiereDeLaClasse::where([
+            "classe_id" => $classe->id,
+            "matiere_id" => $matiere->id,
+            "is_deleted" => false
+        ])->first();
 
         if(!$periode){
             return response()->json(['message' => 'Periode non trouvée'], 404);
