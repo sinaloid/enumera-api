@@ -23,4 +23,9 @@ class Lecon extends Model
 
         return $this->belongsTo(Chapitre::class);
     }
+
+    public function cours() {
+
+        return $this->hasOne(Cours::class);
+    }
 }

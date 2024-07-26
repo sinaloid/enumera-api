@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lecon;
 use App\Models\Chapitre;
+use App\Models\RessourceLecon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -129,7 +130,7 @@ class LeconController extends Controller
      */
     public function show($slug)
     {
-        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours")->first();
 
         if (!$data) {
             return response()->json(['message' => 'Leçon non trouvée'], 404);
@@ -275,4 +276,75 @@ class LeconController extends Controller
 
         return response()->json(['message' => 'Leçon supprimée avec succès',"data" => $data]);
     }
+
+    public function getFile()
+    {
+        $ressources = RessourceLecon::where("is_deleted",false)->get();
+
+        return response()->json(['message' => 'Fichiers récupérés', 'data' => $ressources], 200);
+    }
+
+    public function getLeconFile($slug)
+    {
+        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->first();
+
+        if (!$data) {
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
+        }
+
+        $ressources = RessourceLecon::where([
+            "is_deleted" => false,
+            "lecon_id" => $data->id
+        ])->get();
+
+        return response()->json(['message' => 'Fichiers récupérés', 'data' => $ressources], 200);
+    }
+
+
+    public function storeFile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'type' => 'required|string|max:255',
+            'lecon' => 'required|string|max:255',
+            'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf,wav,mp3,mp4|max:20240', // 1 mega pour les images et les pdf
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $lecon = Lecon::where([
+            "is_deleted" => false,
+            "slug" => $request->lecon
+        ])->first();
+
+        if (!$lecon) {
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
+        }
+
+        $filePaths = [];
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                //$path = $file->store('uploads');
+                //$filePaths[] = $path;
+                $newFileName = Str::random(40) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('public/uploads', $newFileName);
+                // Enregistrer le fichier dans la base de données
+                RessourceLecon::create([
+                    'original_name' => $file->getClientOriginalName(),
+                    'name' => $newFileName,
+                    'type' => $request->type,
+                    'lecon_id' => $lecon->id,
+                    'slug' => Str::random(10),
+                    'url' => Storage::url($path),
+                ]);
+            }
+        }
+
+        return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers enregistrés"], 201);
+    }
+
+
+
 }

@@ -934,6 +934,83 @@
                 ]
             }
         },
+        "/api/chatgpt": {
+            "post": {
+                "tags": [
+                    "ChatGPt"
+                ],
+                "summary": "Prompt gpt",
+                "description": "Crée une nouvelle leçon et retourne la leçon créée",
+                "operationId": "35a366d21ef3399c4b1bbe20412302eb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation",
+                                    "type",
+                                    "chapitre"
+                                ],
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Histoire des royaumes moose"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Prompt gpt"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/classes": {
             "get": {
                 "tags": [
@@ -1269,7 +1346,7 @@
                 ],
                 "summary": "Récupération d'une matière par son slug avec la liste des chapitres de la matière",
                 "description": "Retourne une matière avec la liste des chapitres de la matière",
-                "operationId": "b35432d57ac67224a72c28ee0e2660df",
+                "operationId": "ccd9516563d11c61615706c2f38542e9",
                 "parameters": [
                     {
                         "name": "classe",
@@ -1625,6 +1702,422 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Cours non trouvé"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluations-lecons": {
+            "get": {
+                "tags": [
+                    "Evaluations leçons"
+                ],
+                "summary": "Liste des evaluations",
+                "description": "Retourne la liste des evaluations",
+                "operationId": "4997cebef99b6319c6b4b67480a94146",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Evaluations leçons"
+                ],
+                "summary": "Création d'une evaluation",
+                "description": "Crée une nouvelle evaluation et retourne la evaluation créée",
+                "operationId": "d29da88a1710a6f8b3af92887b2e1956",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "example": "Quel est un principe d'AgilePM ?"
+                                    },
+                                    "choix": {
+                                        "type": "string",
+                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                    },
+                                    "reponses": {
+                                        "type": "string",
+                                        "example": "1;2"
+                                    },
+                                    "point": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "lecon": {
+                                        "type": "string",
+                                        "example": "Slug de la leçon"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "CHOIX_MULTIPLE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evaluation créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluations-lecons/{slug}": {
+            "get": {
+                "tags": [
+                    "Evaluations leçons"
+                ],
+                "summary": "Récupère une evaluation par son slug",
+                "description": "Retourne une evaluation",
+                "operationId": "0d74701e30d03fa5d9a84a01a15d7483",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la evaluation à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Evaluations leçons"
+                ],
+                "summary": "Modification d'une evaluation",
+                "description": "Modifie une evaluation et retourne la evaluation modifiée",
+                "operationId": "8c123a369d2026fe502ed675bc42d438",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la evaluation à modifiée",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "example": "Quel est un principe d'AgilePM ?"
+                                    },
+                                    "choix": {
+                                        "type": "string",
+                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                    },
+                                    "reponses": {
+                                        "type": "string",
+                                        "example": "2;3"
+                                    },
+                                    "point": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "lecon": {
+                                        "type": "string",
+                                        "example": "Slug de la leçon"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "CHOIX_MULTIPLE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Evaluations leçons"
+                ],
+                "summary": "Suppression d'une evaluation par son slug",
+                "description": "Retourne la evaluation supprimée",
+                "operationId": "f97a12a0fb0df5da430ad978e5c3826e",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la evaluation à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluations-lecons/import": {
+            "post": {
+                "tags": [
+                    "Evaluations leçons"
+                ],
+                "summary": "Création d'une evaluation",
+                "description": "Importe une liste de qcm",
+                "operationId": "677fa034e53017fc7b894ecbe35d1bec",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "lecon": {
+                                        "type": "string",
+                                        "example": "Slug de la leçon"
+                                    },
+                                    "qcm": {
+                                        "type": "string",
+                                        "example": "fichier excel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evaluation créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
                                         },
                                         "errors": {
                                             "type": "object"

@@ -11,6 +11,9 @@ use App\Http\Controllers\MatiereDeLaClasseController;
 use App\Http\Controllers\LeconController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\EvaluationLeconController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +48,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::get('/classes/{slug}/matieres', [ClasseController::class,'getClasseMatiere']);
         Route::get('/classes/{classe}/matieres/{matiere}/chapitres', [ClasseController::class,'getClasseMatiereChapitres']);
 
+
         Route::resources([
             'classes' => ClasseController::class,
             'matieres' => MatiereController::class,
@@ -53,7 +57,16 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'chapitres' => ChapitreController::class,
             'lecons' => LeconController::class,
             'cours' => CoursController::class,
+            'evaluations-lecons' => EvaluationLeconController::class,
+            'chatgpt' => ChatController::class,
 
         ]);
+
+
+    Route::get('/files', [LeconController::class, 'getFile'])->name('files.index');
+    Route::get('/files/lecon/{slug}', [LeconController::class, 'getLeconFile'])->name('files.filesLecon');
+    Route::post('/files', [LeconController::class, 'storeFile'])->name('files.store');
+    Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
+    Route::post('/api/file-evaluations-lecons', [EvaluationLeconController::class,'storeExcel']);
     });
 });
