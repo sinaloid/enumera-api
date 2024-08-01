@@ -934,6 +934,55 @@
                 ]
             }
         },
+        "/api/chapitres/{slugMatiere}/{slugClasse}/{slugPeriode}": {
+            "get": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une periode",
+                "description": "Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une periode",
+                "operationId": "78420aa2a7de197680f1cfe61a34ff24",
+                "parameters": [
+                    {
+                        "name": "slugMatiere",
+                        "in": "path",
+                        "description": "slug de la matière",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/chatgpt": {
             "post": {
                 "tags": [

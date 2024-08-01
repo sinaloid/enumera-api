@@ -327,4 +327,88 @@ class ChapitreController extends Controller
 
         return response()->json(['message' => 'Chapitre supprimé avec succès',"data" => $data]);
     }
+
+
+    /**
+     * @OA\Get(
+     *      tags={"Chapitres"},
+     *      summary="Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une periode",
+     *      description="Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une periode",
+     *      path="/api/chapitres/{slugMatiere}/{slugClasse}/{slugPeriode}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugMatiere",
+     *          in="path",
+     *          description="slug de la matière",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function chapitreMatiereClasse($slugMatiere, $slugClasse,$slugPeriode)
+    {
+        $matiere = Matiere::where(["slug"=> $slugMatiere, "is_deleted" => false])->first();
+
+        if (!$matiere) {
+            return response()->json(['message' => 'Matière non trouvé'], 404);
+        }
+
+        $classe = Classe::where(["slug"=> $slugClasse, "is_deleted" => false])->first();
+
+        if (!$classe) {
+            return response()->json(['message' => 'Classe non trouvé'], 404);
+        }
+
+        $matiereClasse = MatiereDeLaClasse::where([
+            "matiere_id"=> $matiere->id,
+            "classe_id"=> $classe->id,
+            "is_deleted" => false
+        ])->first();
+
+        if (!$matiereClasse) {
+            return response()->json(['message' => "La matière n'existe pas dans la classe "], 404);
+        }
+
+        $periode = Periode::where(["slug"=> $slugPeriode, "is_deleted" => false])->first();
+
+        if (!$periode) {
+            return response()->json(['message' => 'Periode non trouvée'], 404);
+        }
+
+        $data = Chapitre::where([
+            "matiere_de_la_classe_id"=> $matiereClasse->id,
+            "periode_id"=> $periode->id,
+            "is_deleted" => false
+            ])->get();
+
+        /*if (!$data) {
+            return response()->json(['message' => 'Classe non trouvé'], 404);
+        }*/
+        // qz3Vvi26KY/1Dk3XSAPFg/Qhxt0fyHi3 /AYMVxEB8uZ
+        return response()->json(['message' => 'Chapitres trouvée', 'data' => $data], 200);
+    }
 }
