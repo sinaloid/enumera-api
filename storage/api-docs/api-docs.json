@@ -2503,6 +2503,37 @@
                 ]
             }
         },
+        "/api/lecons/chapitre/{slug}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Récupère la liste des leçons d'un chapitre",
+                "description": "Retourne la liste des leçons",
+                "operationId": "33e9d93f615e69c13b64132d1ee735b2",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du chapitre",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/matieres": {
             "get": {
                 "tags": [

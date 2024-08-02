@@ -277,6 +277,45 @@ class LeconController extends Controller
         return response()->json(['message' => 'Leçon supprimée avec succès',"data" => $data]);
     }
 
+    /**
+     * @OA\Get(
+     *      tags={"Leçons"},
+     *      summary="Récupère la liste des leçons d'un chapitre",
+     *      description="Retourne la liste des leçons",
+     *      path="/api/lecons/chapitre/{slug}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slug",
+     *          in="path",
+     *          description="slug du chapitre",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function leconChapitre($slug)
+    {
+        $chapitre = Chapitre::where(["slug"=> $slug, "is_deleted" => false])->first();
+
+        if (!$chapitre) {
+            return response()->json(['message' => 'Chapitre non trouvée'], 404);
+        }
+
+        $data = Lecon::where(["chapitre_id"=> $chapitre->id, "is_deleted" => false])->get();
+
+        if (!$data) {
+            return response()->json(['message' => 'Chapitre non trouvée'], 404);
+        }
+
+        return response()->json(['message' => 'Leçon trouvée', 'data' => $data], 200);
+    }
+
     public function getFile()
     {
         $ressources = RessourceLecon::where("is_deleted",false)->get();
