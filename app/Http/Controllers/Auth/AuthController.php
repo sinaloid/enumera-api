@@ -510,7 +510,7 @@ class AuthController extends Controller
                 $user->update([
                     'isBlocked' => !$user->isBlocked,
                 ]);
-                $msg = $user->isActive ? "Compte utilisateur bloqué" : "Compte utilisateur débloqué";
+                $msg = $user->isBlocked ? "Compte utilisateur bloqué" : "Compte utilisateur débloqué";
                 return response()->json(['message' => $msg, "data" => $user], 200);
 
             } else {
@@ -522,6 +522,46 @@ class AuthController extends Controller
 
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/users/profile/{profile}",
+     *     summary="Liste des utilisateurs en fonction d'un profile",
+     *     description="Reoutrne la liste des utilisateurs en fontion d'un profile",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *          name="profile",
+     *          in="path",
+     *          description="Profile des utilisateurs",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Compte utilisateur activé ou désactivé"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getUserByProfile($profile)
+    {
+        $user = User::where('profile', $profile)->get();
+        return response()->json(['message' => "Liste des utilisateurs", "data" => $user], 200);
+    }
 
 
 

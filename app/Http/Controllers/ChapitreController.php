@@ -31,13 +31,42 @@ class ChapitreController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = Chapitre::where("is_deleted",false)->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe","periode")->get();
 
-        if ($data->isEmpty()) {
-            return response()->json(['message' => 'Aucun chapitre trouvé'], 404);
+        if($request->classe && $request->matiere){
+
+            $classe = Classe::where([
+                "slug" =>$request->classe,
+            ])->first();
+            $classe = isset($classe) ? $classe->id:"";
+
+            $matiere = Matiere::where([
+                "slug" =>$request->matiere,
+            ])->first();
+            $matiere = isset($matiere) ? $matiere->id:"";
+
+            $classeMatiere = MatiereDeLaClasse::where([
+                "is_deleted" => false,
+                "classe_id" => $classe,
+                "matiere_id" => $matiere,
+
+            ])->with("classe","matiere")->first();
+            $classeMatiere = isset($classeMatiere) ? $classeMatiere->id:"";
+
+
+        $data = Chapitre::where([
+            "is_deleted" => false,
+            "matiere_de_la_classe_id" => $classeMatiere,
+
+        ])->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe","periode")->get();
+
         }
+
+        /*if ($data->isEmpty()) {
+            return response()->json(['message' => 'Aucun chapitre trouvé'], 404);
+        }*/
 
         return response()->json(['message' => 'Chapitres récupérés', 'data' => $data], 200);
     }

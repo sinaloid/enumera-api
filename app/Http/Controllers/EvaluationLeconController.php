@@ -31,7 +31,7 @@ class EvaluationLeconController extends Controller
      */
     public function index()
     {
-        $data = EvaluationLecon::where("is_deleted",false)->get();
+        $data = EvaluationLecon::where("is_deleted",false)->with('lecon')->get();
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune evaluation trouvée'], 404);
@@ -49,13 +49,11 @@ class EvaluationLeconController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"question","choix","type","lecon"},
-     *             @OA\Property(property="question", type="string", example="Quel est un principe d'AgilePM ?"),
-     *             @OA\Property(property="choix", type="string", example="Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"),
-     *             @OA\Property(property="reponses", type="string", example="1;2"),
-     *             @OA\Property(property="point", type="string", example="1"),
+     *             required={"label","abreviation","description","lecon"},
+     *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="description", type="string", example="courte description"),
      *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
-     *             @OA\Property(property="type", type="string", example="CHOIX_MULTIPLE")
      *         ),
      *     ),
      *     @OA\Response(
@@ -81,11 +79,9 @@ class EvaluationLeconController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'question' => 'required|string|max:255',
-            'choix' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
-            'reponses' => 'required|string|max:255',
-            'point' => 'required|string|max:255',
+            'label' => 'required|string|max:255',
+            'abreviation' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
             'lecon' => 'required|string|max:10',
 
         ]);
@@ -100,11 +96,9 @@ class EvaluationLeconController extends Controller
         }
 
         $data = EvaluationLecon::create([
-            'question' => $request->input('question'),
-            'choix' => $request->input('choix'),
-            'type' => $request->input('type'),
-            'reponses' => $request->input('reponses'),
-            'point' => $request->input('point'),
+            'label' => $request->input('label'),
+            'abreviation' => $request->input('abreviation'),
+            'description' => $request->input('description'),
             'lecon_id' => $lecon->id,
             'slug' => Str::random(10),
         ]);
@@ -154,13 +148,11 @@ class EvaluationLeconController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"question","choix","type","lecon"},
-     *             @OA\Property(property="question", type="string", example="Quel est un principe d'AgilePM ?"),
-     *             @OA\Property(property="choix", type="string", example="Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"),
-     *             @OA\Property(property="reponses", type="string", example="2;3"),
-     *             @OA\Property(property="point", type="string", example="1"),
+     *             required={"label","abreviation","description","lecon"},
+     *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="description", type="string", example="courte description"),
      *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
-     *             @OA\Property(property="type", type="string", example="CHOIX_MULTIPLE")
      *         ),
      *     ),
      *      @OA\Parameter(
@@ -203,11 +195,9 @@ class EvaluationLeconController extends Controller
     public function update(Request $request, $slug)
     {
         $validator = Validator::make($request->all(), [
-            'question' => 'required|string|max:255',
-            'choix' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
-            'reponses' => 'required|string|max:255',
-            'point' => 'required|string|max:255',
+            'label' => 'required|string|max:255',
+            'abreviation' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
             'lecon' => 'required|string|max:10',
 
         ]);
@@ -230,12 +220,10 @@ class EvaluationLeconController extends Controller
         }
 
         $data->update([
-            'question' => $request->input('question'),
-            'choix' => $request->input('choix'),
-            'type' => $request->input('type'),
+            'label' => $request->input('label'),
+            'abreviation' => $request->input('abreviation'),
+            'description' => $request->input('description'),
             'lecon_id' => $lecon->id,
-            'reponses' => $request->input('reponses'),
-            'point' => $request->input('point'),
         ]);
 
         return response()->json(['message' => 'evaluation modifiée avec succès', 'data' => $data], 200);

@@ -28,4 +28,8 @@ class Lecon extends Model
 
         return $this->hasOne(Cours::class);
     }
+    public function evaluations_lecons() {
+
+        return $this->hasMany(EvaluationLecon::class);
+    }
 }

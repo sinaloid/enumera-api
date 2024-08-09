@@ -29,9 +29,21 @@ class MatiereDeLaClasseController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = MatiereDeLaClasse::where("is_deleted",false)->with("classe","matiere")->get();
+
+        if($request->classe){
+
+            $classe = Classe::where([
+                "slug" =>$request->classe,
+            ])->first();
+            $classe = isset($classe) ? $classe->id:"";
+            $data = MatiereDeLaClasse::where([
+                "is_deleted" => false,
+                "classe_id" => $classe,
+            ])->with("classe","matiere")->get();
+        }
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune matière de la classe trouvée'], 404);

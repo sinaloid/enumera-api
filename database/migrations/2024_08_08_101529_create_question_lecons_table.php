@@ -13,16 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('evaluation_lecons', function (Blueprint $table) {
+        Schema::create('question_lecons', function (Blueprint $table) {
             $table->id();
-            $table->string("label");
-            $table->string("abreviation")->nullable();
-            $table->string("description")->nullable();
+            $table->string("question");
+            $table->string("choix")->nullable();
+            $table->string("type");
+            $table->string("reponses")->nullable();
+            $table->string("point")->nullable();
             $table->string("slug");
             $table->boolean('is_deleted')->default(false);
 
-            $table->unsignedBigInteger('lecon_id');
-            $table->foreign('lecon_id')
+            $table->unsignedBigInteger('evaluation_lecon_id');
+            $table->foreign('evaluation_lecon_id')
                     ->references('id')
                     ->on('lecons')
                     ->onDelete('cascade')
@@ -38,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evaluation_lecons');
+        Schema::dropIfExists('question_lecons');
     }
 };

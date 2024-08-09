@@ -29,13 +29,25 @@ class LeconController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = Lecon::where("is_deleted",false)->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe")->get();
 
-        if ($data->isEmpty()) {
-            return response()->json(['message' => 'Aucune leçon trouvée'], 404);
+        if($request->chapitre){
+
+            $chapitre = Chapitre::where([
+                "slug" =>$request->chapitre,
+            ])->first();
+            $chapitre = isset($chapitre) ? $chapitre->id:"";
+            $data = Lecon::where([
+                "is_deleted" => false,
+                "chapitre_id" => $chapitre,
+            ])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe")->get();
         }
+
+        /*if ($data->isEmpty()) {
+            return response()->json(['message' => 'Aucune leçon trouvée'], 404);
+        }*/
 
         return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
     }
@@ -130,7 +142,7 @@ class LeconController extends Controller
      */
     public function show($slug)
     {
-        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours")->first();
+        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons")->first();
 
         if (!$data) {
             return response()->json(['message' => 'Leçon non trouvée'], 404);

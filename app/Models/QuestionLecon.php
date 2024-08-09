@@ -5,21 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EvaluationLecon extends Model
+class QuestionLecon extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        "label",
-        "abreviation",
-        "description",
+        "question",
+        "choix",
+        "type",
+        "reponses",
+        "point",
         "slug",
         "is_deleted",
-        "lecon_id",
+        "evaluation_lecon_id",
     ];
-
-    public function lecon() {
-
-        return $this->belongsTo(Lecon::class);
-    }
 }

@@ -605,6 +605,72 @@
                 ]
             }
         },
+        "/api/users/profile/{profile}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Liste des utilisateurs en fonction d'un profile",
+                "description": "Reoutrne la liste des utilisateurs en fontion d'un profile",
+                "operationId": "0e9ec14fa60886fa509966b6ef12ad2b",
+                "parameters": [
+                    {
+                        "name": "profile",
+                        "in": "path",
+                        "description": "Profile des utilisateurs",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Compte utilisateur activé ou désactivé"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/chapitres": {
             "get": {
                 "tags": [
@@ -1801,35 +1867,27 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "question",
-                                    "choix",
-                                    "type",
+                                    "label",
+                                    "abreviation",
+                                    "description",
                                     "lecon"
                                 ],
                                 "properties": {
-                                    "question": {
+                                    "label": {
                                         "type": "string",
-                                        "example": "Quel est un principe d'AgilePM ?"
+                                        "example": "Intitulé de l'evaluation"
                                     },
-                                    "choix": {
+                                    "abreviation": {
                                         "type": "string",
-                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                        "example": "Intitulé de l'evaluation"
                                     },
-                                    "reponses": {
+                                    "description": {
                                         "type": "string",
-                                        "example": "1;2"
-                                    },
-                                    "point": {
-                                        "type": "string",
-                                        "example": "1"
+                                        "example": "courte description"
                                     },
                                     "lecon": {
                                         "type": "string",
                                         "example": "Slug de la leçon"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "CHOIX_MULTIPLE"
                                     }
                                 },
                                 "type": "object"
@@ -1938,35 +1996,27 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "question",
-                                    "choix",
-                                    "type",
+                                    "label",
+                                    "abreviation",
+                                    "description",
                                     "lecon"
                                 ],
                                 "properties": {
-                                    "question": {
+                                    "label": {
                                         "type": "string",
-                                        "example": "Quel est un principe d'AgilePM ?"
+                                        "example": "Intitulé de l'evaluation"
                                     },
-                                    "choix": {
+                                    "abreviation": {
                                         "type": "string",
-                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                        "example": "Intitulé de l'evaluation"
                                     },
-                                    "reponses": {
+                                    "description": {
                                         "type": "string",
-                                        "example": "2;3"
-                                    },
-                                    "point": {
-                                        "type": "string",
-                                        "example": "1"
+                                        "example": "courte description"
                                     },
                                     "lecon": {
                                         "type": "string",
                                         "example": "Slug de la leçon"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "example": "CHOIX_MULTIPLE"
                                     }
                                 },
                                 "type": "object"
@@ -3429,6 +3479,770 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Periode non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions-lecons": {
+            "get": {
+                "tags": [
+                    "Questions leçons"
+                ],
+                "summary": "Liste des questions",
+                "description": "Retourne la liste des questions",
+                "operationId": "3b04368cccfefb0ed4bb85578020b5ed",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Questions leçons"
+                ],
+                "summary": "Création d'une question",
+                "description": "Crée une nouvelle question et retourne la question créée",
+                "operationId": "d1c1042e72556f5cbf351d4511ae2000",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "example": "Quel est un principe d'AgilePM ?"
+                                    },
+                                    "choix": {
+                                        "type": "string",
+                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                    },
+                                    "reponses": {
+                                        "type": "string",
+                                        "example": "1;2"
+                                    },
+                                    "point": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "evaluation_lecon": {
+                                        "type": "string",
+                                        "example": "Slug de la l'evaluation_lecon"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "CHOIX_MULTIPLE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions-lecons/{slug}": {
+            "get": {
+                "tags": [
+                    "Questions leçons"
+                ],
+                "summary": "Récupère une question par son slug",
+                "description": "Retourne une question",
+                "operationId": "94f16c46fb85497ee4521272fa2ce249",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la question à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Questions leçons"
+                ],
+                "summary": "Modification d'une question",
+                "description": "Modifie une question et retourne la question modifiée",
+                "operationId": "e8283cb9e448246fd810c6312595615b",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la question à modifiée",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "example": "Quel est un principe d'AgilePM ?"
+                                    },
+                                    "choix": {
+                                        "type": "string",
+                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                    },
+                                    "reponses": {
+                                        "type": "string",
+                                        "example": "2;3"
+                                    },
+                                    "point": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "evaluation_lecon": {
+                                        "type": "string",
+                                        "example": "Slug de la levaluation_lecon"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "CHOIX_MULTIPLE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Questions leçons"
+                ],
+                "summary": "Suppression d'une question par son slug",
+                "description": "Retourne la question supprimée",
+                "operationId": "cee20167cf6d2abfdecc33d9a52f4ea6",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la question à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions-lecons/import": {
+            "post": {
+                "tags": [
+                    "Questions leçons"
+                ],
+                "summary": "Création d'une question",
+                "description": "Importe une liste de qcm",
+                "operationId": "d3988faccf296062d56cb2996acc5185",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "evaluation_lecon": {
+                                        "type": "string",
+                                        "example": "Slug de l'evaluation_lecon"
+                                    },
+                                    "qcm": {
+                                        "type": "string",
+                                        "example": "fichier excel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs": {
+            "get": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Liste des utilisateur",
+                "description": "Retourne la liste des utilisateur",
+                "operationId": "27a03cbccef26b92bf6d80712f8b8ab8",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Création d'un utilisateur",
+                "description": "Crée une nouveau utilisateur et retourne le utilisateur créé",
+                "operationId": "dded82ccae378b45b0c84f76ec078823",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nom",
+                                    "prenom",
+                                    "date_de_naissance",
+                                    "genre",
+                                    "telephone",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "prenom": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "date_de_naissance": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1990-01-01"
+                                    },
+                                    "genre": {
+                                        "type": "string",
+                                        "example": "M"
+                                    },
+                                    "profile": {
+                                        "type": "string",
+                                        "example": "ELEVE"
+                                    },
+                                    "telephone": {
+                                        "type": "string",
+                                        "example": "75000000"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "@test@password#2024"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "utilisateur créé avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/{slug}": {
+            "get": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Récupère un utilisateur par son slug",
+                "description": "Retourne un utilisateur",
+                "operationId": "8cd6984d6bae975d718d0045fa5f49e0",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du utilisateur à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Modification d'un utilisateur",
+                "description": "Modifie un utilisateur et retourne le utilisateur modifié",
+                "operationId": "b95b0d19daa0c0edea85d40137a0df6a",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du utilisateur à modifié",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nom",
+                                    "prenom",
+                                    "date_de_naissance",
+                                    "genre",
+                                    "telephone",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "prenom": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "date_de_naissance": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1990-01-01"
+                                    },
+                                    "genre": {
+                                        "type": "string",
+                                        "example": "M"
+                                    },
+                                    "profile": {
+                                        "type": "string",
+                                        "example": "ELEVE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "utilisateur modifié avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "utilisateur non trouvé"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Suppression d'un utilisateur par son slug",
+                "description": "Retourne le utilisateur supprimé",
+                "operationId": "72955b9889fb84546f6b2a4d6f5f7040",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du utilisateur à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "utilisateur supprimé avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "utilisateur non trouvé"
                                         },
                                         "errors": {
                                             "type": "object"

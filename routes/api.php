@@ -13,6 +13,8 @@ use App\Http\Controllers\CoursController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\EvaluationLeconController;
+use App\Http\Controllers\QuestionLeconController;
+use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\ChatController;
 
 /*
@@ -43,7 +45,8 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::post('/users/disable', [AuthController::class,'disable']);
 
         Route::post('/users/change-active-statut', [AuthController::class,'changeActiveStatus']);
-        Route::post('/users/change-block-statut', [AuthController::class,'changeActiveStatus']);
+        Route::post('/users/change-block-statut', [AuthController::class,'changeBlockStatus']);
+        Route::get('/users/profile/{profile}', [AuthController::class,'getUserByProfile']);
 
         Route::get('/classes/{slug}/matieres', [ClasseController::class,'getClasseMatiere']);
         Route::get('/classes/{classe}/matieres/{matiere}/chapitres', [ClasseController::class,'getClasseMatiereChapitres']);
@@ -51,6 +54,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::get('/lecons/chapitre/{slug}', [LeconController::class,'leconChapitre']);
 
         Route::resources([
+            'utilisateurs' => UtilisateurController::class,
             'classes' => ClasseController::class,
             'matieres' => MatiereController::class,
             'periodes' => PeriodeController::class,
@@ -59,6 +63,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'lecons' => LeconController::class,
             'cours' => CoursController::class,
             'evaluations-lecons' => EvaluationLeconController::class,
+            'questions-lecons' => QuestionLeconController::class,
             'chatgpt' => ChatController::class,
 
         ]);
@@ -68,6 +73,6 @@ Route::group(['middleware' => ['cors','json.response']], function () {
     Route::get('/files/lecon/{slug}', [LeconController::class, 'getLeconFile'])->name('files.filesLecon');
     Route::post('/files', [LeconController::class, 'storeFile'])->name('files.store');
     Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
-    Route::post('/api/file-evaluations-lecons', [EvaluationLeconController::class,'storeExcel']);
+    Route::post('/questions-lecons-import', [QuestionLeconController::class,'storeExcel']);
     });
 });
