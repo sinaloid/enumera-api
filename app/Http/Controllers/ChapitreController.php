@@ -35,35 +35,6 @@ class ChapitreController extends Controller
     {
         $data = Chapitre::where("is_deleted",false)->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe","periode")->get();
 
-        if($request->classe && $request->matiere){
-
-            $classe = Classe::where([
-                "slug" =>$request->classe,
-            ])->first();
-            $classe = isset($classe) ? $classe->id:"";
-
-            $matiere = Matiere::where([
-                "slug" =>$request->matiere,
-            ])->first();
-            $matiere = isset($matiere) ? $matiere->id:"";
-
-            $classeMatiere = MatiereDeLaClasse::where([
-                "is_deleted" => false,
-                "classe_id" => $classe,
-                "matiere_id" => $matiere,
-
-            ])->with("classe","matiere")->first();
-            $classeMatiere = isset($classeMatiere) ? $classeMatiere->id:"";
-
-
-        $data = Chapitre::where([
-            "is_deleted" => false,
-            "matiere_de_la_classe_id" => $classeMatiere,
-
-        ])->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe","periode")->get();
-
-        }
-
         /*if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucun chapitre trouvé'], 404);
         }*/
@@ -398,7 +369,7 @@ class ChapitreController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function chapitreMatiereClasse($slugMatiere, $slugClasse,$slugPeriode)
+    public function getChapitreByMatiereClassePeriodeSlug($slugMatiere, $slugClasse,$slugPeriode)
     {
         $matiere = Matiere::where(["slug"=> $slugMatiere, "is_deleted" => false])->first();
 
@@ -432,7 +403,7 @@ class ChapitreController extends Controller
             "matiere_de_la_classe_id"=> $matiereClasse->id,
             "periode_id"=> $periode->id,
             "is_deleted" => false
-            ])->get();
+            ])->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe","periode")->get();
 
         /*if (!$data) {
             return response()->json(['message' => 'Classe non trouvé'], 404);

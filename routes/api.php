@@ -50,8 +50,13 @@ Route::group(['middleware' => ['cors','json.response']], function () {
 
         Route::get('/classes/{slug}/matieres', [ClasseController::class,'getClasseMatiere']);
         Route::get('/classes/{classe}/matieres/{matiere}/chapitres', [ClasseController::class,'getClasseMatiereChapitres']);
-        Route::get('/chapitres/{matiereSlug}/{classeSlug}/{periodeSlug}', [ChapitreController::class,'chapitreMatiereClasse']);
-        Route::get('/lecons/chapitre/{slug}', [LeconController::class,'leconChapitre']);
+
+
+
+        Route::get('/matiere-de-la-classe/classe/{slug}', [MatiereDeLaClasseController::class,'getMatiereDeLaClasseByClasseSlug']);
+        Route::get('/chapitres/{matiereSlug}/{classeSlug}/{periodeSlug}', [ChapitreController::class,'getChapitreByMatiereClassePeriodeSlug']);
+        Route::get('/lecons/chapitre/{slug}', [LeconController::class,'getLeconByChapitreSlug']);
+
 
         Route::resources([
             'utilisateurs' => UtilisateurController::class,

@@ -29,25 +29,13 @@ class LeconController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function index(Request $request)
+    public function index()
     {
         $data = Lecon::where("is_deleted",false)->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe")->get();
 
-        if($request->chapitre){
-
-            $chapitre = Chapitre::where([
-                "slug" =>$request->chapitre,
-            ])->first();
-            $chapitre = isset($chapitre) ? $chapitre->id:"";
-            $data = Lecon::where([
-                "is_deleted" => false,
-                "chapitre_id" => $chapitre,
-            ])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe")->get();
-        }
-
-        /*if ($data->isEmpty()) {
+        if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune leçon trouvée'], 404);
-        }*/
+        }
 
         return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
     }
@@ -142,7 +130,7 @@ class LeconController extends Controller
      */
     public function show($slug)
     {
-        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons")->first();
+        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours")->first();
 
         if (!$data) {
             return response()->json(['message' => 'Leçon non trouvée'], 404);
@@ -396,6 +384,41 @@ class LeconController extends Controller
         return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers enregistrés"], 201);
     }
 
+/**
+     * @OA\Get(
+     *      tags={"Leçons"},
+     *      summary="Liste des leçons",
+     *      description="Retourne la liste des leçons",
+     *      path="/api/lecons",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *     @OA\PathItem (
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getLeconByChapitreSlug($slug)
+    {
+        //$data = Lecon::where("is_deleted",false)->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe")->get();
 
+        $chapitre = Chapitre::where([
+            "slug" =>$slug,
+        ])->first();
+        if (!$chapitre) {
+            return response()->json(['message' => 'Aucun chapitre trouvé'], 404);
+        }
+        $data = Lecon::where([
+            "is_deleted" => false,
+            "chapitre_id" => $chapitre->id,
+        ])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe")->get();
+
+        /*if ($data->isEmpty()) {
+            return response()->json(['message' => 'Aucune leçon trouvée'], 404);
+        }*/
+
+        return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
+    }
 
 }

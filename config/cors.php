@@ -19,9 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*','https://dash.enumera.tech', 'http://dash.enumera.tech'],
+    'allowed_origins' => ['*'],
 
-    'allowed_origins_patterns' => ['/https?:\/\/enumera\.tech\/?\z/'],
+    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
