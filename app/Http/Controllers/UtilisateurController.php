@@ -333,4 +333,36 @@ class UtilisateurController extends Controller
 
         return response()->json(['message' => 'utilisateur supprimé avec succès',"data" => $data]);
     }
+
+
+    /**
+     * @OA\Get(
+     *      tags={"Utilisateurs"},
+     *      summary="Récupère un utilisateur par son slug",
+     *      description="Retourne un utilisateur",
+     *      path="/api/utilisateurs/profile/{slug}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slug",
+     *          in="path",
+     *          description="slug du utilisateur à récupérer",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getUtilisateurByProfile($slug)
+    {
+        $data = User::where(["profile"=> $slug, "is_deleted" => false])->get();
+
+        
+
+        return response()->json(['message' => 'utilisateur trouvé', 'data' => $data], 200);
+    }
 }
