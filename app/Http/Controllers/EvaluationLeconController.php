@@ -342,4 +342,46 @@ class EvaluationLeconController extends Controller
 
         return response()->json(['message' => 'Produits importés avec succès', 'data' => "ok"], 200);
     }
+
+    /**
+     * @OA\Get(
+     *      tags={"Utilisateurs"},
+     *      summary="Récupère un utilisateur par son slug",
+     *      description="Retourne un utilisateur",
+     *      path="/api/utilisateurs/profile/{slug}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slug",
+     *          in="path",
+     *          description="slug du utilisateur à récupérer",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getEvaluationByLeconSlug($slug)
+    {
+        $lecon = Lecon::where([
+            "slug" =>$slug,
+        ])->first();
+        if (!$lecon) {
+            return response()->json(['message' => 'Aucune lecon trouvée'], 404);
+        }
+        $data = EvaluationLecon::where([
+            "is_deleted" => false,
+            "lecon_id" => $lecon->id,
+        ])->with("question_lecons")->get();
+
+        /*if ($data->isEmpty()) {
+            return response()->json(['message' => 'Aucune leçon trouvée'], 404);
+        }*/
+
+        return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
+    }
 }

@@ -22,4 +22,8 @@ class EvaluationLecon extends Model
 
         return $this->belongsTo(Lecon::class);
     }
+
+    public function question_lecons() {
+        return $this->hasMany(QuestionLecon::class);
+    }
 }

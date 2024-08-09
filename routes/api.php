@@ -57,7 +57,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::get('/chapitres/{matiereSlug}/{classeSlug}/{periodeSlug}', [ChapitreController::class,'getChapitreByMatiereClassePeriodeSlug']);
         Route::get('/lecons/chapitre/{slug}', [LeconController::class,'getLeconByChapitreSlug']);
         Route::get('/utilisateurs/profile/{slug}', [UtilisateurController::class,'getUtilisateurByProfile']);
-
+        Route::get('/evaluations-lecons/lecon/{slug}', [EvaluationLeconController::class,'getEvaluationByLeconSlug']);
 
         Route::resources([
             'utilisateurs' => UtilisateurController::class,
