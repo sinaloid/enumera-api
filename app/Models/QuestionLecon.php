@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class QuestionLecon extends Model
 {
     use HasFactory;
+    
     protected $fillable = [
         "question",
         "choix",

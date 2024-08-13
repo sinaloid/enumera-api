@@ -17,7 +17,7 @@ class Matiere extends Model
         "is_deleted",
     ];
 
-    public function matiereDeLaClasse(){
+    public function matiereDeLaClasses(){
 
         return $this->hasMany(MatiereDeLaClasse::class);
     }

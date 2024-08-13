@@ -329,12 +329,131 @@ class ChapitreController extends Controller
     }
 
 
+     /**
+     * @OA\Get(
+     *      tags={"Chapitres"},
+     *      summary="Récupération la liste des chapitres en fonction d'une classe",
+     *      description="Retourne la liste des chapitres chapitres en fonction d'une classe",
+     *      path="/api/chapitres/classe/{slugClasse}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getChapitreByClasse($slugClasse)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $chapitres = Chapitre::whereHas('matiereDeLaClasse.classe', function($query) use ($slugClasse){
+            $query->where([
+                'slug'=>$slugClasse,
+                'is_deleted'=>false
+            ]);
+       })->with(['periode', 'matiereDeLaClasse.matiere', 'matiereDeLaClasse.classe'])->get();
+
+       return response()->json(['message' => 'Chapitres trouvés', 'data' => $chapitres], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Chapitres"},
+     *      summary="Récupération la liste des chapitres en fonction d'une periode",
+     *      description="Retourne la liste des chapitres chapitres en fonction d'une periode",
+     *      path="/api/chapitres/periode/{slugPeriode}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getChapitreByPeriode($slugPeriode)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $chapitres = Chapitre::whereHas('periode', function($query) use ($slugPeriode){
+            $query->where([
+                'slug'=>$slugPeriode,
+                'is_deleted'=>false
+            ]);
+       })->with(['periode', 'matiereDeLaClasse.matiere', 'matiereDeLaClasse.classe'])->get();
+
+       return response()->json(['message' => 'Chapitres trouvés', 'data' => $chapitres], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Chapitres"},
+     *      summary="Récupération la liste des chapitres en fonction d'une periode et d'une classe",
+     *      description="Retourne la liste des chapitres chapitres en fonction d'une periode et d'une classe",
+     *      path="/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getChapitreByPeriodeClasse($slugClasse,$slugPeriode)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $chapitres = Chapitre::whereHas("matiereDeLaClasse.classe", function($query) use ($slugClasse){
+            $query->where([
+                "slug" => $slugClasse,
+                "is_deleted" => false,
+            ]);
+       })->whereHas('periode', function($query) use ($slugPeriode){
+            $query->where([
+                'slug'=>$slugPeriode,
+                'is_deleted'=>false
+            ]);
+       })->with(['periode', 'matiereDeLaClasse.matiere', 'matiereDeLaClasse.classe'])->get();
+
+       return response()->json(['message' => 'Chapitres trouvés', 'data' => $chapitres], 200);
+    }
+
     /**
      * @OA\Get(
      *      tags={"Chapitres"},
      *      summary="Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une periode",
      *      description="Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une periode",
-     *      path="/api/chapitres/{slugMatiere}/{slugClasse}/{slugPeriode}",
+     *      path="/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}/matiere/{slugMatiere}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -369,46 +488,31 @@ class ChapitreController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function getChapitreByMatiereClassePeriodeSlug($slugMatiere, $slugClasse,$slugPeriode)
+    public function getChapitreByPeriodeClasseMatiere($slugClasse, $slugPeriode, $slugMatiere)
     {
-        $matiere = Matiere::where(["slug"=> $slugMatiere, "is_deleted" => false])->first();
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $matiereClasse = MatiereDeLaClasse::whereHas('matiere', function ($query) use ($slugMatiere) {
+           $query->where('slug', $slugMatiere)
+                 ->where('is_deleted', false);
+       })->whereHas('classe', function ($query) use ($slugClasse) {
+           $query->where('slug', $slugClasse)
+                 ->where('is_deleted', false);
+       })->whereHas('chapitres.periode', function ($query) use ($slugPeriode) {
+           $query->where('slug', $slugPeriode)
+                 ->where('is_deleted', false);
+       })->with(['chapitres' => function ($query) use ($slugPeriode) {
+           $query->whereHas('periode', function ($query) use ($slugPeriode) {
+               $query->where('slug', $slugPeriode)
+                     ->where('is_deleted', false);
+           })->where('is_deleted', false)
+             ->with(['periode', 'matiereDeLaClasse.matiere', 'matiereDeLaClasse.classe']);
+       }])->first();
 
-        if (!$matiere) {
-            return response()->json(['message' => 'Matière non trouvé'], 404);
-        }
+       if (!$matiereClasse || $matiereClasse->chapitres->isEmpty()) {
+           return response()->json(['message' => 'Aucun chapitre trouvé pour les critères fournis', 'data' => []], 200);
+       }
 
-        $classe = Classe::where(["slug"=> $slugClasse, "is_deleted" => false])->first();
-
-        if (!$classe) {
-            return response()->json(['message' => 'Classe non trouvé'], 404);
-        }
-
-        $matiereClasse = MatiereDeLaClasse::where([
-            "matiere_id"=> $matiere->id,
-            "classe_id"=> $classe->id,
-            "is_deleted" => false
-        ])->first();
-
-        if (!$matiereClasse) {
-            return response()->json(['message' => "La matière n'existe pas dans la classe "], 404);
-        }
-
-        $periode = Periode::where(["slug"=> $slugPeriode, "is_deleted" => false])->first();
-
-        if (!$periode) {
-            return response()->json(['message' => 'Periode non trouvée'], 404);
-        }
-
-        $data = Chapitre::where([
-            "matiere_de_la_classe_id"=> $matiereClasse->id,
-            "periode_id"=> $periode->id,
-            "is_deleted" => false
-            ])->with("matiereDeLaClasse.matiere","matiereDeLaClasse.classe","periode")->get();
-
-        /*if (!$data) {
-            return response()->json(['message' => 'Classe non trouvé'], 404);
-        }*/
-        // qz3Vvi26KY/1Dk3XSAPFg/Qhxt0fyHi3 /AYMVxEB8uZ
-        return response()->json(['message' => 'Chapitres trouvée', 'data' => $data], 200);
+       return response()->json(['message' => 'Chapitres trouvés', 'data' => $matiereClasse->chapitres], 200);
     }
+
 }

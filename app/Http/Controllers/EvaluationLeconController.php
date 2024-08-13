@@ -345,10 +345,10 @@ class EvaluationLeconController extends Controller
 
     /**
      * @OA\Get(
-     *      tags={"Utilisateurs"},
-     *      summary="Récupère un utilisateur par son slug",
-     *      description="Retourne un utilisateur",
-     *      path="/api/utilisateurs/profile/{slug}",
+     *      tags={"Evaluations"},
+     *      summary="Récupère la liste des evaluations en fonction du slug d'une leçon",
+     *      description="Retourne la liste des evaluations",
+     *      path="/api/evaluations-lecons/profile/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",

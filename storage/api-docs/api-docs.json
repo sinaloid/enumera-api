@@ -1000,14 +1000,116 @@
                 ]
             }
         },
-        "/api/chapitres/{slugMatiere}/{slugClasse}/{slugPeriode}": {
+        "/api/chapitres/classe/{slugClasse}": {
+            "get": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Récupération la liste des chapitres en fonction d'une classe",
+                "description": "Retourne la liste des chapitres chapitres en fonction d'une classe",
+                "operationId": "e957159ed44a66e4fc093aec45021c51",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chapitres/periode/{slugPeriode}": {
+            "get": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Récupération la liste des chapitres en fonction d'une periode",
+                "description": "Retourne la liste des chapitres chapitres en fonction d'une periode",
+                "operationId": "7d854f27712b12828a48e5a89e092060",
+                "parameters": [
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}": {
+            "get": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Récupération la liste des chapitres en fonction d'une periode et d'une classe",
+                "description": "Retourne la liste des chapitres chapitres en fonction d'une periode et d'une classe",
+                "operationId": "1f9bbdbba3b58864e3cc069f5679aea1",
+                "parameters": [
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}/matiere/{slugMatiere}": {
             "get": {
                 "tags": [
                     "Chapitres"
                 ],
                 "summary": "Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une periode",
                 "description": "Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une periode",
-                "operationId": "78420aa2a7de197680f1cfe61a34ff24",
+                "operationId": "a47946db9fb9c12b65d00497e2379618",
                 "parameters": [
                     {
                         "name": "slugMatiere",
@@ -2235,6 +2337,37 @@
                 ]
             }
         },
+        "/api/evaluations-lecons/profile/{slug}": {
+            "get": {
+                "tags": [
+                    "Evaluations"
+                ],
+                "summary": "Récupère la liste des evaluations en fonction du slug d'une leçon",
+                "description": "Retourne la liste des evaluations",
+                "operationId": "197554319834a16c260ab52e84ede062",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du utilisateur à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/lecons": {
             "get": {
                 "tags": [
@@ -2584,6 +2717,204 @@
                 ]
             }
         },
+        "/api/lecons/chapitre/{slugChapitre}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Liste des leçons",
+                "description": "Retourne la liste des leçons",
+                "operationId": "860f94db62796d372a2cf2050fbac236",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/lecons/classe/{slugClasse}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Récupération la liste des leçons en fonction d'une classe",
+                "description": "Retourne la liste des leçons en fonction d'une classe",
+                "operationId": "872d5b84916e86679247e8bd04efb301",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/lecons/classe/{slugClasse}/periode/{slugPeriode}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Récupération la liste des leçons en fonction d'une classe et d'une periode",
+                "description": "Retourne la liste des leçons en fonction d'une classe et d'une periode",
+                "operationId": "345535782a5029e8cbd130e949449681",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/lecons/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Récupération la liste des leçons en fonction d'une classe, d'une periode et d'une matière",
+                "description": "Retourne la liste des leçons en fonction d'une classe, d'une periode et d'une matière",
+                "operationId": "0191178a36f0e6082cb36fad2599c520",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugMatiere",
+                        "in": "path",
+                        "description": "slug de la matiere",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/lecons/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}/chapitre/{slugChapitre}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Récupération la liste des leçons en fonction d'une classe, d'une periode, d'une matière et d'un chapitre",
+                "description": "Retourne la liste des leçons en fonction d'une classe, d'une periode, d'une matière et d'un chapitre",
+                "operationId": "3e4bcba2d60ea39ef7846273e89099c2",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugMatiere",
+                        "in": "path",
+                        "description": "slug de la matiere",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugChapitre",
+                        "in": "path",
+                        "description": "slug du chapitre",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/matieres": {
             "get": {
                 "tags": [
@@ -2891,6 +3222,37 @@
                 ]
             }
         },
+        "/api/matieres/classe/{slugClasse}": {
+            "get": {
+                "tags": [
+                    "Matières"
+                ],
+                "summary": "Récupération la liste des matières en fonction d'une classe",
+                "description": "Retourne la liste des matières en fonction d'une classe",
+                "operationId": "ca0879e3ce84965880f59344bfd478f9",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/matiere-de-la-classe": {
             "get": {
                 "tags": [
@@ -3181,6 +3543,37 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/matiere-de-la-classe/classe/{slug}": {
+            "get": {
+                "tags": [
+                    "Matières de la classe"
+                ],
+                "summary": "Liste des matières de la classe",
+                "description": "Retourne la liste des matières de la classe",
+                "operationId": "c0172371b5ef6c663a2fbf7ce52fb97b",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la classe à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
                     }
                 },
                 "security": [
@@ -4252,6 +4645,37 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/profilep/{slug}": {
+            "get": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Récupère un utilisateur par son slug",
+                "description": "Retourne la liste des utilisateurs",
+                "operationId": "725d86ce7451e8c8e66c9c29e063626b",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du utilisateur à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
                     }
                 },
                 "security": [

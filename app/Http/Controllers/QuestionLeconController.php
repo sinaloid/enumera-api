@@ -342,6 +342,8 @@ class QuestionLeconController extends Controller
             return response()->json(['message' => 'Evaluation leçon non trouvée'], 404);
         }
 
+        //dd($evaluation_lecon);
+
         $qcmName = Str::random(10) . '.' . $request->qcm->getClientOriginalExtension();
 
             // Enregistrer l'image dans le dossier public/images

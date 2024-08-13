@@ -6,6 +6,7 @@ use App\Models\QuestionLecon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Str;
 
+
 class QuestionLeconImport implements ToModel
 {
     protected $evaluation_lecon;
@@ -14,7 +15,6 @@ class QuestionLeconImport implements ToModel
         //
         $this->evaluation_lecon = $evaluation_lecon;
     }
-
     /**
     * @param array $row
     *
@@ -22,8 +22,7 @@ class QuestionLeconImport implements ToModel
     */
     public function model(array $row)
     {
-        //dd($this->evaluation_lecon);
-        if($row[0] !=="Question" && $row[1] !=="Type"){
+        if($row[0] && $row[0] !=="Question" && $row[1] !=="Type"){
             return new QuestionLecon([
                 'question'     => $row[0],
                 'type'    => $row[1],

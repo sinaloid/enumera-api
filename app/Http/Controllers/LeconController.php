@@ -384,12 +384,12 @@ class LeconController extends Controller
         return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers enregistrés"], 201);
     }
 
-/**
+    /**
      * @OA\Get(
      *      tags={"Leçons"},
      *      summary="Liste des leçons",
      *      description="Retourne la liste des leçons",
-     *      path="/api/lecons",
+     *      path="/api/lecons/chapitre/{slugChapitre}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -419,6 +419,263 @@ class LeconController extends Controller
         }*/
 
         return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
+    }
+
+
+    /**
+     * @OA\Get(
+     *      tags={"Leçons"},
+     *      summary="Récupération la liste des leçons en fonction d'une classe",
+     *      description="Retourne la liste des leçons en fonction d'une classe",
+     *      path="/api/lecons/classe/{slugClasse}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getLeconByClasse($slugClasse)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $lecons = Lecon::whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
+            $query->where([
+                'slug'=>$slugClasse,
+                'is_deleted'=>false
+            ]);
+       })->with(["chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons"])->get();
+
+       return response()->json(['message' => 'Leçons trouvés', 'data' => $lecons], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Leçons"},
+     *      summary="Récupération la liste des leçons en fonction d'une classe et d'une periode",
+     *      description="Retourne la liste des leçons en fonction d'une classe et d'une periode",
+     *      path="/api/lecons/classe/{slugClasse}/periode/{slugPeriode}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getLeconByClassePeriode($slugClasse, $slugPeriode)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $lecons = Lecon::whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
+                $query->where([
+                    'slug'=>$slugClasse,
+                    'is_deleted'=>false
+                ]);
+        })->whereHas('chapitre.periode', function($query) use ($slugPeriode){
+            $query->where([
+                'slug'=>$slugPeriode,
+                'is_deleted'=>false
+            ]);
+       })->with(["chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons"])->get();
+
+       return response()->json(['message' => 'Leçons trouvés', 'data' => $lecons], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Leçons"},
+     *      summary="Récupération la liste des leçons en fonction d'une classe, d'une periode et d'une matière",
+     *      description="Retourne la liste des leçons en fonction d'une classe, d'une periode et d'une matière",
+     *      path="/api/lecons/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugMatiere",
+     *          in="path",
+     *          description="slug de la matiere",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getLeconByClassePeriodeMatiere($slugClasse, $slugPeriode, $slugMatiere)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $lecons = Lecon::whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
+                $query->where([
+                    'slug'=>$slugClasse,
+                    'is_deleted'=>false
+                ]);
+        })->whereHas('chapitre.matiereDeLaClasse.matiere', function($query) use ($slugMatiere){
+            $query->where([
+                'slug'=>$slugMatiere,
+                'is_deleted'=>false
+            ]);
+        })->whereHas('chapitre.periode', function($query) use ($slugPeriode){
+            $query->where([
+                'slug'=>$slugPeriode,
+                'is_deleted'=>false
+            ]);
+       })->with(["chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons"])->get();
+
+       return response()->json(['message' => 'Leçons trouvés', 'data' => $lecons], 200);
+    }
+//xAvCTKLs7Y
+    /**
+     * @OA\Get(
+     *      tags={"Leçons"},
+     *      summary="Récupération la liste des leçons en fonction d'une classe, d'une periode, d'une matière et d'un chapitre",
+     *      description="Retourne la liste des leçons en fonction d'une classe, d'une periode, d'une matière et d'un chapitre",
+     *      path="/api/lecons/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}/chapitre/{slugChapitre}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugMatiere",
+     *          in="path",
+     *          description="slug de la matiere",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugChapitre",
+     *          in="path",
+     *          description="slug du chapitre",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getLeconByClassePeriodeMatiereChapitre($slugClasse, $slugPeriode, $slugMatiere, $slugChapitre)
+{
+    // Récupère les leçons en fonction des conditions sur chapitre, matière, classe et période
+    $lecons = Lecon::whereHas('chapitre', function($query) use ($slugChapitre, $slugClasse, $slugMatiere, $slugPeriode) {
+        $query->where('slug', $slugChapitre)
+              ->where('is_deleted', false)
+              ->whereHas('matiereDeLaClasse.classe', function($q) use ($slugClasse) {
+                  $q->where('slug', $slugClasse)
+                    ->where('is_deleted', false);
+              })
+              ->whereHas('matiereDeLaClasse.matiere', function($q) use ($slugMatiere) {
+                  $q->where('slug', $slugMatiere)
+                    ->where('is_deleted', false);
+              })
+              ->whereHas('periode', function($q) use ($slugPeriode) {
+                  $q->where('slug', $slugPeriode)
+                    ->where('is_deleted', false);
+              });
+    })
+    ->with([
+        'chapitre.periode',
+        'chapitre.matiereDeLaClasse.matiere',
+        'chapitre.matiereDeLaClasse.classe',
+        'cours',
+        'evaluations_lecons'
+    ])
+    ->get();
+
+    // Retourne les leçons trouvées
+    return response()->json(['message' => 'Leçons trouvées', 'data' => $lecons], 200);
+}
+
+    public function getLeconByClassePeriodeMatiereChapitre_old($slugClasse, $slugPeriode, $slugMatiere, $slugChapitre)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $lecons = Lecon::whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
+                $query->where([
+                    'slug'=>$slugClasse,
+                    'is_deleted'=>false
+                ]);
+        })->whereHas('chapitre.matiereDeLaClasse.matiere', function($query) use ($slugMatiere){
+            $query->where([
+                'slug'=>$slugMatiere,
+                'is_deleted'=>false
+            ]);
+        })->whereHas('chapitre.periode', function($query) use ($slugPeriode){
+            $query->where([
+                'slug'=>$slugPeriode,
+                'is_deleted'=>false
+            ]);
+       })->whereHas('chapitre', function($query) use ($slugChapitre){
+        $query->where([
+            'slug'=>$slugChapitre,
+            'is_deleted'=>false
+        ]);
+    })->with(["chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons"])->get();
+
+       return response()->json(['message' => 'Leçons trouvés', 'data' => $lecons], 200);
     }
 
 }

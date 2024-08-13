@@ -26,7 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('evaluation_lecon_id');
             $table->foreign('evaluation_lecon_id')
                     ->references('id')
-                    ->on('lecons')
+                    ->on('evaluation_lecons')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
             $table->timestamps();

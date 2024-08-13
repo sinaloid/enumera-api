@@ -339,8 +339,8 @@ class UtilisateurController extends Controller
      * @OA\Get(
      *      tags={"Utilisateurs"},
      *      summary="Récupère un utilisateur par son slug",
-     *      description="Retourne un utilisateur",
-     *      path="/api/utilisateurs/profile/{slug}",
+     *      description="Retourne la liste des utilisateurs",
+     *      path="/api/utilisateurs/profilep/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -361,7 +361,7 @@ class UtilisateurController extends Controller
     {
         $data = User::where(["profile"=> $slug, "is_deleted" => false])->get();
 
-        
+
 
         return response()->json(['message' => 'utilisateur trouvé', 'data' => $data], 200);
     }
