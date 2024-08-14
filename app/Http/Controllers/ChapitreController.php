@@ -271,7 +271,7 @@ class ChapitreController extends Controller
         $data->update([
             'label' => $request->input('label'),
             'periode_id' => $periode->id,
-            'matiere_de_la_classe' => $matiereClasse->id,
+            'matiere_de_la_classe_id' => $matiereClasse->id,
             'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
         ]);
