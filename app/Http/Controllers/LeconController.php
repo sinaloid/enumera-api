@@ -198,7 +198,7 @@ class LeconController extends Controller
             'label' => 'required|string|max:255',
             'chapitre' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
-            'description' => 'nullable|string|max:10000',
+            'description' => 'nullable|string',
 
         ]);
 
