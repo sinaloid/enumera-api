@@ -16,6 +16,7 @@ use App\Http\Controllers\EvaluationLeconController;
 use App\Http\Controllers\QuestionLeconController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,5 +98,6 @@ Route::group(['middleware' => ['cors','json.response']], function () {
     Route::post('/files', [LeconController::class, 'storeFile'])->name('files.store');
     Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
     Route::post('/questions-lecons-import', [QuestionLeconController::class,'storeExcel']);
+    Route::post('/convert-doc-to-html', [DocumentController::class, 'convertDocumentToHtml']);
     });
 });

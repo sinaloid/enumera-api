@@ -82,15 +82,15 @@ class ChatController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
         $message = "what is laravel";
         $response = $this->httpClient->post('chat/completions', [
             'json' => [
                 'model' => 'gpt-3.5-turbo',
                 'messages' => [
-                    ['role' => 'system', 'content' => 'You are'],
-                    ['role' => 'user', 'content' => $message],
+                    ['role' => 'system', 'content' => 'You are a teacher'],
+                    ['role' => 'user', 'content' => $request->message],
                 ],
             ],
         ]);
