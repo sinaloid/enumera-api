@@ -10,6 +10,7 @@ class MatiereDeLaClasse extends Model
     use HasFactory;
 
     protected $fillable = [
+        "coefficient",
         "slug",
         "is_deleted",
         "matiere_id",

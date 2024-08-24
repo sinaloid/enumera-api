@@ -28,12 +28,12 @@ return new class extends Migration
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
 
-            $table->unsignedBigInteger('periode_id');
+            /*$table->unsignedBigInteger('periode_id');
             $table->foreign('periode_id')
                     ->references('id')
                     ->on('periodes')
                     ->onDelete('cascade')
-                    ->onUpdate('cascade');
+                    ->onUpdate('cascade');*/
             $table->timestamps();
         });
     }

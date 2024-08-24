@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detail_classes', function (Blueprint $table) {
+        Schema::create('user_classes', function (Blueprint $table) {
             $table->id();
             $table->string("slug");
+            $table->string("matieres")->nullable(); // liste d'id de matières separer par des virgules
             $table->boolean('is_deleted')->default(false);
 
             $table->unsignedBigInteger('user_id');

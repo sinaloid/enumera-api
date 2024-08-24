@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('matiere_de_la_classes', function (Blueprint $table) {
             $table->id();
 
+            $table->string("coefficient")->nullable();
             $table->string("slug");
             $table->boolean('is_deleted')->default(false);
 

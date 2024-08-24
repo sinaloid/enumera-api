@@ -52,6 +52,7 @@ class MatiereDeLaClasseController extends Controller
      *             required={"classe","matiere"},
      *             @OA\Property(property="classe", type="string", example="slug de la classe"),
      *             @OA\Property(property="matiere", type="string", example="slug de la matière"),
+     *             @OA\Property(property="coefficient", type="string", example="coefficient de la matière"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -79,6 +80,7 @@ class MatiereDeLaClasseController extends Controller
         $validator = Validator::make($request->all(), [
             'classe' => 'required|string|max:10',
             'matiere' => 'required|string|max:10',
+            'coefficient' => 'required|string|max:3',
         ]);
 
         if ($validator->fails()) {
@@ -100,6 +102,7 @@ class MatiereDeLaClasseController extends Controller
         $data = MatiereDeLaClasse::create([
             'classe_id' => $classe->id,
             'matiere_id' => $matiere->id,
+            'coefficient' => $request->coefficient,
             'slug' => Str::random(10),
         ]);
 
@@ -151,6 +154,7 @@ class MatiereDeLaClasseController extends Controller
      *             required={"classe","matiere"},
      *             @OA\Property(property="classe", type="string", example="slug de la classe"),
      *             @OA\Property(property="matiere", type="string", example="slug de la matiere"),
+     *             @OA\Property(property="coefficient", type="string", example="coefficient de la matiere"),
      *         ),
      *     ),
      *      @OA\Parameter(
@@ -195,6 +199,7 @@ class MatiereDeLaClasseController extends Controller
         $validator = Validator::make($request->all(), [
             'classe' => 'required|string|max:10',
             'matiere' => 'required|string|max:10',
+            'coefficient' => 'required|string|max:3',
         ]);
 
         if ($validator->fails()) {
@@ -222,6 +227,7 @@ class MatiereDeLaClasseController extends Controller
         $data->update([
             'classe_id' => $classe->id,
             'matiere_id' => $matiere->id,
+            'coefficient' => $request->coefficient
         ]);
 
         return response()->json(['message' => 'Matière de la classe modifié avec succès', 'data' => $data], 200);

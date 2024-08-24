@@ -28,6 +28,13 @@ return new class extends Migration
                     ->on('chapitres')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
+                    
+            $table->unsignedBigInteger('periode_id');
+            $table->foreign('periode_id')
+                    ->references('id')
+                    ->on('periodes')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
             $table->timestamps();
         });
     }
