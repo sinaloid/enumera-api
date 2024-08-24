@@ -712,10 +712,6 @@
                                         "type": "string",
                                         "example": "Histoire du Burkina Faso"
                                     },
-                                    "periode": {
-                                        "type": "string",
-                                        "example": "slug de la periode"
-                                    },
                                     "matiere": {
                                         "type": "string",
                                         "example": "slug de la matiere"
@@ -847,10 +843,6 @@
                                     "label": {
                                         "type": "string",
                                         "example": "Histoire du Burkina Faso"
-                                    },
-                                    "periode": {
-                                        "type": "string",
-                                        "example": "slug de la periode"
                                     },
                                     "matiereClasse": {
                                         "type": "string",
@@ -1031,85 +1023,14 @@
                 ]
             }
         },
-        "/api/chapitres/periode/{slugPeriode}": {
-            "get": {
-                "tags": [
-                    "Chapitres"
-                ],
-                "summary": "Récupération la liste des chapitres en fonction d'une periode",
-                "description": "Retourne la liste des chapitres chapitres en fonction d'une periode",
-                "operationId": "7d854f27712b12828a48e5a89e092060",
-                "parameters": [
-                    {
-                        "name": "slugPeriode",
-                        "in": "path",
-                        "description": "slug de la periode",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}": {
-            "get": {
-                "tags": [
-                    "Chapitres"
-                ],
-                "summary": "Récupération la liste des chapitres en fonction d'une periode et d'une classe",
-                "description": "Retourne la liste des chapitres chapitres en fonction d'une periode et d'une classe",
-                "operationId": "1f9bbdbba3b58864e3cc069f5679aea1",
-                "parameters": [
-                    {
-                        "name": "slugPeriode",
-                        "in": "path",
-                        "description": "slug de la periode",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "slugClasse",
-                        "in": "path",
-                        "description": "slug de la classe",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}/matiere/{slugMatiere}": {
+        "/api/chapitres/classe/{slugClasse}/matiere/{slugMatiere}": {
             "get": {
                 "tags": [
                     "Chapitres"
                 ],
                 "summary": "Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une periode",
                 "description": "Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une periode",
-                "operationId": "a47946db9fb9c12b65d00497e2379618",
+                "operationId": "74120caa24d06bcd113f71a0ccda9ef2",
                 "parameters": [
                     {
                         "name": "slugMatiere",
@@ -1124,15 +1045,6 @@
                         "name": "slugClasse",
                         "in": "path",
                         "description": "slug de la classe",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "slugPeriode",
-                        "in": "path",
-                        "description": "slug de la periode",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2418,6 +2330,10 @@
                                         "type": "string",
                                         "example": "Slug du chapitre"
                                     },
+                                    "periode": {
+                                        "type": "string",
+                                        "example": "slug de la periode"
+                                    },
                                     "description": {
                                         "type": "string",
                                         "example": "Lorem ipsum lores ipomd"
@@ -2537,6 +2453,10 @@
                                     "label": {
                                         "type": "string",
                                         "example": "Histoire des royaumes moose"
+                                    },
+                                    "periode": {
+                                        "type": "string",
+                                        "example": "slug de la periode"
                                     },
                                     "abreviation": {
                                         "type": "string",
@@ -2699,6 +2619,77 @@
                         "name": "slug",
                         "in": "path",
                         "description": "slug du chapitre",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/lecons/periode/{slugPeriode}": {
+            "get": {
+                "tags": [
+                    "Leçons"
+                ],
+                "summary": "Récupération la liste des leçons en fonction d'une periode",
+                "description": "Retourne la liste des leçons chapitres en fonction d'une periode",
+                "operationId": "8515b4e6e4294be94050936539defd6a",
+                "parameters": [
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}": {
+            "get": {
+                "tags": [
+                    "leçons"
+                ],
+                "summary": "Récupération la liste des chapitres en fonction d'une periode et d'une classe",
+                "description": "Retourne la liste des chapitres chapitres en fonction d'une periode et d'une classe",
+                "operationId": "0ca155d6e1d0f8d65b8f843c4afd8736",
+                "parameters": [
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3296,6 +3287,10 @@
                                     "matiere": {
                                         "type": "string",
                                         "example": "slug de la matière"
+                                    },
+                                    "coefficient": {
+                                        "type": "string",
+                                        "example": "coefficient de la matière"
                                     }
                                 },
                                 "type": "object"
@@ -3415,6 +3410,10 @@
                                     "matiere": {
                                         "type": "string",
                                         "example": "slug de la matiere"
+                                    },
+                                    "coefficient": {
+                                        "type": "string",
+                                        "example": "coefficient de la matiere"
                                     }
                                 },
                                 "type": "object"

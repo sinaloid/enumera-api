@@ -53,6 +53,7 @@ class LeconController extends Controller
      *             @OA\Property(property="label", type="string", example="Histoire des royaumes moose"),
      *             @OA\Property(property="abreviation", type="string", example="Histoire des royaumes moose"),
      *             @OA\Property(property="chapitre", type="string", example="Slug du chapitre"),
+     *             @OA\Property(property="periode", type="string", example="slug de la periode"),
      *             @OA\Property(property="description", type="string", example="Lorem ipsum lores ipomd")
      *         ),
      *     ),
@@ -81,6 +82,7 @@ class LeconController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'chapitre' => 'required|string|max:10',
+            'periode' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string|max:10000',
 
@@ -94,11 +96,16 @@ class LeconController extends Controller
         if (!$chapitre) {
             return response()->json(['message' => 'Chapitre non trouvé'], 404);
         }
+        $periode = Periode::where(["slug" => $request->periode,"is_deleted" => false])->first();
+        if(!$periode){
+            return response()->json(['message' => 'Periode non trouvée'], 404);
+        }
 
         $data = Lecon::create([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
             'chapitre_id' => $chapitre->id,
+            'periode_id' => $periode->id,
             'description' => $request->input('description'),
             'slug' => Str::random(10),
         ]);
@@ -150,6 +157,7 @@ class LeconController extends Controller
      *         @OA\JsonContent(
      *             required={"label","abreviation","chapitre"},
      *             @OA\Property(property="label", type="string", example="Histoire des royaumes moose"),
+     *             @OA\Property(property="periode", type="string", example="slug de la periode"),
      *             @OA\Property(property="abreviation", type="string", example="Histoire des royaumes moose"),
      *             @OA\Property(property="chapitre", type="string", example="Slug du chapitre"),
      *             @OA\Property(property="description", type="string", example="Lorem ipsum lores ipomd")
@@ -197,6 +205,7 @@ class LeconController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'chapitre' => 'required|string|max:10',
+            'periode' => 'required|string|max:10',
             'abreviation' => 'required|string|max:255',
             'description' => 'nullable|string',
 
@@ -210,7 +219,11 @@ class LeconController extends Controller
         if (!$chapitre) {
             return response()->json(['message' => 'Chapitre non trouvé'], 404);
         }
+        $periode = Periode::where(["slug" => $request->periode,"is_deleted" => false])->first();
 
+        if(!$periode){
+            return response()->json(['message' => 'Periode non trouvée'], 404);
+        }
 
         $data = Lecon::where("slug", $slug)->where("is_deleted",false)->first();
 
@@ -221,6 +234,7 @@ class LeconController extends Controller
         $data->update([
             'label' => $request->input('label'),
             'chapitre_id' => $chapitre->id,
+            'periode_id' => $periode->id,
             'abreviation' => $request->input('abreviation'),
             'description' => $request->input('description'),
         ]);
@@ -382,6 +396,89 @@ class LeconController extends Controller
         }
 
         return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers enregistrés"], 201);
+    }
+    /**
+     * @OA\Get(
+     *      tags={"Leçons"},
+     *      summary="Récupération la liste des leçons en fonction d'une periode",
+     *      description="Retourne la liste des leçons chapitres en fonction d'une periode",
+     *      path="/api/lecons/periode/{slugPeriode}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getLeconByPeriode($slugPeriode)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $lecons = Lecon::whereHas('periode', function($query) use ($slugPeriode){
+            $query->where([
+                'slug'=>$slugPeriode,
+                'is_deleted'=>false
+            ]);
+       })->with(['periode', 'chapitre.matiereDeLaClasse.matiere', 'chapitre.matiereDeLaClasse.classe'])->get();
+
+       return response()->json(['message' => 'Leçons trouvés', 'data' => $lecons], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"leçons"},
+     *      summary="Récupération la liste des chapitres en fonction d'une periode et d'une classe",
+     *      description="Retourne la liste des chapitres chapitres en fonction d'une periode et d'une classe",
+     *      path="/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getChapitreByPeriodeClasse($slugClasse,$slugPeriode)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $chapitres = Chapitre::whereHas("matiereDeLaClasse.classe", function($query) use ($slugClasse){
+            $query->where([
+                "slug" => $slugClasse,
+                "is_deleted" => false,
+            ]);
+       })->whereHas('periode', function($query) use ($slugPeriode){
+            $query->where([
+                'slug'=>$slugPeriode,
+                'is_deleted'=>false
+            ]);
+       })->with(['periode', 'matiereDeLaClasse.matiere', 'matiereDeLaClasse.classe'])->get();
+
+       return response()->json(['message' => 'Chapitres trouvés', 'data' => $chapitres], 200);
     }
 
     /**

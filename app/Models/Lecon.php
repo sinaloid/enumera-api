@@ -17,6 +17,8 @@ class Lecon extends Model
         "slug",
         "is_deleted",
         "chapitre_id",
+        "periode_id",
+
     ];
 
     public function chapitre() {
@@ -31,5 +33,10 @@ class Lecon extends Model
     public function evaluations_lecons() {
 
         return $this->hasMany(EvaluationLecon::class);
+    }
+
+    public function periode() {
+
+        return $this->belongsTo(Periode::class);
     }
 }

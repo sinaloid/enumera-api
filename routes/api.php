@@ -55,7 +55,6 @@ Route::group(['middleware' => ['cors','json.response']], function () {
 
 
         Route::get('/matiere-de-la-classe/classe/{slug}', [MatiereDeLaClasseController::class,'getMatiereDeLaClasseByClasseSlug']);
-        Route::get('/lecons/chapitre/{slug}', [LeconController::class,'getLeconByChapitreSlug']);
         Route::get('/utilisateurs/profile/{slug}', [UtilisateurController::class,'getUtilisateurByProfile']);
         Route::get('/evaluations-lecons/lecon/{slug}', [EvaluationLeconController::class,'getEvaluationByLeconSlug']);
 
@@ -66,15 +65,17 @@ Route::group(['middleware' => ['cors','json.response']], function () {
 
         /**Chapitres */
         Route::get('/chapitres/classe/{slugClasse}', [ChapitreController::class,'getChapitreByClasse']);
-        Route::get('/chapitres/periode/{slugPeriode}', [ChapitreController::class,'getChapitreByPeriode']);
-        Route::get('/chapitres/classe/{slugClasse}/periode/{slugPeriode}', [ChapitreController::class,'getChapitreByPeriodeClasse']);
-        Route::get('/chapitres/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}', [ChapitreController::class,'getChapitreByPeriodeClasseMatiere']);
+        Route::get('/chapitres/classe/{slugClasse}/matiere/{slugMatiere}', [ChapitreController::class,'getChapitreByClasseMatiere']);
 
         /**Leçons */
+        Route::get('/lecons/chapitre/{slug}', [LeconController::class,'getLeconByChapitreSlug']);
+        Route::get('/lecons/periode/{slugPeriode}', [LeconController::class,'getLeconByPeriode']);
         Route::get('/lecons/classe/{slugClasse}', [LeconController::class,'getLeconByClasse']);
         Route::get('/lecons/classe/{slugClasse}/periode/{slugPeriode}', [LeconController::class,'getLeconByClassePeriode']);
         Route::get('/lecons/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}', [LeconController::class,'getLeconByClassePeriodeMatiere']);
         Route::get('/lecons/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}/chapitre/{slugChapitre}', [LeconController::class,'getLeconByClassePeriodeMatiereChapitre']);
+
+        Route::get('/chapitres/classe/{slugClasse}/periode/{slugPeriode}', [ChapitreController::class,'getChapitreByPeriodeClasse']);
 
 
         Route::resources([
