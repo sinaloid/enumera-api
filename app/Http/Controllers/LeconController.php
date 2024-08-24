@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lecon;
 use App\Models\Chapitre;
+use App\Models\Periode;
 use App\Models\RessourceLecon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -549,7 +550,7 @@ class LeconController extends Controller
                 'slug'=>$slugClasse,
                 'is_deleted'=>false
             ]);
-       })->with(["chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons"])->get();
+       })->with(["chapitre", "periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons"])->get();
 
        return response()->json(['message' => 'Leçons trouvés', 'data' => $lecons], 200);
     }
