@@ -138,7 +138,7 @@ class LeconController extends Controller
      */
     public function show($slug)
     {
-        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->with("chapitre.periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons")->first();
+        $data = Lecon::where(["slug"=> $slug, "is_deleted" => false])->with("chapitre", "periode","chapitre.matiereDeLaClasse.matiere","chapitre.matiereDeLaClasse.classe","cours","evaluations_lecons")->first();
 
         if (!$data) {
             return response()->json(['message' => 'Leçon non trouvée'], 404);
