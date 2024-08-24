@@ -1063,6 +1063,90 @@
                 ]
             }
         },
+        "/api/chapitres/import": {
+            "post": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Création d'un chapitre",
+                "description": "Importe une liste de qcm",
+                "operationId": "bb48fb8beb564bc5a9af3650f61c9a0e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "classe",
+                                    "matiere",
+                                    "chapitre"
+                                ],
+                                "properties": {
+                                    "classe": {
+                                        "type": "string",
+                                        "example": "Slug de la classe"
+                                    },
+                                    "matiere": {
+                                        "type": "string",
+                                        "example": "Slug de la matiere"
+                                    },
+                                    "file": {
+                                        "type": "string",
+                                        "example": "fichier excel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Section créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/chatgpt": {
             "post": {
                 "tags": [

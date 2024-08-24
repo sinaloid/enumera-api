@@ -66,6 +66,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         /**Chapitres */
         Route::get('/chapitres/classe/{slugClasse}', [ChapitreController::class,'getChapitreByClasse']);
         Route::get('/chapitres/classe/{slugClasse}/matiere/{slugMatiere}', [ChapitreController::class,'getChapitreByClasseMatiere']);
+        Route::post('/chapitres/import', [ChapitreController::class,'importChapitre']);
 
         /**Leçons */
         Route::get('/lecons/chapitre/{slug}', [LeconController::class,'getLeconByChapitreSlug']);

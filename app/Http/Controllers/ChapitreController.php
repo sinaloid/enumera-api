@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Imports\SectionImport;
+use Excel;
 
 class ChapitreController extends Controller
 {
@@ -401,6 +403,90 @@ class ChapitreController extends Controller
        }
 
        return response()->json(['message' => 'Chapitres trouvés', 'data' => $matiereClasse->chapitres], 200);
+    }
+
+
+    /**
+     * @OA\Post(
+     *     tags={"Chapitres"},
+     *     description="Importe une liste de qcm",
+     *     path="/api/chapitres/import",
+     *     summary="Création d'un chapitre",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"classe","matiere","chapitre"},
+     *             @OA\Property(property="classe", type="string", example="Slug de la classe"),
+     *             @OA\Property(property="matiere", type="string", example="Slug de la matiere"),
+     *             @OA\Property(property="file", type="string", example="fichier excel")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Section créée avec succès"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function importChapitre(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'classe' => 'required|string|max:10',
+            'matiere' => 'required|string|max:10',
+            'file' => 'required|max:10000|mimes:csv,xlsx',
+        ]);
+
+        //dd(Str::slug($request->titre));
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $matiere = Matiere::where(["slug" => $request->matiere,"is_deleted" => false])->first();
+        if(!$matiere){
+            return response()->json(['message' => 'Matière non trouvée'], 404);
+        }
+        $classe = Classe::where(["slug" => $request->classe,"is_deleted" => false])->first();
+        if(!$classe){
+            return response()->json(['message' => 'Classe non trouvée'], 404);
+        }
+
+
+        $matiereClasse = MatiereDeLaClasse::where([
+            "classe_id" => $classe->id,
+            "matiere_id" => $matiere->id,
+            "is_deleted" => false
+        ])->first();
+
+
+        if(!$matiereClasse){
+            return response()->json(['message' => 'Matiere de la classe non trouvée'], 404);
+        }
+
+        $fileName = Str::random(10) . '.' . $request->file->getClientOriginalExtension();
+
+            // Enregistrer l'image dans le dossier public/images
+            $importPath = $request->file->move(public_path('excels'), $fileName);
+
+            if ($importPath) {
+                Excel::import(new SectionImport($matiereClasse),'excels/' . $fileName);
+            }else{
+                return response()->json(['error' => "Échec lors de l'enregistrement des données"], 422);
+
+            }
+
+        return response()->json(['message' => 'Sections importées avec succès', 'data' => "ok"], 200);
     }
 
 }
