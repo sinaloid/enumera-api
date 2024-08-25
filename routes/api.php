@@ -71,6 +71,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         /**Leçons */
         Route::get('/lecons/chapitre/{slug}', [LeconController::class,'getLeconByChapitreSlug']);
         Route::get('/lecons/periode/{slugPeriode}', [LeconController::class,'getLeconByPeriode']);
+        
         Route::get('/lecons/classe/{slugClasse}', [LeconController::class,'getLeconByClasse']);
         Route::get('/lecons/classe/{slugClasse}/periode/{slugPeriode}', [LeconController::class,'getLeconByClassePeriode']);
         Route::get('/lecons/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}', [LeconController::class,'getLeconByClassePeriodeMatiere']);
