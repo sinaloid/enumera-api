@@ -2752,46 +2752,6 @@
                 ]
             }
         },
-        "/api/chapitres/periode/{slugPeriode}/classe/{slugClasse}": {
-            "get": {
-                "tags": [
-                    "leçons"
-                ],
-                "summary": "Récupération la liste des chapitres en fonction d'une periode et d'une classe",
-                "description": "Retourne la liste des chapitres chapitres en fonction d'une periode et d'une classe",
-                "operationId": "0ca155d6e1d0f8d65b8f843c4afd8736",
-                "parameters": [
-                    {
-                        "name": "slugPeriode",
-                        "in": "path",
-                        "description": "slug de la periode",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "slugClasse",
-                        "in": "path",
-                        "description": "slug de la classe",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/lecons/chapitre/{slugChapitre}": {
             "get": {
                 "tags": [
@@ -2846,10 +2806,10 @@
         "/api/lecons/classe/{slugClasse}/periode/{slugPeriode}": {
             "get": {
                 "tags": [
-                    "Leçons"
+                    "leçons"
                 ],
-                "summary": "Récupération la liste des leçons en fonction d'une classe et d'une periode",
-                "description": "Retourne la liste des leçons en fonction d'une classe et d'une periode",
+                "summary": "Récupération la liste des leçons en fonction  d'une classe et d'une periode",
+                "description": "Retourne la liste des leçons en fonction  d'une classe et d'une periode",
                 "operationId": "345535782a5029e8cbd130e949449681",
                 "parameters": [
                     {
