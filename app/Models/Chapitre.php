@@ -22,5 +22,10 @@ class Chapitre extends Model
 
         return $this->belongsTo(MatiereDeLaClasse::class);
     }
-    
+
+    public function lecons() {
+
+        return $this->hasMany(Lecon::class);
+    }
+
 }

@@ -3288,6 +3288,46 @@
                 ]
             }
         },
+        "/api/matieres/classe/{slugClasse}/periode/{slugPeriode}": {
+            "get": {
+                "tags": [
+                    "Matières"
+                ],
+                "summary": "Récupération la liste des matières en fonction d'une classe",
+                "description": "Retourne la liste des matières en fonction d'une classe",
+                "operationId": "72380cf254720cf56111be98cee94655",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la periode",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/matiere-de-la-classe": {
             "get": {
                 "tags": [

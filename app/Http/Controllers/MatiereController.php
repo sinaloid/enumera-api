@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Matiere;
+use App\Models\Lecon;
+use App\Models\Classe;
+use App\Models\MatiereDeLaClasse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -312,7 +315,7 @@ class MatiereController extends Controller
      *      tags={"Matières"},
      *      summary="Récupération la liste des matières en fonction d'une classe",
      *      description="Retourne la liste des matières en fonction d'une classe",
-     *      path="/api/matieres/classe/{slugClasse}",
+     *      path="/api/matieres/classe/{slugClasse}/periode/{slugPeriode}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -326,13 +329,22 @@ class MatiereController extends Controller
      *              type="string"
      *          )
      *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la periode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
      *     security={{"bearerAuth":{}}}
      * )
      */
     public function getMatiereByClassePeriode($slugClasse, $slugPeriode)
     {
        // Requête unique pour récupérer la matière, la classe, et la période en même temps
-       $matieres = Matiere::where('is_deleted',false)->whereHas('matiereDeLaClasses', function($query) use ($slugClasse){
+       /*$matieres = Lecon::where('is_deleted',false)->whereHas('matiereDeLaClasses', function($query) use ($slugClasse,$slugPeriode){
             $query->where([
                 'slug'=>$slugClasse,
                 'is_deleted'=>false
@@ -341,27 +353,41 @@ class MatiereController extends Controller
                     'slug'=>$slugClasse,
                     'is_deleted'=>false
                 ]);
-            })->whereHas('chapitre', function($query) {
+            })->whereHas('chapitres', function($query) use ($slugPeriode) {
                 $query->where('is_deleted', false)->whereHas('lecons.periode',function($query) use ($slugPeriode){
                     $query->where([
-                        'is_deleted', false,
+                        'is_deleted' => false,
                         'slug' => $slugPeriode
                     ]);
                 });
             });
-       })->with("matiereDeLaClasses", function($query) use ($slugClasse){
-            $query->whereHas('classe', function($q) use ($slugClasse){
-                $q->where([
-                    'slug'=>$slugClasse,
-                    'is_deleted'=>false
-                ]);
-            })->with(['classe' => function($q) use ($slugClasse){
-                $q->where([
-                    'slug'=>$slugClasse,
-                    'is_deleted'=>false
-                ]);
+       })->with("matiereDeLaClasses.chapitre")->get();*/
+
+       $classe = Classe::where([
+        "is_deleted" => false,
+        'slug' =>$slugClasse
+       ])->first();
+
+       $matieres = MatiereDeLaClasse::where([
+        "is_deleted" => false,
+        'classe_id' => $classe->id
+       ])
+       ->with([
+        'classe',
+        'matiere',
+        'chapitres' => function ($query) use ($slugPeriode) {
+            $query->whereHas('lecons', function ($query) use ($slugPeriode) {
+                $query->whereHas('periode', function ($query) use ($slugPeriode) {
+                    $query->where('slug', $slugPeriode);
+                });
+            })->with(['lecons' => function ($query) use ($slugPeriode) {
+                $query->whereHas('periode', function ($query) use ($slugPeriode) {
+                    $query->where('slug', $slugPeriode);
+                })->with('periode');
             }]);
-       })->get();
+        }
+       ])
+       ->get();
 
        return response()->json(['message' => 'Matières trouvés', 'data' => $matieres], 200);
     }
