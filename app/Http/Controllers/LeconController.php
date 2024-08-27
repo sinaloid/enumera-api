@@ -498,7 +498,7 @@ class LeconController extends Controller
     public function getLeconByClasse($slugClasse)
     {
        // Requête unique pour récupérer la matière, la classe, et la période en même temps
-       $lecons = Lecon::whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
+       $lecons = Lecon::where("is_deleted", false)->whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
             $query->where([
                 'slug'=>$slugClasse,
                 'is_deleted'=>false
@@ -542,7 +542,7 @@ class LeconController extends Controller
     public function getLeconByClassePeriode($slugClasse,$slugPeriode)
     {
        // Requête unique pour récupérer la matière, la classe, et la période en même temps
-       $lecons = Lecon::whereHas("chapitre.matiereDeLaClasse.classe", function($query) use ($slugClasse){
+       $lecons = Lecon::where("is_deleted", false)->whereHas("chapitre.matiereDeLaClasse.classe", function($query) use ($slugClasse){
             $query->where([
                 "slug" => $slugClasse,
                 "is_deleted" => false,
@@ -601,7 +601,7 @@ class LeconController extends Controller
     public function getLeconByClassePeriodeMatiere($slugClasse, $slugPeriode, $slugMatiere)
     {
        // Requête unique pour récupérer la matière, la classe, et la période en même temps
-       $lecons = Lecon::whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
+       $lecons = Lecon::where("is_deleted", false)->whereHas('chapitre.matiereDeLaClasse.classe', function($query) use ($slugClasse){
                 $query->where([
                     'slug'=>$slugClasse,
                     'is_deleted'=>false
@@ -673,7 +673,7 @@ class LeconController extends Controller
     public function getLeconByClassePeriodeMatiereChapitre($slugClasse, $slugPeriode, $slugMatiere, $slugChapitre)
 {
     // Récupère les leçons en fonction des conditions sur chapitre, matière, classe et période
-    $lecons = Lecon::whereHas('chapitre', function($query) use ($slugChapitre, $slugClasse, $slugMatiere, $slugPeriode) {
+    $lecons = Lecon::where("is_deleted", false)->whereHas('chapitre', function($query) use ($slugChapitre, $slugClasse, $slugMatiere, $slugPeriode) {
         $query->where('slug', $slugChapitre)
               ->where('is_deleted', false)
               ->whereHas('matiereDeLaClasse.classe', function($q) use ($slugClasse) {

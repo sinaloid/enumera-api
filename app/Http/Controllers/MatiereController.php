@@ -307,4 +307,63 @@ class MatiereController extends Controller
        return response()->json(['message' => 'Matières trouvés', 'data' => $matieres], 200);
     }
 
+    /**
+     * @OA\Get(
+     *      tags={"Matières"},
+     *      summary="Récupération la liste des matières en fonction d'une classe",
+     *      description="Retourne la liste des matières en fonction d'une classe",
+     *      path="/api/matieres/classe/{slugClasse}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getMatiereByClassePeriode($slugClasse, $slugPeriode)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $matieres = Matiere::where('is_deleted',false)->whereHas('matiereDeLaClasses', function($query) use ($slugClasse){
+            $query->where([
+                'slug'=>$slugClasse,
+                'is_deleted'=>false
+            ])->whereHas('classe', function($query) use ($slugClasse){
+                $query->where([
+                    'slug'=>$slugClasse,
+                    'is_deleted'=>false
+                ]);
+            })->whereHas('chapitre', function($query) {
+                $query->where('is_deleted', false)->whereHas('lecons.periode',function($query) use ($slugPeriode){
+                    $query->where([
+                        'is_deleted', false,
+                        'slug' => $slugPeriode
+                    ]);
+                });
+            });
+       })->with("matiereDeLaClasses", function($query) use ($slugClasse){
+            $query->whereHas('classe', function($q) use ($slugClasse){
+                $q->where([
+                    'slug'=>$slugClasse,
+                    'is_deleted'=>false
+                ]);
+            })->with(['classe' => function($q) use ($slugClasse){
+                $q->where([
+                    'slug'=>$slugClasse,
+                    'is_deleted'=>false
+                ]);
+            }]);
+       })->get();
+
+       return response()->json(['message' => 'Matières trouvés', 'data' => $matieres], 200);
+    }
+
 }

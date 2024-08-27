@@ -341,7 +341,7 @@ class ChapitreController extends Controller
     public function getChapitreByClasse($slugClasse)
     {
        // Requête unique pour récupérer la matière, la classe, et la période en même temps
-       $chapitres = Chapitre::whereHas('matiereDeLaClasse.classe', function($query) use ($slugClasse){
+       $chapitres = Chapitre::where("is_deleted", false)->whereHas('matiereDeLaClasse.classe', function($query) use ($slugClasse){
             $query->where([
                 'slug'=>$slugClasse,
                 'is_deleted'=>false
