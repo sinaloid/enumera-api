@@ -1028,8 +1028,8 @@
                 "tags": [
                     "Chapitres"
                 ],
-                "summary": "Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une periode",
-                "description": "Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une periode",
+                "summary": "Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une matière",
+                "description": "Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une matière",
                 "operationId": "74120caa24d06bcd113f71a0ccda9ef2",
                 "parameters": [
                     {
@@ -1045,6 +1045,55 @@
                         "name": "slugClasse",
                         "in": "path",
                         "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chapitres/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}": {
+            "get": {
+                "tags": [
+                    "Chapitres"
+                ],
+                "summary": "Récupération la liste des chapitres d'une matière en fonction d'une classe, d'une matiere et d'une periode",
+                "description": "Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe, d'une matiere et d'une periode",
+                "operationId": "1a401eb1f222d0b983da1d5a4d55130d",
+                "parameters": [
+                    {
+                        "name": "slugMatiere",
+                        "in": "path",
+                        "description": "slug de la matière",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugPeriode",
+                        "in": "path",
+                        "description": "slug de la perdiode",
                         "required": true,
                         "schema": {
                             "type": "string"

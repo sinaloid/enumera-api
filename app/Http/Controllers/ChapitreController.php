@@ -356,8 +356,8 @@ class ChapitreController extends Controller
     /**
      * @OA\Get(
      *      tags={"Chapitres"},
-     *      summary="Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une periode",
-     *      description="Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une periode",
+     *      summary="Récupération la liste des chapitres d'une matière en fonction d'une classe et d'une matière",
+     *      description="Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe et d'une matière",
      *      path="/api/chapitres/classe/{slugClasse}/matiere/{slugMatiere}",
      *      @OA\Response(
      *          response=200,
@@ -397,6 +397,77 @@ class ChapitreController extends Controller
            $query->where('is_deleted', false)
              ->with(['matiereDeLaClasse.matiere', 'matiereDeLaClasse.classe']);
        }])->first();
+
+       if (!$matiereClasse || $matiereClasse->chapitres->isEmpty()) {
+           return response()->json(['message' => 'Aucun chapitre trouvé pour les critères fournis', 'data' => []], 200);
+       }
+
+       return response()->json(['message' => 'Chapitres trouvés', 'data' => $matiereClasse->chapitres], 200);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Chapitres"},
+     *      summary="Récupération la liste des chapitres d'une matière en fonction d'une classe, d'une matiere et d'une periode",
+     *      description="Retourne la liste des chapitres chapitres d'une matière en fonction d'une classe, d'une matiere et d'une periode",
+     *      path="/api/chapitres/classe/{slugClasse}/periode/{slugPeriode}/matiere/{slugMatiere}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugMatiere",
+     *          in="path",
+     *          description="slug de la matière",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugClasse",
+     *          in="path",
+     *          description="slug de la classe",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          name="slugPeriode",
+     *          in="path",
+     *          description="slug de la perdiode",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getChapitreByClassePeriodeMatiere($slugClasse,$slugPeriode, $slugMatiere)
+    {
+       // Requête unique pour récupérer la matière, la classe, et la période en même temps
+       $matiereClasse = MatiereDeLaClasse::whereHas('matiere', function ($query) use ($slugMatiere) {
+           $query->where('slug', $slugMatiere)
+                 ->where('is_deleted', false);
+       })->whereHas('classe', function ($query) use ($slugClasse) {
+           $query->where('slug', $slugClasse)
+                 ->where('is_deleted', false);
+       })->with(['chapitres' => function ($query) use ($slugPeriode) {
+            $query->where('is_deleted', false)->whereHas('lecons', function ($query) use ($slugPeriode) {
+                $query->whereHas('periode', function ($query) use ($slugPeriode) {
+                    $query->where('slug', $slugPeriode);
+                });
+            })->with(['matiereDeLaClasse.matiere', 'matiereDeLaClasse.classe',
+                'lecons' => function ($query) use ($slugPeriode) {
+                        $query->whereHas('periode', function ($query) use ($slugPeriode) {
+                            $query->where('slug', $slugPeriode);
+                        })->with('periode');
+                    }
+             ]);
+       }])->first();
+
 
        if (!$matiereClasse || $matiereClasse->chapitres->isEmpty()) {
            return response()->json(['message' => 'Aucun chapitre trouvé pour les critères fournis', 'data' => []], 200);
