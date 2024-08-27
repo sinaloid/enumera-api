@@ -130,7 +130,7 @@ class EvaluationLeconController extends Controller
      */
     public function show($slug)
     {
-        $data = EvaluationLecon::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = EvaluationLecon::where(["slug"=> $slug, "is_deleted" => false])->with("question_lecons")->first();
 
         if (!$data) {
             return response()->json(['message' => 'evaluation non trouvée'], 404);
