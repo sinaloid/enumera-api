@@ -36,6 +36,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
     Route::post('/get-otp', [AuthController::class,'getOtp']);
     Route::post('/login', [AuthController::class,'login']);
     Route::post('/edit-password', [AuthController::class,'editPassword']);
+    Route::get('/classes/public', [ClasseController::class,'index']);
 
     Route::middleware(['auth:api'])->group(function () {
         Route::get('/users', [AuthController::class,'index']);
