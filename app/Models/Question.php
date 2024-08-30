@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QuestionLecon extends Model
+class Question extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         "question",
         "choix",
@@ -17,11 +16,11 @@ class QuestionLecon extends Model
         "point",
         "slug",
         "is_deleted",
-        "evaluation_lecon_id",
+        "evaluation_id",
     ];
 
-    public function evaluation_lecon(){
+    public function evaluation(){
 
-        return $this->belongsTo(EvaluationLecon::class);
+        return $this->belongsTo(Evaluation::class);
     }
 }

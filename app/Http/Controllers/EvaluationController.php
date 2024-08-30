@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EvaluationLecon;
-use App\Models\Lecon;
+use App\Models\Evaluation;
+use App\Models\MatiereDeLaClasse;
 use App\Models\RessourceLecon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class EvaluationLeconController extends Controller
+class EvaluationController extends Controller
 {
     /**
      * @OA\Get(
-     *      tags={"Evaluations leçons"},
+     *      tags={"Evaluations"},
      *      summary="Liste des evaluations",
      *      description="Retourne la liste des evaluations",
-     *      path="/api/evaluations-lecons",
+     *      path="/api/evaluations",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -31,7 +31,7 @@ class EvaluationLeconController extends Controller
      */
     public function index()
     {
-        $data = EvaluationLecon::where("is_deleted",false)->with('lecon')->get();
+        $data = Evaluation::where("is_deleted",false)->with('matiereDeLaClasse.matiere','matiereDeLaClasse.classe')->get();
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune evaluation trouvée'], 404);
@@ -42,9 +42,9 @@ class EvaluationLeconController extends Controller
 
     /**
      * @OA\Post(
-     *     tags={"Evaluations leçons"},
+     *     tags={"Evaluations"},
      *     description="Crée une nouvelle evaluation et retourne la evaluation créée",
-     *     path="/api/evaluations-lecons",
+     *     path="/api/evaluations",
      *     summary="Création d'une evaluation",
      *     @OA\RequestBody(
      *         required=true,
@@ -52,8 +52,12 @@ class EvaluationLeconController extends Controller
      *             required={"label","abreviation","description","lecon"},
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="date", type="string", example="20/9/2021"),
+     *             @OA\Property(property="heure_debut", type="string", example="15:00"),
+     *             @OA\Property(property="heure_fin", type="string", example="17:00"),
+     *             @OA\Property(property="classe", type="string", example="slug de la classe"),
+     *             @OA\Property(property="matiere", type="string", example="slug de la matière"),
      *             @OA\Property(property="description", type="string", example="courte description"),
-     *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -82,7 +86,11 @@ class EvaluationLeconController extends Controller
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'lecon' => 'required|string|max:10',
+            'classe' => 'required|string|max:10',
+            'matiere' => 'required|string|max:10',
+            'date' => 'required|string|max:10',
+            'heure_debut' => 'required|string|max:10',
+            'heure_fin' => 'required|string|max:10',
 
         ]);
 
@@ -90,16 +98,31 @@ class EvaluationLeconController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $lecon = Lecon::where(["slug" => $request->lecon,"is_deleted" => false])->first();
-        if (!$lecon) {
-            return response()->json(['message' => 'Leçon non trouvée'], 404);
+        $matiereDeLaClasse = MatiereDeLaClasse::where(["is_deleted" => false])
+            ->whereHas('classe', function($query) use ($request){
+                $query->where([
+                    'is_deleted' => false,
+                    'slug' => $request->classe
+                ]);
+            })
+            ->whereHas('matiere', function($query) use ($request){
+                $query->where([
+                    'is_deleted' => false,
+                    'slug' => $request->matiere
+                ]);
+            })->first();
+        if (!$matiereDeLaClasse) {
+            return response()->json(['message' => 'Matière de la classe non trouvée'], 404);
         }
 
-        $data = EvaluationLecon::create([
+        $data = Evaluation::create([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
+            'date' => $request->input('date'),
+            'heure_debut' => $request->input('heure_debut'),
+            'heure_fin' => $request->input('heure_fin'),
             'description' => $request->input('description'),
-            'lecon_id' => $lecon->id,
+            'matiere_de_la_classe_id' => $matiereDeLaClasse->id,
             'slug' => Str::random(10),
         ]);
 
@@ -108,10 +131,10 @@ class EvaluationLeconController extends Controller
 
     /**
      * @OA\Get(
-     *      tags={"Evaluations leçons"},
+     *      tags={"Evaluations"},
      *      summary="Récupère une evaluation par son slug",
      *      description="Retourne une evaluation",
-     *      path="/api/evaluations-lecons/{slug}",
+     *      path="/api/evaluations/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -130,7 +153,7 @@ class EvaluationLeconController extends Controller
      */
     public function show($slug)
     {
-        $data = EvaluationLecon::where(["slug"=> $slug, "is_deleted" => false])->with("question_lecons")->first();
+        $data = Evaluation::where(["slug"=> $slug, "is_deleted" => false])->with('questions','matiereDeLaClasse.matiere','matiereDeLaClasse.classe')->first();
 
         if (!$data) {
             return response()->json(['message' => 'evaluation non trouvée'], 404);
@@ -141,9 +164,9 @@ class EvaluationLeconController extends Controller
 
     /**
      * @OA\Put(
-     *     tags={"Evaluations leçons"},
+     *     tags={"Evaluations"},
      *     description="Modifie une evaluation et retourne la evaluation modifiée",
-     *     path="/api/evaluations-lecons/{slug}",
+     *     path="/api/evaluations/{slug}",
      *     summary="Modification d'une evaluation",
      *     @OA\RequestBody(
      *         required=true,
@@ -151,8 +174,12 @@ class EvaluationLeconController extends Controller
      *             required={"label","abreviation","description","lecon"},
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="date", type="string", example="20/9/2021"),
+     *             @OA\Property(property="heure_debut", type="string", example="15:00"),
+     *             @OA\Property(property="heure_fin", type="string", example="17:00"),
+     *             @OA\Property(property="classe", type="string", example="slug de la classe"),
+     *             @OA\Property(property="matiere", type="string", example="slug de la matière"),
      *             @OA\Property(property="description", type="string", example="courte description"),
-     *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
      *         ),
      *     ),
      *      @OA\Parameter(
@@ -198,7 +225,11 @@ class EvaluationLeconController extends Controller
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'lecon' => 'required|string|max:10',
+            'classe' => 'required|string|max:10',
+            'matiere' => 'required|string|max:10',
+            'date' => 'required|string|max:10',
+            'heure_debut' => 'required|string|max:10',
+            'heure_fin' => 'required|string|max:10',
 
         ]);
 
@@ -207,13 +238,24 @@ class EvaluationLeconController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $lecon = Lecon::where(["slug" => $request->lecon,"is_deleted" => false])->first();
-        if (!$lecon) {
-            return response()->json(['message' => 'Leçon non trouvée'], 404);
+        $matiereDeLaClasse = MatiereDeLaClasse::where(["is_deleted" => false])
+            ->whereHas('classe', function($query) use ($request){
+                $query->where([
+                    'is_deleted' => false,
+                    'slug' => $request->classe
+                ]);
+            })
+            ->whereHas('matiere', function($query) use ($request){
+                $query->where([
+                    'is_deleted' => false,
+                    'slug' => $request->matiere
+                ]);
+            })->first();
+        if (!$matiereDeLaClasse) {
+            return response()->json(['message' => 'Matière de la classe non trouvée'], 404);
         }
 
-
-        $data = EvaluationLecon::where("slug", $slug)->where("is_deleted",false)->first();
+        $data = Evaluation::where("slug", $slug)->where("is_deleted",false)->first();
 
         if (!$data) {
             return response()->json(['message' => 'evaluation non trouvée'], 404);
@@ -222,8 +264,11 @@ class EvaluationLeconController extends Controller
         $data->update([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
+            'date' => $request->input('date'),
+            'heure_debut' => $request->input('heure_debut'),
+            'heure_fin' => $request->input('heure_fin'),
             'description' => $request->input('description'),
-            'lecon_id' => $lecon->id,
+            'matiere_de_la_classe_id' => $matiereDeLaClasse->id,
         ]);
 
         return response()->json(['message' => 'evaluation modifiée avec succès', 'data' => $data], 200);
@@ -232,10 +277,10 @@ class EvaluationLeconController extends Controller
 
     /**
      * @OA\Delete(
-     *      tags={"Evaluations leçons"},
+     *      tags={"Evaluations"},
      *      summary="Suppression d'une evaluation par son slug",
      *      description="Retourne la evaluation supprimée",
-     *      path="/api/evaluations-lecons/{slug}",
+     *      path="/api/evaluations/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -267,7 +312,7 @@ class EvaluationLeconController extends Controller
     public function destroy($slug)
     {
 
-        $data = EvaluationLecon::where("slug",$slug)->where("is_deleted",false)->first();
+        $data = Evaluation::where("slug",$slug)->where("is_deleted",false)->first();
         if (!$data) {
             return response()->json(['message' => 'evaluation non trouvée'], 404);
         }
@@ -279,84 +324,19 @@ class EvaluationLeconController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     tags={"Evaluations leçons"},
-     *     description="Importe une liste de qcm",
-     *     path="/api/evaluations-lecons/import",
-     *     summary="Création d'une evaluation",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"question","choix","type","lecon"},
-     *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
-     *             @OA\Property(property="qcm", type="string", example="fichier excel")
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Evaluation créée avec succès"),
-     *             @OA\Property(property="data", type="object")
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides"),
-     *             @OA\Property(property="errors", type="object")
-     *         )
-     *     ),
-     *     security={{"bearerAuth":{}}}
-     * )
-     */
-    public function storeExcel(Request $request){
-
-        $validator = Validator::make($request->all(), [
-            'lecon' => 'required|string|max:10',
-            'qcm' => 'required|max:10000|mimes:csv,xlsx',
-        ]);
-
-        //dd(Str::slug($request->titre));
-        if ($validator->fails()) {
-            return response(['errors' => $validator->errors()->all()], 422);
-        }
-
-        $lecon = Lecon::where(["slug" => $request->lecon,"is_deleted" => false])->first();
-        if (!$lecon) {
-            return response()->json(['message' => 'Leçon non trouvée'], 404);
-        }
-
-        $qcmName = Str::random(10) . '.' . $request->qcm->getClientOriginalExtension();
-
-            // Enregistrer l'image dans le dossier public/images
-            $importPath = $request->qcm->move(public_path('excels'), $qcmName);
-
-            if ($importPath) {
-                Excel::import(new EvaluationLeconImport($lecon),'excels/' . $qcmName);
-            }else{
-                return response()->json(['error' => "Échec lors de l'enregistrement des données"], 422);
-
-            }
-
-        return response()->json(['message' => 'Produits importés avec succès', 'data' => "ok"], 200);
-    }
-
-    /**
      * @OA\Get(
-     *      tags={"Evaluations leçons"},
-     *      summary="Récupère la liste des evaluations en fonction du slug d'une leçon",
+     *      tags={"Evaluations"},
+     *      summary="Récupère la liste des evaluations en fonction d'une classe et d'une matière",
      *      description="Retourne la liste des evaluations",
-     *      path="/api/evaluations-lecons/profile/{slug}",
+     *      path="/api/evaluations/classe/{slugClasse}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *      ),
      *      @OA\Parameter(
-     *          name="slug",
+     *          name="slugClasse",
      *          in="path",
-     *          description="slug du utilisateur à récupérer",
+     *          description="slug de la classe",
      *          required=true,
      *          @OA\Schema(
      *              type="string"
@@ -365,23 +345,27 @@ class EvaluationLeconController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-    public function getEvaluationByLeconSlug($slug)
+    public function getEvaluationByClasse($slugClasse)
     {
-        $lecon = Lecon::where([
-            "slug" =>$slug,
-        ])->first();
-        if (!$lecon) {
-            return response()->json(['message' => 'Aucune lecon trouvée'], 404);
-        }
-        $data = EvaluationLecon::where([
+        $data = Evaluation::where([
             "is_deleted" => false,
-            "lecon_id" => $lecon->id,
-        ])->with("question_lecons")->get();
+        ])
+        ->whereHas('matiereDeLaClasse', function($query) use ($slugClasse){
+            $query->where([
+                'is_deleted' => false,
+            ])->whereHas('classe', function($query) use ($slugClasse){
+                $query->where([
+                    'is_deleted' => false,
+                    'slug' => $slugClasse
+                ]);
+            });
+        })
+        ->with("questions")->get();
 
         /*if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune leçon trouvée'], 404);
         }*/
 
-        return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
+        return response()->json(['message' => 'Evaluations récupérées', 'data' => $data], 200);
     }
 }

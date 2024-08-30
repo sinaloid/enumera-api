@@ -12,7 +12,9 @@ use App\Http\Controllers\LeconController;
 use App\Http\Controllers\CoursController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EvaluationLeconController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionLeconController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\ChatController;
@@ -82,6 +84,13 @@ Route::group(['middleware' => ['cors','json.response']], function () {
 
         Route::get('/chapitres/classe/{slugClasse}/periode/{slugPeriode}', [ChapitreController::class,'getChapitreByPeriodeClasse']);
 
+        /**Evaluations */
+        Route::get('/evaluations/classe/{slugClasse}', [EvaluationController::class,'getEvaluationByClasse']);
+
+        /**Question */
+        Route::get('/questions/evaluation/{slugEvaluation}', [QuestionController::class,'getQuestionByEvaluation']);
+        /**Question Leçons */
+        Route::get('/questions-lecons/evaluation/{slugEvaluation}', [QuestionLeconController::class,'getQuestionByEvaluation']);
 
         Route::resources([
             'utilisateurs' => UtilisateurController::class,
@@ -92,7 +101,9 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'chapitres' => ChapitreController::class,
             'lecons' => LeconController::class,
             'cours' => CoursController::class,
+            'evaluations' => EvaluationController::class,
             'evaluations-lecons' => EvaluationLeconController::class,
+            'questions' => QuestionController::class,
             'questions-lecons' => QuestionLeconController::class,
             'chatgpt' => ChatController::class,
 
@@ -104,6 +115,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
     Route::post('/files', [LeconController::class, 'storeFile'])->name('files.store');
     Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
     Route::post('/questions-lecons-import', [QuestionLeconController::class,'storeExcel']);
+    Route::post('/questions-import', [QuestionController::class,'storeExcel']);
     Route::post('/convert-doc-to-html', [DocumentController::class, 'convertDocumentToHtml']);
     });
 });

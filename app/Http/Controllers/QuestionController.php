@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\QuestionLecon;
+use App\Models\Question;
 use App\Models\Lecon;
-use App\Models\EvaluationLecon;
+use App\Models\Evaluation;
 use App\Models\RessourceLecon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -12,16 +12,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use App\Imports\QuestionLeconImport;
+use App\Imports\QuestionImport;
 use Excel;
-class QuestionLeconController extends Controller
+class QuestionController extends Controller
 {
     /**
      * @OA\Get(
-     *      tags={"Questions leçons"},
+     *      tags={"Questions"},
      *      summary="Liste des questions",
      *      description="Retourne la liste des questions",
-     *      path="/api/questions-lecons",
+     *      path="/api/questions",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -33,7 +33,7 @@ class QuestionLeconController extends Controller
      */
     public function index()
     {
-        $data = QuestionLecon::where("is_deleted",false)->get();
+        $data = Question::where("is_deleted",false)->get();
 
         if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune question trouvée'], 404);
@@ -44,9 +44,9 @@ class QuestionLeconController extends Controller
 
     /**
      * @OA\Post(
-     *     tags={"Questions leçons"},
+     *     tags={"Questions"},
      *     description="Crée une nouvelle question et retourne la question créée",
-     *     path="/api/questions-lecons",
+     *     path="/api/questions",
      *     summary="Création d'une question",
      *     @OA\RequestBody(
      *         required=true,
@@ -56,7 +56,7 @@ class QuestionLeconController extends Controller
      *             @OA\Property(property="choix", type="string", example="Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"),
      *             @OA\Property(property="reponses", type="string", example="1;2"),
      *             @OA\Property(property="point", type="string", example="1"),
-     *             @OA\Property(property="evaluation_lecon", type="string", example="Slug de la l'evaluation_lecon"),
+     *             @OA\Property(property="evaluation", type="string", example="Slug de l'evaluation"),
      *             @OA\Property(property="type", type="string", example="CHOIX_MULTIPLE")
      *         ),
      *     ),
@@ -88,7 +88,7 @@ class QuestionLeconController extends Controller
             'type' => 'required|string|max:255',
             'reponses' => 'required|string|max:255',
             'point' => 'required|string|max:255',
-            'evaluation_lecon' => 'required|string|max:10',
+            'evaluation' => 'required|string|max:10',
 
         ]);
 
@@ -96,18 +96,18 @@ class QuestionLeconController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $evaluation_lecon = EvaluationLecon::where(["slug" => $request->evaluation_lecon,"is_deleted" => false])->first();
-        if (!$evaluation_lecon) {
-            return response()->json(['message' => 'Evaluation leçon non trouvée'], 404);
+        $evaluation = Evaluation::where(["slug" => $request->evaluation,"is_deleted" => false])->first();
+        if (!$evaluation) {
+            return response()->json(['message' => 'Evaluation non trouvée'], 404);
         }
 
-        $data = QuestionLecon::create([
+        $data = Question::create([
             'question' => $request->input('question'),
             'choix' => $request->input('choix'),
             'type' => $request->input('type'),
             'reponses' => $request->input('reponses'),
             'point' => $request->input('point'),
-            'evaluation_lecon_id' => $evaluation_lecon->id,
+            'evaluation_id' => $evaluation->id,
             'slug' => Str::random(10),
         ]);
 
@@ -116,10 +116,10 @@ class QuestionLeconController extends Controller
 
     /**
      * @OA\Get(
-     *      tags={"Questions leçons"},
+     *      tags={"Questions"},
      *      summary="Récupère une question par son slug",
      *      description="Retourne une question",
-     *      path="/api/questions-lecons/{slug}",
+     *      path="/api/questions/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -138,7 +138,7 @@ class QuestionLeconController extends Controller
      */
     public function show($slug)
     {
-        $data = QuestionLecon::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = Question::where(["slug"=> $slug, "is_deleted" => false])->first();
 
         if (!$data) {
             return response()->json(['message' => 'question non trouvée'], 404);
@@ -149,9 +149,9 @@ class QuestionLeconController extends Controller
 
     /**
      * @OA\Put(
-     *     tags={"Questions leçons"},
+     *     tags={"Questions"},
      *     description="Modifie une question et retourne la question modifiée",
-     *     path="/api/questions-lecons/{slug}",
+     *     path="/api/questions/{slug}",
      *     summary="Modification d'une question",
      *     @OA\RequestBody(
      *         required=true,
@@ -161,7 +161,7 @@ class QuestionLeconController extends Controller
      *             @OA\Property(property="choix", type="string", example="Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"),
      *             @OA\Property(property="reponses", type="string", example="2;3"),
      *             @OA\Property(property="point", type="string", example="1"),
-     *             @OA\Property(property="evaluation_lecon", type="string", example="Slug de la levaluation_lecon"),
+     *             @OA\Property(property="evaluation", type="string", example="Slug de la levaluation_lecon"),
      *             @OA\Property(property="type", type="string", example="CHOIX_MULTIPLE")
      *         ),
      *     ),
@@ -210,7 +210,7 @@ class QuestionLeconController extends Controller
             'type' => 'required|string|max:255',
             'reponses' => 'required|string|max:255',
             'point' => 'required|string|max:255',
-            'evaluation_lecon' => 'required|string|max:10',
+            'evaluation' => 'required|string|max:10',
 
         ]);
 
@@ -219,13 +219,13 @@ class QuestionLeconController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $evaluation_lecon = EvaluationLecon::where(["slug" => $request->evaluation_lecon,"is_deleted" => false])->first();
-        if (!$evaluation_lecon) {
-            return response()->json(['message' => 'Evaluation leçon non trouvée'], 404);
+        $evaluation = Evaluation::where(["slug" => $request->evaluation,"is_deleted" => false])->first();
+        if (!$evaluation) {
+            return response()->json(['message' => 'Evaluation non trouvée'], 404);
         }
 
 
-        $data = QuestionLecon::where("slug", $slug)->where("is_deleted",false)->first();
+        $data = Question::where("slug", $slug)->where("is_deleted",false)->first();
 
         if (!$data) {
             return response()->json(['message' => 'question non trouvée'], 404);
@@ -235,7 +235,7 @@ class QuestionLeconController extends Controller
             'question' => $request->input('question'),
             'choix' => $request->input('choix'),
             'type' => $request->input('type'),
-            'evaluation_lecon_id' => $evaluation_lecon->id,
+            'evaluation_id' => $evaluation->id,
             'reponses' => $request->input('reponses'),
             'point' => $request->input('point'),
         ]);
@@ -246,10 +246,10 @@ class QuestionLeconController extends Controller
 
     /**
      * @OA\Delete(
-     *      tags={"Questions leçons"},
+     *      tags={"Questions"},
      *      summary="Suppression d'une question par son slug",
      *      description="Retourne la question supprimée",
-     *      path="/api/questions-lecons/{slug}",
+     *      path="/api/questions/{slug}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -281,7 +281,7 @@ class QuestionLeconController extends Controller
     public function destroy($slug)
     {
 
-        $data = QuestionLecon::where("slug",$slug)->where("is_deleted",false)->first();
+        $data = Question::where("slug",$slug)->where("is_deleted",false)->first();
         if (!$data) {
             return response()->json(['message' => 'question non trouvée'], 404);
         }
@@ -294,9 +294,9 @@ class QuestionLeconController extends Controller
 
     /**
      * @OA\Post(
-     *     tags={"Questions leçons"},
+     *     tags={"Questions"},
      *     description="Importe une liste de qcm",
-     *     path="/api/questions-lecons/import",
+     *     path="/api/questions/import",
      *     summary="Création d'une question",
      *     @OA\RequestBody(
      *         required=true,
@@ -328,7 +328,7 @@ class QuestionLeconController extends Controller
     public function storeExcel(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'evaluation_lecon' => 'required|string|max:10',
+            'evaluation' => 'required|string|max:10',
             'qcm' => 'required|max:10000|mimes:csv,xlsx',
         ]);
 
@@ -337,8 +337,8 @@ class QuestionLeconController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $evaluation_lecon = EvaluationLecon::where(["slug" => $request->evaluation_lecon,"is_deleted" => false])->first();
-        if (!$evaluation_lecon) {
+        $evaluation = Evaluation::where(["slug" => $request->evaluation,"is_deleted" => false])->first();
+        if (!$evaluation) {
             return response()->json(['message' => 'Evaluation leçon non trouvée'], 404);
         }
 
@@ -350,7 +350,7 @@ class QuestionLeconController extends Controller
             $importPath = $request->qcm->move(public_path('excels'), $qcmName);
             //dd($evaluation_lecon);
             if ($importPath) {
-                Excel::import(new QuestionLeconImport($evaluation_lecon),'excels/' . $qcmName);
+                Excel::import(new QuestionImport($evaluation),'excels/' . $qcmName);
             }else{
                 return response()->json(['error' => "Échec lors de l'enregistrement des données"], 422);
 
@@ -361,10 +361,10 @@ class QuestionLeconController extends Controller
 
     /**
      * @OA\Get(
-     *      tags={"Questions leçons"},
+     *      tags={"Questions"},
      *      summary="Récupère la liste des question en fonction d'une evaluation",
      *      description="Retourne une question",
-     *      path="/api/questions-lecons/evaluation/{slugEvaluation}",
+     *      path="/api/questions/evaluation/{slugEvaluation}",
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -383,8 +383,8 @@ class QuestionLeconController extends Controller
      */
     public function getQuestionByEvaluation($slugEvaluation)
     {
-        $data = QuestionLecon::where(["is_deleted" => false])
-        ->whereHas('evaluation_lecon', function($query) use ($slugEvaluation){
+        $data = Question::where(["is_deleted" => false])
+        ->whereHas('evaluation', function($query) use ($slugEvaluation){
             $query->where([
                 'is_deleted' => false,
                 'slug' => $slugEvaluation

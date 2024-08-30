@@ -1982,6 +1982,397 @@
                 ]
             }
         },
+        "/api/evaluations": {
+            "get": {
+                "tags": [
+                    "Evaluations"
+                ],
+                "summary": "Liste des evaluations",
+                "description": "Retourne la liste des evaluations",
+                "operationId": "4dc805d4bcf32dfa6a5cf2974acad82d",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Evaluations"
+                ],
+                "summary": "Création d'une evaluation",
+                "description": "Crée une nouvelle evaluation et retourne la evaluation créée",
+                "operationId": "9c3990f23ab97bf741a84d30a1f86bb3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation",
+                                    "description",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Intitulé de l'evaluation"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "Intitulé de l'evaluation"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "example": "20/9/2021"
+                                    },
+                                    "heure_debut": {
+                                        "type": "string",
+                                        "example": "15:00"
+                                    },
+                                    "heure_fin": {
+                                        "type": "string",
+                                        "example": "17:00"
+                                    },
+                                    "classe": {
+                                        "type": "string",
+                                        "example": "slug de la classe"
+                                    },
+                                    "matiere": {
+                                        "type": "string",
+                                        "example": "slug de la matière"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "courte description"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evaluation créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluations/{slug}": {
+            "get": {
+                "tags": [
+                    "Evaluations"
+                ],
+                "summary": "Récupère une evaluation par son slug",
+                "description": "Retourne une evaluation",
+                "operationId": "81dedcbdf2d66dbe8488c9e93662b4f4",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la evaluation à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Evaluations"
+                ],
+                "summary": "Modification d'une evaluation",
+                "description": "Modifie une evaluation et retourne la evaluation modifiée",
+                "operationId": "362d634cb504c538726c734a345efb3d",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la evaluation à modifiée",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "label",
+                                    "abreviation",
+                                    "description",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "example": "Intitulé de l'evaluation"
+                                    },
+                                    "abreviation": {
+                                        "type": "string",
+                                        "example": "Intitulé de l'evaluation"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "example": "20/9/2021"
+                                    },
+                                    "heure_debut": {
+                                        "type": "string",
+                                        "example": "15:00"
+                                    },
+                                    "heure_fin": {
+                                        "type": "string",
+                                        "example": "17:00"
+                                    },
+                                    "classe": {
+                                        "type": "string",
+                                        "example": "slug de la classe"
+                                    },
+                                    "matiere": {
+                                        "type": "string",
+                                        "example": "slug de la matière"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "courte description"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Evaluations"
+                ],
+                "summary": "Suppression d'une evaluation par son slug",
+                "description": "Retourne la evaluation supprimée",
+                "operationId": "f747c673a07f2034c7d4ccbdd7d99fdd",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la evaluation à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/evaluations/classe/{slugClasse}/matiere/{slugMatiere}": {
+            "get": {
+                "tags": [
+                    "Evaluations"
+                ],
+                "summary": "Récupère la liste des evaluations en fonction d'une classe et d'une matière",
+                "description": "Retourne la liste des evaluations",
+                "operationId": "b0133a7aa17704ab41843db2b4e2e8d3",
+                "parameters": [
+                    {
+                        "name": "slugClasse",
+                        "in": "path",
+                        "description": "slug de la classe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "slugMatiere",
+                        "in": "path",
+                        "description": "slug de la matière",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/evaluations-lecons": {
             "get": {
                 "tags": [
@@ -2385,7 +2776,7 @@
         "/api/evaluations-lecons/profile/{slug}": {
             "get": {
                 "tags": [
-                    "Evaluations"
+                    "Evaluations leçons"
                 ],
                 "summary": "Récupère la liste des evaluations en fonction du slug d'une leçon",
                 "description": "Retourne la liste des evaluations",
@@ -4022,6 +4413,453 @@
                 ]
             }
         },
+        "/api/questions": {
+            "get": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Liste des questions",
+                "description": "Retourne la liste des questions",
+                "operationId": "e64d3c7a745fc05662a4a1e1eb3d96ab",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Création d'une question",
+                "description": "Crée une nouvelle question et retourne la question créée",
+                "operationId": "788d85763184ddf1b557afb040547f32",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "example": "Quel est un principe d'AgilePM ?"
+                                    },
+                                    "choix": {
+                                        "type": "string",
+                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                    },
+                                    "reponses": {
+                                        "type": "string",
+                                        "example": "1;2"
+                                    },
+                                    "point": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "evaluation": {
+                                        "type": "string",
+                                        "example": "Slug de l'evaluation"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "CHOIX_MULTIPLE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions/{slug}": {
+            "get": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Récupère une question par son slug",
+                "description": "Retourne une question",
+                "operationId": "f56d48906edc3c291b3365080be87697",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la question à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Modification d'une question",
+                "description": "Modifie une question et retourne la question modifiée",
+                "operationId": "4fbc06996bdcea4af76f1bba384b2720",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la question à modifiée",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "example": "Quel est un principe d'AgilePM ?"
+                                    },
+                                    "choix": {
+                                        "type": "string",
+                                        "example": "Communiquer souvent;Communiquer verbalement;Communiquer de manière formelle;Communiquer de façon continue et claire"
+                                    },
+                                    "reponses": {
+                                        "type": "string",
+                                        "example": "2;3"
+                                    },
+                                    "point": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "evaluation": {
+                                        "type": "string",
+                                        "example": "Slug de la levaluation_lecon"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "CHOIX_MULTIPLE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Suppression d'une question par son slug",
+                "description": "Retourne la question supprimée",
+                "operationId": "bc59a0082f28d1a4aaaa7868d5bed2d4",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la question à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions/import": {
+            "post": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Création d'une question",
+                "description": "Importe une liste de qcm",
+                "operationId": "6bbb27e719ee8c27218b8d893267a83a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "choix",
+                                    "type",
+                                    "lecon"
+                                ],
+                                "properties": {
+                                    "evaluation_lecon": {
+                                        "type": "string",
+                                        "example": "Slug de l'evaluation_lecon"
+                                    },
+                                    "qcm": {
+                                        "type": "string",
+                                        "example": "fichier excel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "question créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions/evaluation/{slugEvaluation}": {
+            "get": {
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Récupère la liste des question en fonction d'une evaluation",
+                "description": "Retourne une question",
+                "operationId": "510c3388ff5de7671412027f537150df",
+                "parameters": [
+                    {
+                        "name": "slugEvaluation",
+                        "in": "path",
+                        "description": "slug de l'évaluation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/questions-lecons": {
             "get": {
                 "tags": [
@@ -4429,6 +5267,37 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/questions-lecons/evaluation/{slugEvaluation}": {
+            "get": {
+                "tags": [
+                    "Questions leçons"
+                ],
+                "summary": "Récupère la liste des question en fonction d'une evaluation",
+                "description": "Retourne une question",
+                "operationId": "988bd7ff7a16809858be6c10f4b5758f",
+                "parameters": [
+                    {
+                        "name": "slugEvaluation",
+                        "in": "path",
+                        "description": "slug de l'évaluation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
                     }
                 },
                 "security": [
