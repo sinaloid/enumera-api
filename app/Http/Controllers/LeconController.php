@@ -360,7 +360,7 @@ class LeconController extends Controller
         $validator = Validator::make($request->all(), [
             'type' => 'required|string|max:255',
             'lecon' => 'required|string|max:255',
-            'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf,wav,mp3,mp4|max:20240', // 1 mega pour les images et les pdf
+            //'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf,wav,mp3,mp4|max:20240', // 1 mega pour les images et les pdf
         ]);
 
         if ($validator->fails()) {
@@ -394,9 +394,12 @@ class LeconController extends Controller
                     'url' => Storage::url($path),
                 ]);
             }
-        }
+            return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers enregistrés"], 201);
 
-        return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers enregistrés"], 201);
+        }
+        return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers non enregistré"], 200);
+
+
     }
     /**
      * @OA\Get(

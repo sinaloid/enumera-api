@@ -2333,28 +2333,19 @@
                 ]
             }
         },
-        "/api/evaluations/classe/{slugClasse}/matiere/{slugMatiere}": {
+        "/api/evaluations/classe/{slugClasse}": {
             "get": {
                 "tags": [
                     "Evaluations"
                 ],
                 "summary": "Récupère la liste des evaluations en fonction d'une classe et d'une matière",
                 "description": "Retourne la liste des evaluations",
-                "operationId": "b0133a7aa17704ab41843db2b4e2e8d3",
+                "operationId": "e3f8ac9541788ff8d287c5e429d79449",
                 "parameters": [
                     {
                         "name": "slugClasse",
                         "in": "path",
                         "description": "slug de la classe",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "slugMatiere",
-                        "in": "path",
-                        "description": "slug de la matière",
                         "required": true,
                         "schema": {
                             "type": "string"
