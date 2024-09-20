@@ -19,6 +19,8 @@ use App\Http\Controllers\QuestionLeconController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,12 +112,27 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         ]);
 
 
-    Route::get('/files', [LeconController::class, 'getFile'])->name('files.index');
-    Route::get('/files/lecon/{slug}', [LeconController::class, 'getLeconFile'])->name('files.filesLecon');
-    Route::post('/files', [LeconController::class, 'storeFile'])->name('files.store');
-    Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
-    Route::post('/questions-lecons-import', [QuestionLeconController::class,'storeExcel']);
-    Route::post('/questions-import', [QuestionController::class,'storeExcel']);
-    Route::post('/convert-doc-to-html', [DocumentController::class, 'convertDocumentToHtml']);
+        Route::get('/files', [LeconController::class, 'getFile'])->name('files.index');
+        Route::get('/files/lecon/{slug}', [LeconController::class, 'getLeconFile'])->name('files.filesLecon');
+        Route::post('/files', [LeconController::class, 'storeFile'])->name('files.store');
+        Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
+        Route::post('/questions-lecons-import', [QuestionLeconController::class,'storeExcel']);
+        Route::post('/questions-import', [QuestionController::class,'storeExcel']);
+        Route::post('/convert-doc-to-html', [DocumentController::class, 'convertDocumentToHtml']);
+
+        Route::group(['middleware' => ['role:super-admin|admin']], function() {
+
+            Route::resource('permissions', PermissionController::class);
+            Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
+
+            Route::resource('roles', RoleController::class);
+            Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy']);
+            Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole']);
+            Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'givePermissionToRole']);
+
+            //Route::resource('users', App\Http\Controllers\UserController::class);
+            //Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
+
+        });
     });
 });

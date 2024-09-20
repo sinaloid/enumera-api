@@ -319,6 +319,8 @@ class AuthController extends Controller
             }*/
 
             // Générer un token d'accès
+            //$user = auth()->user();
+            //dd($user->getAllPermissions());
             $token = $user->createToken('my-app-token')->accessToken;
             return response()->json(["message" => "Connexion réussi avec succès", 'user' => $user, 'access_token' => $token]);
         }
