@@ -5495,6 +5495,37 @@
                 ]
             }
         },
+        "/api/roles/{slug}": {
+            "get": {
+                "tags": [
+                    "Rôles"
+                ],
+                "summary": "Récupère un groupe par son slug",
+                "description": "Retourne un groupe",
+                "operationId": "e6264f44945741112c82e97d865bc1ca",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la groupe",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/roles/{id}": {
             "put": {
                 "tags": [
@@ -5999,6 +6030,109 @@
                 "responses": {
                     "200": {
                         "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/{slug}/groupe": {
+            "post": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Assigner un groupe d'utilisateur à un utilisateur",
+                "operationId": "748516dad565b993dc73115548550d14",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permission"
+                                ],
+                                "properties": {
+                                    "groupe": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Groupe attribué à l'utilisateur"
+                    },
+                    "404": {
+                        "description": "Rôle non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/{slug}/droits": {
+            "post": {
+                "tags": [
+                    "Rôles"
+                ],
+                "summary": "Assigner des permissions à un utilisateur",
+                "operationId": "da0d1b677f7f1cd37d7f41db6d151baf",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permission"
+                                ],
+                                "properties": {
+                                    "permission": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permissions ajoutées au rôle"
+                    },
+                    "404": {
+                        "description": "Rôle non trouvé"
                     }
                 },
                 "security": [

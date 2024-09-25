@@ -101,7 +101,7 @@ class RoleController extends Controller
     public function show($slug)
     {
         //$data = Role::where(["slug"=> $slug, "is_deleted" => false])->first();
-        $data = Role::where(["slug"=> $slug])->first();
+        $data = Role::where(["slug"=> $slug])->with("permissions")->first();
 
         if (!$data) {
             return response()->json(['message' => 'Groupe non trouvée'], 404);
@@ -217,13 +217,13 @@ class RoleController extends Controller
      * security={{"bearerAuth":{}}}
      * )
      */
-    public function givePermissionToRole(Request $request, $roleId)
+    public function givePermissionToRole(Request $request, $roleSlug)
     {
         $validated = $request->validate([
             'permission' => 'required|array'
         ]);
 
-        $role = Role::findOrFail($roleId);
+        $role = Role::where("slug",$roleSlug)->first();
         $role->syncPermissions($validated['permission']);
 
         return response()->json(['message' => 'Permissions ajoutées au rôle'], 200);

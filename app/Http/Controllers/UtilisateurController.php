@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Lecon;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -178,7 +180,7 @@ class UtilisateurController extends Controller
      */
     public function show($slug)
     {
-        $data = User::where(["slug"=> $slug, "is_deleted" => false])->first();
+        $data = User::where(["slug"=> $slug, "is_deleted" => false])->with('roles.permissions','permissions')->first();
 
         if (!$data) {
             return response()->json(['message' => 'utilisateur non trouvé'], 404);
@@ -365,4 +367,105 @@ class UtilisateurController extends Controller
 
         return response()->json(['message' => 'utilisateur trouvé', 'data' => $data], 200);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/utilisateurs/{slug}/groupe",
+     *     summary="Assigner un groupe d'utilisateur à un utilisateur",
+     *     tags={"Utilisateurs"},
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"permission"},
+     *             @OA\Property(property="groupe", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Groupe attribué à l'utilisateur"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rôle non trouvé"
+     *     ),
+     * security={{"bearerAuth":{}}}
+     * )
+     */
+    public function giveRoleToUser(Request $request, $slug)
+    {
+        $validated = $request->validate([
+            'groupe' => 'required|string'
+        ]);
+
+        $role = Role::where("slug",$request->groupe)->first();
+        if(!$role){
+            return response()->json(['message' => "Le groupe n'existe pas"], 404);
+        }
+        $utilisateur = User::where("slug",$slug)->first();
+
+        if(!$utilisateur){
+            return response()->json(['message' => "L'utilisateur n'existe pas"], 404);
+        }
+        //$role->syncPermissions($validated['permission']);
+        //$utilisteur->assignRole($role);
+        $utilisateur->syncRoles($role);
+
+        return response()->json(['message' => "Groupe attribué à l'utilisateur"], 200);
+    }
+    /**
+     * @OA\Post(
+     *     path="/api/utilisateurs/{slug}/droits",
+     *     summary="Assigner des permissions à un utilisateur",
+     *     tags={"Rôles"},
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"permission"},
+     *             @OA\Property(property="permission", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Permissions ajoutées au rôle"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rôle non trouvé"
+     *     ),
+     * security={{"bearerAuth":{}}}
+     * )
+     */
+    public function givePermissionsToUser(Request $request, $slug)
+    {
+    // Valider les données d'entrée
+    $validated = $request->validate([
+        'permissions' => 'required|array',
+        'permissions.*' => 'string|exists:permissions,name', // Chaque permission doit être une chaîne valide et exister dans la table des permissions
+    ]);
+
+    // Rechercher l'utilisateur par le slug
+    $utilisateur = User::where('slug', $slug)->first();
+
+    if (!$utilisateur) {
+        return response()->json(['message' => "L'utilisateur n'existe pas"], 404);
+    }
+
+        // Supprimer les permissions actuelles de l'utilisateur et attribuer les nouvelles
+        $utilisateur->syncPermissions($validated['permissions']);
+
+        return response()->json(['message' => 'Permissions attribuées avec succès à l\'utilisateur'], 200);
+    }
+
 }
