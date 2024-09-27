@@ -131,6 +131,10 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             Route::put('roles/{roleSlug}/permissions', [RoleController::class, 'givePermissionToRole']);
             Route::put('utilisateurs/{slug}/groupe', [UtilisateurController::class, 'giveRoleToUser']);
             Route::put('utilisateurs/{slug}/droits', [UtilisateurController::class, 'givePermissionsToUser']);
+            Route::post('utilisateurs/{slug}/classes', [UtilisateurController::class, 'userClasse']);
+            Route::delete('utilisateurs/{slug}/classe/{slugClasse}', [UtilisateurController::class, 'removeUserClasse']);
+            Route::post('utilisateurs/utilisateur-classe/{slug}/matieres', [UtilisateurController::class, 'userClasseMatiere']);
+            Route::delete('utilisateurs/utilisateur-classe-matiere/{slug}', [UtilisateurController::class, 'removeUserClasseMatiere']);
 
             //Route::resource('users', App\Http\Controllers\UserController::class);
             //Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);

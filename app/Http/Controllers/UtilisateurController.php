@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Lecon;
+use App\Models\UserClasse;
+use App\Models\Classe;
+use App\Models\Matiere;
+use App\Models\UserClasseMatiere;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
@@ -14,6 +17,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class UtilisateurController extends Controller
 {
@@ -34,7 +38,16 @@ class UtilisateurController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::where("is_deleted",false)->get();
+        $data = User::where("is_deleted",false)->with([
+            'roles.permissions',
+            'permissions',
+            'userClasses' => function($query){
+                $query->where('is_deleted', false)->with('classe');
+            },
+            'userClasses.userClasseMatieres' => function($query){
+                $query->where('is_deleted', false);
+            }
+        ])->get();
 
         if($request->profile){
             $data = User::where([
@@ -94,11 +107,12 @@ class UtilisateurController extends Controller
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
+            'matricule' => 'nullable|string|min:6|max:255|unique:users,matricule',
             'date_de_naissance' => 'required|string|max:255',
             'genre' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'telephone' => 'nullable|integer|digits:8|starts_with:5,6,7,01,02,03,05,06,07|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'nullable|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
 
@@ -110,7 +124,7 @@ class UtilisateurController extends Controller
             $response = $otpController->generateOTP($request);
             $response = $response->getData();*/
 
-            $matricule = $this->matriculeGenerator("ENA");
+            $matricule = isset($request->matricule) ? $request->matricule : $this->matriculeGenerator("ENA");
             $user = User::create([
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
@@ -118,9 +132,9 @@ class UtilisateurController extends Controller
                 'genre' => $request->genre,
                 'profile' => $request->profile,
                 'genre' => $request->genre,
-                'telephone' => $request->telephone,
+                'telephone' => isset($request->telephone) ? $request->telephone : "null",
                 'matricule' => $matricule,
-                'email' => $request->email,
+                'email' => isset($request->email) ? $request->email : "null",
                 'slug' => Str::random(10),
                 "isActive" => true,
                 "email_verified_at" => Carbon::now(),
@@ -180,7 +194,16 @@ class UtilisateurController extends Controller
      */
     public function show($slug)
     {
-        $data = User::where(["slug"=> $slug, "is_deleted" => false])->with('roles.permissions','permissions')->first();
+        $data = User::where(["slug"=> $slug, "is_deleted" => false])->with([
+            'roles.permissions',
+            'permissions',
+            'userClasses' => function($query){
+                $query->where('is_deleted', false)->with('classe');
+            },
+            'userClasses.userClasseMatieres' => function($query){
+                $query->where('is_deleted', false);
+            }
+        ])->first();
 
         if (!$data) {
             return response()->json(['message' => 'utilisateur non trouvé'], 404);
@@ -245,6 +268,11 @@ class UtilisateurController extends Controller
      */
     public function update(Request $request, $slug)
     {
+        $utilisateur = User::where([
+            'email' => $request->email,
+            'telephone' => $request->telephone
+        ])->first();
+
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
@@ -253,7 +281,8 @@ class UtilisateurController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             //'telephone' => 'nullable|integer|digits:8|starts_with:5,6,7,01,02,03,05,06,07|unique:users',
             //'email' => 'required|string|email|max:255|unique:users',
-            //'password' => 'required|string|min:8',
+
+            'password' => 'required|string|min:8',
         ]);
 
         if ($validator->fails()) {
@@ -274,13 +303,13 @@ class UtilisateurController extends Controller
             'genre' => $request->genre,
             'profile' => $request->profile,
             'genre' => $request->genre,
-            //'telephone' => $request->telephone,
-            //'matricule' => $matricule,
-            //'email' => $request->email,
+            'telephone' => $request->telephone,
+            'matricule' => $request->matricule,
+            'email' => $request->email,
             'slug' => Str::random(10),
             "isActive" => true,
             //"email_verified_at" => Carbon::now(),
-            //'password' => bcrypt($request->password),
+            'password' => bcrypt($request->password),
         ]);
 
 
@@ -361,7 +390,16 @@ class UtilisateurController extends Controller
      */
     public function getUtilisateurByProfile($slug)
     {
-        $data = User::where(["profile"=> $slug, "is_deleted" => false])->get();
+        $data = User::where(["profile"=> $slug, "is_deleted" => false])->with([
+            'roles.permissions',
+            'permissions',
+            'userClasses' => function($query){
+                $query->where('is_deleted', false)->with('classe');
+            },
+            'userClasses.userClasseMatieres' => function($query){
+                $query->where('is_deleted', false);
+            }
+        ])->get();
 
 
 
@@ -467,5 +505,221 @@ class UtilisateurController extends Controller
 
         return response()->json(['message' => 'Permissions attribuées avec succès à l\'utilisateur'], 200);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/utilisateurs/{slug}/classes",
+     *     summary="Assigner des classes à un utilisateur",
+     *     tags={"Utilisateurs"},
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"classes"},
+     *             @OA\Property(property="classes", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Classes attribuées"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Utilisateur ou classes non trouvé"
+     *     ),
+     * security={{"bearerAuth":{}}}
+     * )
+     */
+    public function userClasse(Request $request, $slug)
+    {
+    // Valider les données d'entrée
+    $validated = $request->validate([
+        'classes' => 'required|array',
+        'classes.*' => 'string|exists:classes,slug', // Chaque classe doit être une chaîne valide et exister dans la table des classes
+    ]);
+
+    // Rechercher l'utilisateur par le slug
+    $utilisateur = User::where('slug', $slug)->first();
+    if (!$utilisateur) {
+        return response()->json(['message' => "L'utilisateur n'existe pas"], 404);
+    }
+
+     // Rechercher les classes correspondantes aux slugs en une seule requête
+    $classes = Classe::whereIn('slug', $validated['classes'])->get();
+
+    if ($classes->isEmpty()) {
+        return response()->json(['message' => 'Aucune des classes spécifiées n\'a été trouvée'], 404);
+    }
+
+    // Assigner les classes à l'utilisateur en évitant les doublons
+    foreach ($classes as $classe) {
+        UserClasse::firstOrCreate([
+            'user_id' => $utilisateur->id,
+            'classe_id' => $classe->id,
+        ],['slug' => Str::random(8),]);
+    }
+
+    return response()->json(['message' => 'Classes attribuées avec succès à l\'utilisateur'], 200);
+    }
+    /**
+    * @OA\Delete(
+    *     path="/api/utilisateurs/{slug}/classes/{classeSlug}",
+    *     summary="Supprimer une classe d'un utilisateur",
+    *     tags={"Utilisateurs"},
+    *     @OA\Parameter(
+    *         name="slug",
+    *         in="path",
+    *         required=true,
+    *         @OA\Schema(type="string")
+    *     ),
+    *     @OA\Parameter(
+    *         name="classeSlug",
+    *         in="path",
+    *         required=true,
+    *         @OA\Schema(type="string")
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Classe supprimée"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Utilisateur ou classe non trouvé"
+    *     ),
+    * security={{"bearerAuth":{}}}
+    * )
+    */
+    public function removeUserClasse(Request $request, $slug, $classeSlug)
+    {
+        // Rechercher l'utilisateur par son slug
+        $utilisateur = User::where('slug', $slug)->first();
+
+        if (!$utilisateur) {
+            return response()->json(['message' => "L'utilisateur n'existe pas"], 404);
+        }
+
+        // Rechercher la classe par son slug
+        $classe = Classe::where('slug', $classeSlug)->first();
+
+        if (!$classe) {
+            return response()->json(['message' => "La classe n'existe pas"], 404);
+        }
+
+        // Supprimer la relation dans la table pivot UserClasse
+        $deleted = UserClasse::where('user_id', $utilisateur->id)
+            ->where('classe_id', $classe->id)->delete();
+
+        if ($deleted) {
+            return response()->json(['message' => 'Classe supprimée avec succès de l\'utilisateur'], 200);
+        } else {
+            return response()->json(['message' => 'Aucune relation trouvée à supprimer'], 404);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/utilisateurs/utilisateur-classe/{slug}/matieres",
+     *     summary="Assigner des matières à un enseignants",
+     *     tags={"Utilisateurs"},
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"matieres"},
+     *             @OA\Property(property="matieres", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Classes attribuées"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Utilisateur ou classes non trouvé"
+     *     ),
+     * security={{"bearerAuth":{}}}
+     * )
+     */
+    public function userClasseMatiere(Request $request, $slug)
+    {
+        // Valider les données d'entrée
+        $validated = $request->validate([
+        'matieres' => 'required|array',
+        'matieres.*' => 'string|exists:matieres,slug', // Chaque classe doit être une chaîne valide et exister dans la table des classes
+        ]);
+
+        // Rechercher l'utilisateur par le slug
+        $utilisateurClasse = UserClasse::where('slug', $slug)->first();
+        if (!$utilisateurClasse) {
+            return response()->json(['message' => "La classe utilisateur n'existe pas"], 404);
+        }
+
+        // Rechercher les classes correspondantes aux slugs en une seule requête
+        $matieres = Matiere::whereIn('slug', $validated['matieres'])->get();
+
+        if ($matieres->isEmpty()) {
+            return response()->json(['message' => 'Aucune des matieres spécifiées n\'a été trouvée'], 404);
+        }
+
+        // Assigner les classes à l'utilisateur en évitant les doublons
+        foreach ($matieres as $matiere) {
+            UserClasseMatiere::firstOrCreate([
+                'user_classe_id' => $utilisateurClasse->id,
+                'matiere_id' => $matiere->id,
+
+            ],[
+                'matiere_slug' => $matiere->slug,
+                'matiere_label' => $matiere->label,
+                'slug' => Str::random(8),
+            ]);
+        }
+
+        return response()->json(['message' => 'Matières attribuées avec succès à l\'utilisateur'], 200);
+    }
+
+    /**
+    * @OA\Delete(
+    *     path="/api/utilisateurs/utilisateur-classe-matiere/{slug}",
+    *     summary="Supprimer une matière d'un utilisateur",
+    *     tags={"Utilisateurs"},
+    *     @OA\Parameter(
+    *         name="slug",
+    *         in="path",
+    *         required=true,
+    *         @OA\Schema(type="string")
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Classe supprimée"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Utilisateur ou classe non trouvé"
+    *     ),
+    * security={{"bearerAuth":{}}}
+    * )
+    */
+    public function removeUserClasseMatiere(Request $request, $matiereSlug)
+    {
+        // Supprimer la relation dans la table pivot UserClasse
+        $deleted = UserClasseMatiere::where('slug', $matiereSlug)->delete();
+
+        if ($deleted) {
+            return response()->json(['message' => 'Matière de l\'utilisateur supprimée avec succès de '], 200);
+        } else {
+            return response()->json(['message' => 'Aucune relation trouvée à supprimer'], 404);
+        }
+    }
+
 
 }
