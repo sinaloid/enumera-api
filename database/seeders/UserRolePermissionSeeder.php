@@ -18,13 +18,6 @@ class UserRolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Permissions
-        Permission::create([
-            'name' => 'view roles',
-            'display_name' => 'Voir les rôles',
-            'description' => 'Permet à un utilisateur de consulter la liste des rôles et leurs détails au sein de l\'application.',
-            'slug' => Str::random(10),
-        ]);
         // Permissions pour "role"
 Permission::create([
     'name' => 'create role',
