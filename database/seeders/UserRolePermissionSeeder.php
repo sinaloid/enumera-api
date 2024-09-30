@@ -373,6 +373,281 @@ Permission::create([
     'slug' => Str::random(10),
 ]);
 
+// Permissions pour "discussion"
+Permission::create([
+    'name' => 'create discussion',
+    'display_name' => 'Créer une discussion',
+    'description' => 'Permet à un utilisateur de créer une nouvelle discussion.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update discussion',
+    'display_name' => 'Modifier une discussion',
+    'description' => 'Permet à un utilisateur de modifier une discussion existante.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete discussion',
+    'display_name' => 'Supprimer une discussion',
+    'description' => 'Permet à un utilisateur de supprimer une discussion.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view discussion',
+    'display_name' => 'Voir les discussions',
+    'description' => 'Permet à un utilisateur de consulter la liste des discussions.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "classeVirtuelle"
+Permission::create([
+    'name' => 'create classeVirtuelle',
+    'display_name' => 'Créer une classe virtuelle',
+    'description' => 'Permet à un utilisateur de créer une nouvelle classe virtuelle.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update classeVirtuelle',
+    'display_name' => 'Modifier une classe virtuelle',
+    'description' => 'Permet à un utilisateur de modifier une classe virtuelle.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete classeVirtuelle',
+    'display_name' => 'Supprimer une classe virtuelle',
+    'description' => 'Permet à un utilisateur de supprimer une classe virtuelle.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view classeVirtuelle',
+    'display_name' => 'Voir les classes virtuelles',
+    'description' => 'Permet à un utilisateur de consulter la liste des classes virtuelles.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "eleve"
+Permission::create([
+    'name' => 'create eleve',
+    'display_name' => 'Créer un élève',
+    'description' => 'Permet à un utilisateur de créer un élève.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update eleve',
+    'display_name' => 'Modifier un élève',
+    'description' => 'Permet à un utilisateur de modifier les informations d\'un élève.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete eleve',
+    'display_name' => 'Supprimer un élève',
+    'description' => 'Permet à un utilisateur de supprimer un élève.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view eleve',
+    'display_name' => 'Voir les élèves',
+    'description' => 'Permet à un utilisateur de consulter la liste des élèves.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "enseignant"
+Permission::create([
+    'name' => 'create enseignant',
+    'display_name' => 'Créer un enseignant',
+    'description' => 'Permet à un utilisateur de créer un enseignant.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update enseignant',
+    'display_name' => 'Modifier un enseignant',
+    'description' => 'Permet à un utilisateur de modifier les informations d\'un enseignant.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete enseignant',
+    'display_name' => 'Supprimer un enseignant',
+    'description' => 'Permet à un utilisateur de supprimer un enseignant.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view enseignant',
+    'display_name' => 'Voir les enseignants',
+    'description' => 'Permet à un utilisateur de consulter la liste des enseignants.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "parent"
+Permission::create([
+    'name' => 'create parent',
+    'display_name' => 'Créer un parent',
+    'description' => 'Permet à un utilisateur de créer un parent.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update parent',
+    'display_name' => 'Modifier un parent',
+    'description' => 'Permet à un utilisateur de modifier les informations d\'un parent.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete parent',
+    'display_name' => 'Supprimer un parent',
+    'description' => 'Permet à un utilisateur de supprimer un parent.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view parent',
+    'display_name' => 'Voir les parents',
+    'description' => 'Permet à un utilisateur de consulter la liste des parents.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "utilisateur"
+Permission::create([
+    'name' => 'create utilisateur',
+    'display_name' => 'Créer un utilisateur',
+    'description' => 'Permet à un utilisateur de créer un utilisateur.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update utilisateur',
+    'display_name' => 'Modifier un utilisateur',
+    'description' => 'Permet à un utilisateur de modifier les informations d\'un utilisateur.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete utilisateur',
+    'display_name' => 'Supprimer un utilisateur',
+    'description' => 'Permet à un utilisateur de supprimer un utilisateur.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view utilisateur',
+    'display_name' => 'Voir les utilisateurs',
+    'description' => 'Permet à un utilisateur de consulter la liste des utilisateurs.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "parametre"
+Permission::create([
+    'name' => 'update parametre',
+    'display_name' => 'Modifier les paramètres',
+    'description' => 'Permet à un utilisateur de modifier les paramètres de l\'application.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view parametre',
+    'display_name' => 'Voir les paramètres',
+    'description' => 'Permet à un utilisateur de consulter les paramètres de l\'application.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "questionLecon"
+Permission::create([
+    'name' => 'create questionLecon',
+    'display_name' => 'Créer une question de leçon',
+    'description' => 'Permet à un utilisateur de créer une nouvelle question pour une leçon.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update questionLecon',
+    'display_name' => 'Modifier une question de leçon',
+    'description' => 'Permet à un utilisateur de modifier une question existante pour une leçon.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete questionLecon',
+    'display_name' => 'Supprimer une question de leçon',
+    'description' => 'Permet à un utilisateur de supprimer une question liée à une leçon.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view questionLecon',
+    'display_name' => 'Voir les questions de leçon',
+    'description' => 'Permet à un utilisateur de consulter la liste des questions pour les leçons.',
+    'slug' => Str::random(10),
+]);
+
+// Permissions pour "question"
+Permission::create([
+    'name' => 'create question',
+    'display_name' => 'Créer une question',
+    'description' => 'Permet à un utilisateur de créer une nouvelle question.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'update question',
+    'display_name' => 'Modifier une question',
+    'description' => 'Permet à un utilisateur de modifier une question existante.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'delete question',
+    'display_name' => 'Supprimer une question',
+    'description' => 'Permet à un utilisateur de supprimer une question.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'view question',
+    'display_name' => 'Voir les questions',
+    'description' => 'Permet à un utilisateur de consulter la liste des questions.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'assign role',
+    'display_name' => 'Attribuer un groupe',
+    'description' => 'Permet à un utilisateur d\'attribuer un groupe à un utilisateur ou entité.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'assign permission',
+    'display_name' => 'Attribuer un droit',
+    'description' => 'Permet à un utilisateur d\'attribuer un droit spécifique à un utilisateur ou entité.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'assign classe',
+    'display_name' => 'Attribuer une classe',
+    'description' => 'Permet à un utilisateur d\'attribuer une classe à un élève ou enseignant.',
+    'slug' => Str::random(10),
+]);
+
+Permission::create([
+    'name' => 'assign matiere',
+    'display_name' => 'Attribuer une matière',
+    'description' => 'Permet à un utilisateur d\'attribuer une matière à un enseignant ou élève.',
+    'slug' => Str::random(10),
+]);
+
 
 
 
@@ -446,6 +721,7 @@ Permission::create([
                 ]);
 
         $superAdminUser->assignRole($superAdminRole);
+        $superAdminUser->syncPermissions($allPermissionNames);
 
 
     }

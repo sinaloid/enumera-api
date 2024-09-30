@@ -712,7 +712,7 @@ class UtilisateurController extends Controller
     public function removeUserClasseMatiere(Request $request, $matiereSlug)
     {
         // Supprimer la relation dans la table pivot UserClasse
-        $deleted = UserClasseMatiere::where('slug', $matiereSlug)->delete();
+        $deleted = UserClasse::where('slug', $matiereSlug)->delete();
 
         if ($deleted) {
             return response()->json(['message' => 'Matière de l\'utilisateur supprimée avec succès de '], 200);

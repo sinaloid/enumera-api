@@ -6141,6 +6141,184 @@
                     }
                 ]
             }
+        },
+        "/api/utilisateurs/{slug}/classes": {
+            "post": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Assigner des classes à un utilisateur",
+                "operationId": "aa4441a66419d0f2555dda20a436bb43",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "classes"
+                                ],
+                                "properties": {
+                                    "classes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Classes attribuées"
+                    },
+                    "404": {
+                        "description": "Utilisateur ou classes non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/{slug}/classes/{classeSlug}": {
+            "delete": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Supprimer une classe d'un utilisateur",
+                "operationId": "7f0ea4853383218624d42607b62ba5a2",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "classeSlug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Classe supprimée"
+                    },
+                    "404": {
+                        "description": "Utilisateur ou classe non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/utilisateur-classe/{slug}/matieres": {
+            "post": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Assigner des matières à un enseignants",
+                "operationId": "c27676d23ab10f80f3c1c38166e8b6f7",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "matieres"
+                                ],
+                                "properties": {
+                                    "matieres": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Classes attribuées"
+                    },
+                    "404": {
+                        "description": "Utilisateur ou classes non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/utilisateur-classe-matiere/{slug}": {
+            "delete": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Supprimer une matière d'un utilisateur",
+                "operationId": "3e7c678a58c9b94e3df443e2328d1335",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Classe supprimée"
+                    },
+                    "404": {
+                        "description": "Utilisateur ou classe non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
