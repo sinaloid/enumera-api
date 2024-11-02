@@ -12,6 +12,7 @@ class EvaluationLecon extends Model
     protected $fillable = [
         "label",
         "abreviation",
+        "type_de_correction",
         "description",
         "slug",
         "is_deleted",

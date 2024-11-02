@@ -30,6 +30,7 @@ class User extends Authenticatable
         "matricule",
         "isActive",
         "isBlocked",
+        "image",
         "email",
         "password",
         "slug",

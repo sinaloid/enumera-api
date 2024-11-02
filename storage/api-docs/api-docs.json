@@ -2028,6 +2028,10 @@
                                         "type": "string",
                                         "example": "Intitulé de l'evaluation"
                                     },
+                                    "type_de_correction": {
+                                        "type": "string",
+                                        "example": "Correction automatique ou Correction manuelle"
+                                    },
                                     "date": {
                                         "type": "string",
                                         "example": "20/9/2021"
@@ -2172,6 +2176,10 @@
                                     "abreviation": {
                                         "type": "string",
                                         "example": "Intitulé de l'evaluation"
+                                    },
+                                    "type_de_correction": {
+                                        "type": "string",
+                                        "example": "Correction automatique ou Correction manuelle"
                                     },
                                     "date": {
                                         "type": "string",
@@ -2406,6 +2414,10 @@
                                         "type": "string",
                                         "example": "Intitulé de l'evaluation"
                                     },
+                                    "type_de_correction": {
+                                        "type": "string",
+                                        "example": "Correction automatique ou Correction manuelle"
+                                    },
                                     "abreviation": {
                                         "type": "string",
                                         "example": "Intitulé de l'evaluation"
@@ -2534,6 +2546,10 @@
                                     "label": {
                                         "type": "string",
                                         "example": "Intitulé de l'evaluation"
+                                    },
+                                    "type_de_correction": {
+                                        "type": "string",
+                                        "example": "Correction automatique ou Correction manuelle"
                                     },
                                     "abreviation": {
                                         "type": "string",
@@ -2786,6 +2802,301 @@
                 "responses": {
                     "200": {
                         "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/res-lecons-eleves": {
+            "get": {
+                "tags": [
+                    "Evaluations leçons reponses élèves"
+                ],
+                "summary": "Liste des réponses des élvès",
+                "description": "Retourne la liste des réponses des élvès",
+                "operationId": "9298d56dae5c888bf2d9028b56b5dffd",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Evaluations leçons reponses élèves"
+                ],
+                "summary": "Création d'une réponse",
+                "description": "Crée une nouvelle réponse d'un élève et retourne la réponse créée",
+                "operationId": "2c8996d27b12ab5cf491f27d8eca5aee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_response",
+                                    "eleve",
+                                    "evaluation"
+                                ],
+                                "properties": {
+                                    "user_response": {
+                                        "type": "string",
+                                        "example": "reponse de l'eleve"
+                                    },
+                                    "evaluation": {
+                                        "type": "string",
+                                        "example": "Slug de l'evaluation"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Réponse créée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/res-lecons-eleves/{slug}": {
+            "get": {
+                "tags": [
+                    "Evaluations leçons reponses élèves"
+                ],
+                "summary": "Récupère une evaluation par son slug",
+                "description": "Retourne une evaluation",
+                "operationId": "d67915fc9ef12ad6024585da7b90f3ad",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la réponse à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Evaluations leçons reponses élèves"
+                ],
+                "summary": "Modification d'une evaluation",
+                "description": "Modifie une evaluation et retourne la evaluation modifiée",
+                "operationId": "4cf25f10b24ad0d156eb45c72f31d6c4",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la evaluation à modifiée",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_response"
+                                ],
+                                "properties": {
+                                    "user_response": {
+                                        "type": "string",
+                                        "example": "reponse de l'eleve"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation modifiée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "evaluation non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Evaluations leçons reponses élèves"
+                ],
+                "summary": "Suppression d'une réponse d'un élève par son slug",
+                "description": "Retourne la réponse supprimée",
+                "operationId": "bd56bb22385d6916f2d72d7d8d5298e4",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la réponse à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Réponse supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Réponse non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -5990,6 +6301,100 @@
                                         "message": {
                                             "type": "string",
                                             "example": "utilisateur non trouvé"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/auth/infos": {
+            "get": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Récupère les informations de l'utilisateur connecté",
+                "description": "Retourne les informations de l'utilisateur connecté",
+                "operationId": "df33df2fb7c3e04255665922205bfc0e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/utilisateurs/auth/image": {
+            "put": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Modification de la photo de l'utilisateur connecté",
+                "description": "Modifie la photo de l'utilisateur connecté et retourne le utilisateur modifié",
+                "operationId": "a210655ebfb167ddc33309df2e7a7dac",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "image"
+                                ],
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "example": "photo de l'utilisateur"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "utilisateur modifié avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
                                         },
                                         "errors": {
                                             "type": "object"

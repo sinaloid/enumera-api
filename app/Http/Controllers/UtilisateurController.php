@@ -312,6 +312,21 @@ class UtilisateurController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
+        if ($request->hasFile('image')) {
+            // Générer un nom aléatoire pour l'image
+            $imageName = Str::random(10) . '.' . $request->image->getClientOriginalExtension();
+
+            // Enregistrer l'image dans le dossier public/images
+            $imagePath = $request->image->move(public_path('users'), $imageName);
+
+            if ($imagePath) {
+                if($data->image){Storage::delete($data->image);}
+                $data->update([
+                    'image' => 'users/' . $imageName,
+                ]);
+            }
+        }
+
 
         return response()->json(['message' => 'utilisateur modifié avec succès', 'data' => $data], 200);
 
@@ -363,6 +378,159 @@ class UtilisateurController extends Controller
         $data->update(["is_deleted" => true]);
 
         return response()->json(['message' => 'utilisateur supprimé avec succès',"data" => $data]);
+    }
+
+    /**
+     * @OA\Get(
+     *      tags={"Utilisateurs"},
+     *      summary="Récupère les informations de l'utilisateur connecté",
+     *      description="Retourne les informations de l'utilisateur connecté",
+     *      path="/api/utilisateurs/auth/infos",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function getUtilisateurAuth()
+    {
+        $data = Auth::user()->with([
+            'roles.permissions',
+            'permissions',
+            'userClasses' => function($query){
+                $query->where('is_deleted', false)->with('classe');
+            },
+            'userClasses.userClasseMatieres' => function($query){
+                $query->where('is_deleted', false);
+            }
+        ])->first();
+
+
+
+        return response()->json(['message' => 'utilisateur trouvé', 'data' => $data], 200);
+    }
+
+    /**
+     * @OA\Put(
+     *     tags={"Utilisateurs"},
+     *     description="Modifie la photo de l'utilisateur connecté et retourne le utilisateur modifié",
+     *     path="/api/utilisateurs/auth/image",
+     *     summary="Modification de la photo de l'utilisateur connecté",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"image"},
+     *             @OA\Property(property="image", type="string", example="photo de l'utilisateur"),
+     *         ),
+     *     ),
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="utilisateur modifié avec succès"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function updateUtilisateurAuthImage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $data = Auth::user()->first();
+
+        if ($request->hasFile('image')) {
+            // Générer un nom aléatoire pour l'image
+            $imageName = Str::random(10) . '.' . $request->image->getClientOriginalExtension();
+
+            // Enregistrer l'image dans le dossier public/images
+            $imagePath = $request->image->move(public_path('users'), $imageName);
+
+            if ($imagePath) {
+                if($data->image){Storage::delete($data->image);}
+                $data->update([
+                    'image' => 'users/' . $imageName,
+                ]);
+            }
+        }
+
+
+
+        return response()->json(['message' => 'utilisateur trouvé', 'data' => $data], 200);
+    }
+
+    /**
+     * @OA\Put(
+     *     tags={"Utilisateurs"},
+     *     description="Modifie le mot de passe de l'utilisateur connecté et retourne le utilisateur modifié",
+     *     path="/api/utilisateurs/auth/password",
+     *     summary="Modification du mot de passe de l'utilisateur connecté",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"password","oldPassword"},
+     *             @OA\Property(property="password", type="string", example="Nouveau mot de passe"),
+     *             @OA\Property(property="oldPassword", type="string", example="Ancien mot de passe"),
+     *         ),
+     *     ),
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="utilisateur modifié avec succès"),
+     *             @OA\Property(property="data", type="object")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Les données fournies ne sont pas valides"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function updateUtilisateurAuthPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|min:8',
+            'oldPassword' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $data = Auth::user()->first();
+
+        if(Hash::check($request->oldPassword, $data->password)){
+            $data->update([
+                'password' => bcrypt($request->password),
+            ]);
+            return response()->json(['message' => 'Votre mot de passe a bien été modifié', 'data' => $data], 200);
+        }
+
+        return response()->json(['errors' => 'L’ancien mot de passe est incorrect.'], 401);
     }
 
 

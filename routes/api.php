@@ -21,6 +21,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\EvaluationLeconReponseEleveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +94,9 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::get('/questions/evaluation/{slugEvaluation}', [QuestionController::class,'getQuestionByEvaluation']);
         /**Question Leçons */
         Route::get('/questions-lecons/evaluation/{slugEvaluation}', [QuestionLeconController::class,'getQuestionByEvaluation']);
+        Route::get('utilisateurs/auth/infos', [UtilisateurController::class, 'getUtilisateurAuth']);
+        Route::post('utilisateurs/auth/image', [UtilisateurController::class, 'updateUtilisateurAuthImage']);
+        Route::post('utilisateurs/auth/password', [UtilisateurController::class, 'updateUtilisateurAuthPassword']);
 
         Route::resources([
             'utilisateurs' => UtilisateurController::class,
@@ -105,6 +109,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'cours' => CoursController::class,
             'evaluations' => EvaluationController::class,
             'evaluations-lecons' => EvaluationLeconController::class,
+            'res-lecons-eleves' => EvaluationLeconReponseEleveController::class,
             'questions' => QuestionController::class,
             'questions-lecons' => QuestionLeconController::class,
             'chatgpt' => ChatController::class,

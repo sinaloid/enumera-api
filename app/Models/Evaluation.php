@@ -12,6 +12,7 @@ class Evaluation extends Model
     protected $fillable = [
         "label",
         "abreviation",
+        "type_de_correction",
         "date",
         "heure_debut",
         "heure_fin",

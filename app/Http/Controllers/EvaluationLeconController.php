@@ -51,6 +51,7 @@ class EvaluationLeconController extends Controller
      *         @OA\JsonContent(
      *             required={"label","abreviation","description","lecon"},
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="type_de_correction", type="string", example="Correction automatique ou Correction manuelle"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="description", type="string", example="courte description"),
      *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
@@ -81,6 +82,7 @@ class EvaluationLeconController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
+            'type_de_correction' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'lecon' => 'required|string|max:10',
 
@@ -98,6 +100,7 @@ class EvaluationLeconController extends Controller
         $data = EvaluationLecon::create([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
+            'type_de_correction' => $request->input('type_de_correction'),
             'description' => $request->input('description'),
             'lecon_id' => $lecon->id,
             'slug' => Str::random(10),
@@ -150,6 +153,7 @@ class EvaluationLeconController extends Controller
      *         @OA\JsonContent(
      *             required={"label","abreviation","description","lecon"},
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="type_de_correction", type="string", example="Correction automatique ou Correction manuelle"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="description", type="string", example="courte description"),
      *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
@@ -197,6 +201,7 @@ class EvaluationLeconController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
+            'type_de_correction' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'lecon' => 'required|string|max:10',
 
@@ -222,6 +227,7 @@ class EvaluationLeconController extends Controller
         $data->update([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
+            'type_de_correction' => $request->input('type_de_correction'),
             'description' => $request->input('description'),
             'lecon_id' => $lecon->id,
         ]);

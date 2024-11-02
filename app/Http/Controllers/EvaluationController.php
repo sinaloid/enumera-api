@@ -52,6 +52,7 @@ class EvaluationController extends Controller
      *             required={"label","abreviation","description","lecon"},
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="type_de_correction", type="string", example="Correction automatique ou Correction manuelle"),
      *             @OA\Property(property="date", type="string", example="20/9/2021"),
      *             @OA\Property(property="heure_debut", type="string", example="15:00"),
      *             @OA\Property(property="heure_fin", type="string", example="17:00"),
@@ -85,6 +86,7 @@ class EvaluationController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
+            'type_de_correction' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'classe' => 'required|string|max:10',
             'matiere' => 'required|string|max:10',
@@ -118,6 +120,7 @@ class EvaluationController extends Controller
         $data = Evaluation::create([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
+            'type_de_correction' => $request->input('type_de_correction'),
             'date' => $request->input('date'),
             'heure_debut' => $request->input('heure_debut'),
             'heure_fin' => $request->input('heure_fin'),
@@ -174,6 +177,7 @@ class EvaluationController extends Controller
      *             required={"label","abreviation","description","lecon"},
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="type_de_correction", type="string", example="Correction automatique ou Correction manuelle"),
      *             @OA\Property(property="date", type="string", example="20/9/2021"),
      *             @OA\Property(property="heure_debut", type="string", example="15:00"),
      *             @OA\Property(property="heure_fin", type="string", example="17:00"),
@@ -224,6 +228,8 @@ class EvaluationController extends Controller
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
+            'type_de_correction' => 'required|string|max:255',
+            'type_de_correction' => $request->input('type_de_correction'),
             'description' => 'required|string|max:255',
             'classe' => 'required|string|max:10',
             'matiere' => 'required|string|max:10',
@@ -264,6 +270,7 @@ class EvaluationController extends Controller
         $data->update([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
+            'type_de_correction' => $request->input('type_de_correction'),
             'date' => $request->input('date'),
             'heure_debut' => $request->input('heure_debut'),
             'heure_fin' => $request->input('heure_fin'),

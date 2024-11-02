@@ -1,31 +1,42 @@
-# Utiliser l'image officielle PHP 8.2 avec Apache
-FROM php:8.2-apache
+# Utiliser l'image officielle de PHP 8.1 avec Apache
+FROM php:8.1-apache
 
-# Installer les extensions PHP requises pour Laravel
+# Installer les dépendances système et extensions PHP requises
 RUN apt-get update && apt-get install -y \
-    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zip \
     unzip \
     git \
     curl \
-    && docker-php-ext-install zip pdo pdo_mysql
+    libzip-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo pdo_mysql zip
 
-# Installer Composer
+# Installer Composer globalement
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copier le projet Laravel dans le conteneur
-WORKDIR /var/www/html
-COPY . /var/www/html
+# Copier le contenu du projet dans le répertoire /var/www
+WORKDIR /var/www
+COPY . /var/www
 
-# Donner les bonnes permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+# Installer les dépendances PHP de Laravel
+RUN composer install --optimize-autoloader --no-dev
 
-# Activer le module Apache rewrite
+# Configurer les permissions pour Laravel (pour Apache)
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 755 /var/www/storage \
+    && chmod -R 755 /var/www/bootstrap/cache
+
+# Changer le DocumentRoot d'Apache pour le dossier public de Laravel
+RUN sed -i 's|/var/www/html|/var/www/public|g' /etc/apache2/sites-available/000-default.conf
+
+# Activer le module mod_rewrite d'Apache pour supporter les URLs propres de Laravel
 RUN a2enmod rewrite
 
-# Exposer le port 80
+# Exposer le port 80 pour Apache
 EXPOSE 80
 
-# Commande pour démarrer Apache
+# Lancer Apache en mode foreground (le service principal)
 CMD ["apache2-foreground"]
