@@ -395,7 +395,8 @@ class UtilisateurController extends Controller
      */
     public function getUtilisateurAuth()
     {
-        $data = Auth::user()->with([
+        $user = Auth::user();
+        $data = User::where("id",$user->id)->with([
             'roles.permissions',
             'permissions',
             'userClasses' => function($query){
