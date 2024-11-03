@@ -92,7 +92,8 @@ class EvaluationLeconReponseEleveController extends Controller
 
         $point_obtenu = 0;
         foreach ($request->user_response as $value) {
-            $point_obtenu = $point_obtenu + floatval($value['user_point']);
+            $user_point = isset($value['user_point']) ? floatval($value['user_point']) : 0;
+            $point_obtenu = $point_obtenu + $user_point;
         }
 
         $data = EvaluationLeconReponseEleve::create([
