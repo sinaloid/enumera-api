@@ -3106,6 +3106,37 @@
                 ]
             }
         },
+        "/api/res-lecons-eleves/evaluation/{slug}": {
+            "get": {
+                "tags": [
+                    "Evaluations leçons reponses élèves"
+                ],
+                "summary": "Récupère des réponse en fonction d'une evaluation",
+                "description": "Retourne des réponses",
+                "operationId": "5833a11d5527fa0feaeb44206ff29a89",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de l'evaluation leçon",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/lecons": {
             "get": {
                 "tags": [

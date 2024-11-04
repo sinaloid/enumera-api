@@ -268,4 +268,38 @@ class EvaluationLeconReponseEleveController extends Controller
 
         return response()->json(['message' => 'Réponse supprimée avec succès',"data" => $data]);
     }
+
+    /**
+     * @OA\Get(
+     *      tags={"Evaluations leçons reponses élèves"},
+     *      summary="Récupère des réponse en fonction d'une evaluation",
+     *      description="Retourne des réponses",
+     *      path="/api/res-lecons-eleves/evaluation/{slug}",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Parameter(
+     *          name="slug",
+     *          in="path",
+     *          description="slug de l'evaluation leçon",
+     *          required=true,
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function reponseByEvaluation($evaluationSlug)
+    {
+        $data = EvaluationLeconReponseEleve::where("is_deleted", false)->whereHas('evaluationLecon', function($query) use ($evaluationSlug){
+            $query->where([
+                'slug'=>$evaluationSlug,
+                'is_deleted'=>false
+            ]);
+       })->with("evaluationLecon","user")->get();
+
+        return response()->json(['message' => 'Réponse trouvée', 'data' => $data], 200);
+    }
 }

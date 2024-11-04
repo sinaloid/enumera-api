@@ -94,6 +94,9 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::get('/questions/evaluation/{slugEvaluation}', [QuestionController::class,'getQuestionByEvaluation']);
         /**Question Leçons */
         Route::get('/questions-lecons/evaluation/{slugEvaluation}', [QuestionLeconController::class,'getQuestionByEvaluation']);
+        Route::get('/res-lecons-eleves/evaluation/{slugEvaluation}', [EvaluationLeconReponseEleveController::class,'reponseByEvaluation']);
+
+
         Route::get('utilisateurs/auth/infos', [UtilisateurController::class, 'getUtilisateurAuth']);
         Route::post('utilisateurs/auth/image', [UtilisateurController::class, 'updateUtilisateurAuthImage']);
         Route::post('utilisateurs/auth/password', [UtilisateurController::class, 'updateUtilisateurAuthPassword']);
