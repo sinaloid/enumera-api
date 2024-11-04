@@ -12,10 +12,10 @@ class RoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:view role', ['only' => ['index']]);
+        /*$this->middleware('permission:view role', ['only' => ['index']]);
         $this->middleware('permission:create role', ['only' => ['store', 'addPermissionToRole', 'givePermissionToRole']]);
         $this->middleware('permission:update role', ['only' => ['update']]);
-        $this->middleware('permission:delete role', ['only' => ['destroy']]);
+        $this->middleware('permission:delete role', ['only' => ['destroy']]);*/
     }
 
     /**
@@ -33,6 +33,17 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
+
+        $role = Auth()->user()->roles;
+        
+        $is_super_admin = str_contains($role[0]['name'], 'super-admin');
+        if(!$is_super_admin){
+            // Utiliser la méthode filter de la collection Laravel pour filtrer les permissions
+            $roles = $roles->filter(function ($item) {
+            return !str_contains($item->name, 'super-admin');
+                })->values(); // Réindexer la collection
+        }
+
         return response()->json($roles, 200);
     }
 

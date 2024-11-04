@@ -10,10 +10,10 @@ class PermissionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:view permission', ['only' => ['index']]);
+        /*$this->middleware('permission:view permission', ['only' => ['index']]);
         $this->middleware('permission:create permission', ['only' => ['store']]);
         $this->middleware('permission:update permission', ['only' => ['update']]);
-        $this->middleware('permission:delete permission', ['only' => ['destroy']]);
+        $this->middleware('permission:delete permission', ['only' => ['destroy']]);*/
     }
 
     /**
@@ -31,6 +31,19 @@ class PermissionController extends Controller
     public function index()
     {
         $permissions = Permission::all();
+
+        $role = Auth()->user()->roles;
+        //return $permissions;
+        $is_super_admin = str_contains($role[0]['name'], 'super-admin');
+        if(!$is_super_admin){
+            // Utiliser la méthode filter de la collection Laravel pour filtrer les permissions
+            $permissions = $permissions->filter(function ($item) {
+            return (!str_contains($item->name, 'role') && !str_contains($item->name, 'permission'))
+                   || str_contains($item->name, 'assign');
+                })->values(); // Réindexer la collection
+        }
+
+
         return response()->json($permissions, 200);
     }
 

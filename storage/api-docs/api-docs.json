@@ -6413,6 +6413,85 @@
                 ]
             }
         },
+        "/api/utilisateurs/auth/password": {
+            "put": {
+                "tags": [
+                    "Utilisateurs"
+                ],
+                "summary": "Modification du mot de passe de l'utilisateur connecté",
+                "description": "Modifie le mot de passe de l'utilisateur connecté et retourne le utilisateur modifié",
+                "operationId": "368fb0a262fc52f006aa5d26d39c01eb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password",
+                                    "oldPassword"
+                                ],
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Nouveau mot de passe"
+                                    },
+                                    "oldPassword": {
+                                        "type": "string",
+                                        "example": "Ancien mot de passe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "utilisateur modifié avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Les données fournies ne sont pas valides"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/utilisateurs/profilep/{slug}": {
             "get": {
                 "tags": [

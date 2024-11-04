@@ -689,7 +689,7 @@ Permission::create([
         ]);
 
         // Lets give all permission to super-admin role.
-$allPermissionNames = [
+/*$allPermissionNames = [
     "create role",
   "update role",
   "delete role",
@@ -776,12 +776,12 @@ $allPermissionNames = [
   "assign permission",
   "assign classe",
   "assign matiere",
-];
-        //$allPermissionNames = Permission::pluck('name')->toArray();
+];*/
+        $allPermissionNames = Permission::pluck('name')->toArray();
 
         $superAdminRole->givePermissionTo($allPermissionNames);
 
-        $adminPermissionNames = [
+        /*$adminPermissionNames = [
             "create role",
           "update role",
           "delete role",
@@ -868,7 +868,16 @@ $allPermissionNames = [
           "assign permission",
           "assign classe",
           "assign matiere",
-        ];
+        ];*/
+
+        // Filtrer les éléments qui ne contiennent pas "role" ou "permission"
+        $filteredPermissions = array_filter($allPermissionNames, function($item) {
+            return (!str_contains($item, "role") && !str_contains($item, "permission")) || str_contains($item, "assign");
+        });
+
+        // Réindexer le tableau pour éviter les clés vides
+        $adminPermissionNames = array_values($filteredPermissions);
+
 
         $adminRole->givePermissionTo($adminPermissionNames);
 
