@@ -469,8 +469,8 @@ class UtilisateurController extends Controller
                 $data->update([
                     'image' => 'users/' . $imageName,
                 ]);
+                return response()->json(['message' => 'Modification reussi', 'data' => $data], 200);
             }
-            return response()->json(['message' => 'Modification reussi', 'data' => $data], 200);
         }
 
 
