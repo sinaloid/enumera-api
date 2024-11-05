@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Evaluation;
+use App\Models\EvaluationDevoir;
+use App\Models\EvaluationMatiereDeLaClasse;
 use App\Models\MatiereDeLaClasse;
 use App\Models\RessourceLecon;
 use Illuminate\Http\Request;
@@ -31,11 +32,11 @@ class EvaluationController extends Controller
      */
     public function index()
     {
-        $data = Evaluation::where("is_deleted",false)->with('matiereDeLaClasse.matiere','matiereDeLaClasse.classe')->get();
+        $data = EvaluationDevoir::where("is_deleted",false)->with('evaluationMatiereDeLaClasses.matiereDeLaClasse.matiere','evaluationMatiereDeLaClasses.matiereDeLaClasse.classe')->get();
 
-        if ($data->isEmpty()) {
+        /*if ($data->isEmpty()) {
             return response()->json(['message' => 'Aucune evaluation trouvée'], 404);
-        }
+        }*/
 
         return response()->json(['message' => 'evaluations récupérées', 'data' => $data], 200);
     }
@@ -82,14 +83,15 @@ class EvaluationController extends Controller
      */
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
             'type_de_correction' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'classe' => 'required|string|max:10',
-            'matiere' => 'required|string|max:10',
+            //'matiere' => 'required|string|max:10',
+            'matieres' => 'required|array',
+            'matieres.*' => 'string|exists:matieres,slug', // Chaque classe doit être une chaîne valide et exister dans la table des classes
             'date' => 'required|string|max:10',
             'heure_debut' => 'required|string|max:10',
             'heure_fin' => 'required|string|max:10',
@@ -100,24 +102,7 @@ class EvaluationController extends Controller
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $matiereDeLaClasse = MatiereDeLaClasse::where(["is_deleted" => false])
-            ->whereHas('classe', function($query) use ($request){
-                $query->where([
-                    'is_deleted' => false,
-                    'slug' => $request->classe
-                ]);
-            })
-            ->whereHas('matiere', function($query) use ($request){
-                $query->where([
-                    'is_deleted' => false,
-                    'slug' => $request->matiere
-                ]);
-            })->first();
-        if (!$matiereDeLaClasse) {
-            return response()->json(['message' => 'Matière de la classe non trouvée'], 404);
-        }
-
-        $data = Evaluation::create([
+        $data = EvaluationDevoir::create([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
             'type_de_correction' => $request->input('type_de_correction'),
@@ -125,9 +110,33 @@ class EvaluationController extends Controller
             'heure_debut' => $request->input('heure_debut'),
             'heure_fin' => $request->input('heure_fin'),
             'description' => $request->input('description'),
-            'matiere_de_la_classe_id' => $matiereDeLaClasse->id,
+            //'matiere_de_la_classe_id' => $matiereDeLaClasse->id,
             'slug' => Str::random(10),
         ]);
+
+        foreach ($request->matieres as $matiereSlug) {
+            $matiereDeLaClasse = MatiereDeLaClasse::where(["is_deleted" => false])
+            ->whereHas('classe', function($query) use ($request){
+                $query->where([
+                    'is_deleted' => false,
+                    'slug' => $request->classe
+                ]);
+            })
+            ->whereHas('matiere', function($query) use ($matiereSlug){
+                $query->where([
+                    'is_deleted' => false,
+                    'slug' => $matiereSlug
+                ]);
+            })->first();
+            EvaluationMatiereDeLaClasse::create([
+                'slug' => Str::random(10),
+                "evaluation_devoir_id" => $data->id,
+                "matiere_de_la_classe_id" => $matiereDeLaClasse->id,
+            ]);
+            /*if (!$matiereDeLaClasse) {
+                return response()->json(['message' => 'Matière de la classe non trouvée'], 404);
+            }*/
+        }
 
         return response()->json(['message' => 'Evaluation créée avec succès', 'data' => $data], 200);
     }
@@ -156,7 +165,7 @@ class EvaluationController extends Controller
      */
     public function show($slug)
     {
-        $data = Evaluation::where(["slug"=> $slug, "is_deleted" => false])->with('questions','matiereDeLaClasse.matiere','matiereDeLaClasse.classe')->first();
+        $data = EvaluationDevoir::where(["slug"=> $slug, "is_deleted" => false])->with('questions','matiereDeLaClasse.matiere','matiereDeLaClasse.classe')->first();
 
         if (!$data) {
             return response()->json(['message' => 'evaluation non trouvée'], 404);
@@ -225,49 +234,35 @@ class EvaluationController extends Controller
      */
     public function update(Request $request, $slug)
     {
+        // Validation des données
         $validator = Validator::make($request->all(), [
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
             'type_de_correction' => 'required|string|max:255',
-            'type_de_correction' => $request->input('type_de_correction'),
             'description' => 'required|string|max:255',
             'classe' => 'required|string|max:10',
-            'matiere' => 'required|string|max:10',
+            'matieres' => 'required|array',
+            'matieres.*' => 'string|exists:matieres,slug',
             'date' => 'required|string|max:10',
             'heure_debut' => 'required|string|max:10',
             'heure_fin' => 'required|string|max:10',
-
         ]);
-
 
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        $matiereDeLaClasse = MatiereDeLaClasse::where(["is_deleted" => false])
-            ->whereHas('classe', function($query) use ($request){
-                $query->where([
-                    'is_deleted' => false,
-                    'slug' => $request->classe
-                ]);
-            })
-            ->whereHas('matiere', function($query) use ($request){
-                $query->where([
-                    'is_deleted' => false,
-                    'slug' => $request->matiere
-                ]);
-            })->first();
-        if (!$matiereDeLaClasse) {
-            return response()->json(['message' => 'Matière de la classe non trouvée'], 404);
+        // Récupération de l'évaluation
+        $evaluation = EvaluationDevoir::where([
+            'slug' => $slug,
+            'is_deleted' => false
+        ])->first();
+        if (!$evaluation) {
+            return response()->json(['message' => 'Évaluation non trouvée'], 404);
         }
 
-        $data = Evaluation::where("slug", $slug)->where("is_deleted",false)->first();
-
-        if (!$data) {
-            return response()->json(['message' => 'evaluation non trouvée'], 404);
-        }
-
-        $data->update([
+        // Mise à jour des informations de l'évaluation
+        $evaluation->update([
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
             'type_de_correction' => $request->input('type_de_correction'),
@@ -275,12 +270,41 @@ class EvaluationController extends Controller
             'heure_debut' => $request->input('heure_debut'),
             'heure_fin' => $request->input('heure_fin'),
             'description' => $request->input('description'),
-            'matiere_de_la_classe_id' => $matiereDeLaClasse->id,
         ]);
 
-        return response()->json(['message' => 'evaluation modifiée avec succès', 'data' => $data], 200);
+        // Supprimer les matières existantes associées
+        EvaluationMatiereDeLaClasse::where('evaluation_devoir_id', $evaluation->id)->delete();
 
+        // Réassigner les nouvelles matières
+        foreach ($request->matieres as $matiereSlug) {
+            $matiereDeLaClasse = MatiereDeLaClasse::where(["is_deleted" => false])
+                ->whereHas('classe', function($query) use ($request) {
+                    $query->where([
+                        'is_deleted' => false,
+                        'slug' => $request->classe
+                    ]);
+                })
+                ->whereHas('matiere', function($query) use ($matiereSlug) {
+                    $query->where([
+                        'is_deleted' => false,
+                        'slug' => $matiereSlug
+                    ]);
+                })->first();
+
+            if ($matiereDeLaClasse) {
+                EvaluationMatiereDeLaClasse::create([
+                    'slug' => Str::random(10),
+                    "evaluation_devoir_id" => $evaluation->id,
+                    "matiere_de_la_classe_id" => $matiereDeLaClasse->id,
+                ]);
+            } else {
+                return response()->json(['message' => "Matière de la classe non trouvée pour le slug $matiereSlug"], 404);
+            }
+        }
+
+        return response()->json(['message' => 'Évaluation mise à jour avec succès', 'data' => $evaluation], 200);
     }
+
 
     /**
      * @OA\Delete(
@@ -319,7 +343,7 @@ class EvaluationController extends Controller
     public function destroy($slug)
     {
 
-        $data = Evaluation::where("slug",$slug)->where("is_deleted",false)->first();
+        $data = EvaluationDevoir::where("slug",$slug)->where("is_deleted",false)->first();
         if (!$data) {
             return response()->json(['message' => 'evaluation non trouvée'], 404);
         }
@@ -354,7 +378,7 @@ class EvaluationController extends Controller
      */
     public function getEvaluationByClasse($slugClasse)
     {
-        $data = Evaluation::where([
+        $data = EvaluationDevoir::where([
             "is_deleted" => false,
         ])
         ->whereHas('matiereDeLaClasse', function($query) use ($slugClasse){

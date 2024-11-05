@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('evaluations', function (Blueprint $table) {
+        Schema::create('evaluation_devoirs', function (Blueprint $table) {
             $table->id();
-
             $table->string("label");
             $table->string("abreviation")->nullable();
+            $table->string('type_de_correction')->nullable();
             $table->string("date")->nullable();
             $table->string("heure_debut")->nullable();
             $table->string("heure_fin")->nullable();
@@ -25,13 +25,6 @@ return new class extends Migration
             $table->string("description")->nullable();
             $table->string("slug");
             $table->boolean('is_deleted')->default(false);
-
-            /*$table->unsignedBigInteger('matiere_de_la_classe_id');
-            $table->foreign('matiere_de_la_classe_id')
-                    ->references('id')
-                    ->on('matiere_de_la_classes')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');*/
             $table->timestamps();
         });
     }
@@ -43,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evaluations');
+        Schema::dropIfExists('evaluation_devoirs');
     }
 };

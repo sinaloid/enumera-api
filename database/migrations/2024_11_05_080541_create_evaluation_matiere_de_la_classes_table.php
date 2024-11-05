@@ -13,25 +13,24 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('evaluations', function (Blueprint $table) {
+        Schema::create('evaluation_matiere_de_la_classes', function (Blueprint $table) {
             $table->id();
-
-            $table->string("label");
-            $table->string("abreviation")->nullable();
-            $table->string("date")->nullable();
-            $table->string("heure_debut")->nullable();
-            $table->string("heure_fin")->nullable();
-            $table->string("etat")->default("EN_ATTENTE");
-            $table->string("description")->nullable();
             $table->string("slug");
             $table->boolean('is_deleted')->default(false);
 
-            /*$table->unsignedBigInteger('matiere_de_la_classe_id');
+            $table->unsignedBigInteger('evaluation_devoir_id');
+            $table->foreign('evaluation_devoir_id')
+                    ->references('id')
+                    ->on('evaluation_devoirs')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
+
+            $table->unsignedBigInteger('matiere_de_la_classe_id');
             $table->foreign('matiere_de_la_classe_id')
                     ->references('id')
                     ->on('matiere_de_la_classes')
                     ->onDelete('cascade')
-                    ->onUpdate('cascade');*/
+                    ->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -43,6 +42,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evaluations');
+        Schema::dropIfExists('evaluation_matiere_de_la_classes');
     }
 };

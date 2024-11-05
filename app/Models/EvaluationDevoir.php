@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Evaluation extends Model
+class EvaluationDevoir extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         "label",
         "abreviation",
@@ -20,16 +19,13 @@ class Evaluation extends Model
         "description",
         "slug",
         "is_deleted",
-        //"matiere_de_la_classe_id", à supprimer
     ];
 
     public function questions() {
         return $this->hasMany(Question::class);
     }
 
-    public function matiereDeLaClasse() {
-
-        return $this->belongsTo(MatiereDeLaClasse::class);
+    public function evaluationMatiereDeLaClasses(){
+        return $this->hasMany(EvaluationMatiereDeLaClasse::class);
     }
-
 }
