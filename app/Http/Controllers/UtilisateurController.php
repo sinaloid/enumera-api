@@ -470,11 +470,12 @@ class UtilisateurController extends Controller
                     'image' => 'users/' . $imageName,
                 ]);
             }
+            return response()->json(['message' => 'Modification reussi', 'data' => $data], 200);
         }
 
 
 
-        return response()->json(['message' => 'utilisateur trouvé', 'data' => $data], 200);
+        return response()->json(['message' => 'Echec de la modification', 'data' => $data], 200);
     }
 
     /**
