@@ -22,10 +22,10 @@ class QuestionImport implements ToModel
     */
     public function model(array $row)
     {
-        if($row[0] && $row[0] !=="Question" && $row[1] !=="Type"){
+        if($row[0] && ( strtolower($row[0]) !=="question" || strtolower($row[0]) !=="questions")){
             return new Question([
                 'question'     => $row[0],
-                'type'    => $row[1],
+                'type'    => strtoupper($row[1]),
                 'choix'    => $row[2],
                 'reponses'    => $row[3],
                 'point'    => $row[4],
