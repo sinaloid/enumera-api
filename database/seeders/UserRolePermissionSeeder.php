@@ -42,7 +42,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view role',
-    'display_name' => 'Voir les rôles',
+    'display_name' => 'Consulter les rôles',
     'description' => 'Permet à un utilisateur de consulter la liste des rôles et leurs détails.',
     'slug' => Str::random(10),
 ]);
@@ -71,7 +71,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view permission',
-    'display_name' => 'Voir les permissions',
+    'display_name' => 'Consulter les permissions',
     'description' => 'Permet à un utilisateur de consulter la liste des permissions et leurs détails.',
     'slug' => Str::random(10),
 ]);
@@ -100,7 +100,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view user',
-    'display_name' => 'Voir les utilisateurs',
+    'display_name' => 'Consulter les utilisateurs',
     'description' => 'Permet à un utilisateur de consulter la liste des utilisateurs.',
     'slug' => Str::random(10),
 ]);
@@ -129,7 +129,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view classe',
-    'display_name' => 'Voir les classes',
+    'display_name' => 'Consulter les classes',
     'description' => 'Permet à un utilisateur de consulter la liste des classes.',
     'slug' => Str::random(10),
 ]);
@@ -158,7 +158,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view matiere',
-    'display_name' => 'Voir les matières',
+    'display_name' => 'Consulter les matières',
     'description' => 'Permet à un utilisateur de consulter la liste des matières.',
     'slug' => Str::random(10),
 ]);
@@ -187,7 +187,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view matiereDeLaclasse',
-    'display_name' => 'Voir les matières de classe',
+    'display_name' => 'Consulter les matières de classe',
     'description' => 'Permet à un utilisateur de consulter les matières assignées à une classe.',
     'slug' => Str::random(10),
 ]);
@@ -216,7 +216,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view periode',
-    'display_name' => 'Voir les périodes',
+    'display_name' => 'Consulter les périodes',
     'description' => 'Permet à un utilisateur de consulter la liste des périodes.',
     'slug' => Str::random(10),
 ]);
@@ -245,7 +245,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view chapitre',
-    'display_name' => 'Voir les chapitres',
+    'display_name' => 'Consulter les chapitres',
     'description' => 'Permet à un utilisateur de consulter la liste des chapitres.',
     'slug' => Str::random(10),
 ]);
@@ -274,7 +274,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view lecon',
-    'display_name' => 'Voir les leçons',
+    'display_name' => 'Consulter les leçons',
     'description' => 'Permet à un utilisateur de consulter la liste des leçons.',
     'slug' => Str::random(10),
 ]);
@@ -303,7 +303,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view cours',
-    'display_name' => 'Voir les cours',
+    'display_name' => 'Consulter les cours',
     'description' => 'Permet à un utilisateur de consulter la liste des cours.',
     'slug' => Str::random(10),
 ]);
@@ -332,7 +332,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view evaluationLecon',
-    'display_name' => 'Voir les évaluations de leçon',
+    'display_name' => 'Consulter les évaluations de leçon',
     'description' => 'Permet à un utilisateur de consulter les évaluations de leçon.',
     'slug' => Str::random(10),
 ]);
@@ -361,7 +361,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view evaluation',
-    'display_name' => 'Voir les évaluations',
+    'display_name' => 'Consulter les évaluations',
     'description' => 'Permet à un utilisateur de consulter la liste des évaluations.',
     'slug' => Str::random(10),
 ]);
@@ -390,7 +390,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view discussion',
-    'display_name' => 'Voir les discussions',
+    'display_name' => 'Consulter les discussions',
     'description' => 'Permet à un utilisateur de consulter la liste des discussions.',
     'slug' => Str::random(10),
 ]);
@@ -419,7 +419,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view classeVirtuelle',
-    'display_name' => 'Voir les classes virtuelles',
+    'display_name' => 'Consulter les classes virtuelles',
     'description' => 'Permet à un utilisateur de consulter la liste des classes virtuelles.',
     'slug' => Str::random(10),
 ]);
@@ -448,7 +448,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view eleve',
-    'display_name' => 'Voir les élèves',
+    'display_name' => 'Consulter les élèves',
     'description' => 'Permet à un utilisateur de consulter la liste des élèves.',
     'slug' => Str::random(10),
 ]);
@@ -477,7 +477,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view enseignant',
-    'display_name' => 'Voir les enseignants',
+    'display_name' => 'Consulter les enseignants',
     'description' => 'Permet à un utilisateur de consulter la liste des enseignants.',
     'slug' => Str::random(10),
 ]);
@@ -506,7 +506,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view parent',
-    'display_name' => 'Voir les parents',
+    'display_name' => 'Consulter les parents',
     'description' => 'Permet à un utilisateur de consulter la liste des parents.',
     'slug' => Str::random(10),
 ]);
@@ -535,7 +535,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view utilisateur',
-    'display_name' => 'Voir les utilisateurs',
+    'display_name' => 'Consulter les utilisateurs',
     'description' => 'Permet à un utilisateur de consulter la liste des utilisateurs.',
     'slug' => Str::random(10),
 ]);
@@ -550,7 +550,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view parametre',
-    'display_name' => 'Voir les paramètres',
+    'display_name' => 'Consulter les paramètres',
     'description' => 'Permet à un utilisateur de consulter les paramètres de l\'application.',
     'slug' => Str::random(10),
 ]);
@@ -579,7 +579,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view questionLecon',
-    'display_name' => 'Voir les questions de leçon',
+    'display_name' => 'Consulter les questions de leçon',
     'description' => 'Permet à un utilisateur de consulter la liste des questions pour les leçons.',
     'slug' => Str::random(10),
 ]);
@@ -608,7 +608,7 @@ Permission::create([
 
 Permission::create([
     'name' => 'view question',
-    'display_name' => 'Voir les questions',
+    'display_name' => 'Consulter les questions',
     'description' => 'Permet à un utilisateur de consulter la liste des questions.',
     'slug' => Str::random(10),
 ]);
