@@ -22,7 +22,7 @@ class QuestionLeconImport implements ToModel
     */
     public function model(array $row)
     {
-        if($row[0] && ( strtolower($row[0]) !=="question" || strtolower($row[0]) !=="questions")){
+        if($row[0] && ( strtolower($row[0]) !=="question" && strtolower($row[0]) !=="questions")){
             return new QuestionLecon([
                 'question'     => $row[0],
                 'type'    => strtoupper($row[1]),
