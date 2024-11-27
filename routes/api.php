@@ -123,7 +123,13 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::get('/files', [LeconController::class, 'getFile'])->name('files.index');
         Route::get('/files/lecon/{slug}', [LeconController::class, 'getLeconFile'])->name('files.filesLecon');
         Route::post('/files', [LeconController::class, 'storeFile'])->name('files.store');
-        Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
+
+        /**Files evaluation lecon */
+        Route::get('/files-evaluation-lecon', [EvaluationLeconController::class, 'getFile']);
+        Route::get('/files-evaluation-lecon/evaluation/{slug}', [EvaluationLeconController::class, 'getFileBySlug']);
+        Route::post('/files-evaluation-lecon', [EvaluationLeconController::class, 'storeFile']);
+
+        #Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
         Route::post('/questions-lecons-import', [QuestionLeconController::class,'storeExcel']);
         Route::post('/questions-import', [QuestionController::class,'storeExcel']);
         Route::post('/convert-doc-to-html', [DocumentController::class, 'convertDocumentToHtml']);

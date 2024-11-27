@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EvaluationLecon;
 use App\Models\Lecon;
 use App\Models\RessourceLecon;
+use App\Models\RessourceEvaluationLecon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,7 @@ class EvaluationLeconController extends Controller
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="type_de_correction", type="string", example="Correction automatique ou Correction manuelle"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="enonce", type="string", example="Enoncé de l'exercice"),
      *             @OA\Property(property="description", type="string", example="courte description"),
      *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
      *         ),
@@ -83,6 +85,7 @@ class EvaluationLeconController extends Controller
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
             'type_de_correction' => 'required|string|max:255',
+            'enonce' => 'nullable|string|max:10000',
             'description' => 'required|string|max:255',
             'lecon' => 'required|string|max:10',
 
@@ -101,6 +104,7 @@ class EvaluationLeconController extends Controller
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
             'type_de_correction' => $request->input('type_de_correction'),
+            'enonce' => $request->input('enonce'),
             'description' => $request->input('description'),
             'lecon_id' => $lecon->id,
             'slug' => Str::random(10),
@@ -155,6 +159,7 @@ class EvaluationLeconController extends Controller
      *             @OA\Property(property="label", type="string", example="Intitulé de l'evaluation"),
      *             @OA\Property(property="type_de_correction", type="string", example="Correction automatique ou Correction manuelle"),
      *             @OA\Property(property="abreviation", type="string", example="Intitulé de l'evaluation"),
+     *             @OA\Property(property="enonce", type="string", example="Enoncé de l'exercice"),
      *             @OA\Property(property="description", type="string", example="courte description"),
      *             @OA\Property(property="lecon", type="string", example="Slug de la leçon"),
      *         ),
@@ -202,6 +207,7 @@ class EvaluationLeconController extends Controller
             'label' => 'required|string|max:255',
             'abreviation' => 'required|string|max:255',
             'type_de_correction' => 'required|string|max:255',
+            'enonce' => 'nullable|string|max:10000',
             'description' => 'required|string|max:255',
             'lecon' => 'required|string|max:10',
 
@@ -228,6 +234,7 @@ class EvaluationLeconController extends Controller
             'label' => $request->input('label'),
             'abreviation' => $request->input('abreviation'),
             'type_de_correction' => $request->input('type_de_correction'),
+            'enonce' => $request->input('enonce'),
             'description' => $request->input('description'),
             'lecon_id' => $lecon->id,
         ]);
@@ -389,5 +396,76 @@ class EvaluationLeconController extends Controller
         }*/
 
         return response()->json(['message' => 'leçons récupérées', 'data' => $data], 200);
+    }
+
+
+
+    public function getFile()
+    {
+        $ressources = RessourceEvaluationLecon::where("is_deleted",false)->get();
+
+        return response()->json(['message' => 'Fichiers récupérés', 'data' => $ressources], 200);
+    }
+
+    public function getFileBySlug($slug)
+    {
+        $data = EvaluationLecon::where(["slug"=> $slug, "is_deleted" => false])->first();
+
+        if (!$data) {
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
+        }
+
+        $ressources = RessourceEvaluationLecon::where([
+            "is_deleted" => false,
+            "evaluation_lecon_id" => $data->id
+        ])->get();
+
+        return response()->json(['message' => 'Fichiers récupérés', 'data' => $ressources], 200);
+    }
+
+
+    public function storeFile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'type' => 'required|string|max:255',
+            'evaluation' => 'required|string|max:255',
+            //'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf,wav,mp3,mp4|max:20240', // 1 mega pour les images et les pdf
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $evaluationLecon = EvaluationLecon::where([
+            "is_deleted" => false,
+            "slug" => $request->evaluation
+        ])->first();
+
+        if (!$evaluationLecon) {
+            return response()->json(['message' => 'Leçon non trouvée'], 404);
+        }
+
+        $filePaths = [];
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $newFileName = Str::random(40) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('public/uploads', $newFileName);
+                // Enregistrer le fichier dans la base de données
+                RessourceEvaluationLecon::create([
+                    'original_name' => $file->getClientOriginalName(),
+                    'name' => $newFileName,
+                    'type' => $request->type,
+                    'evaluation_lecon_id' => $evaluationLecon->id,
+                    'slug' => Str::random(10),
+                    'url' => Storage::url($path),
+                ]);
+            }
+            return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers enregistrés"], 201);
+
+        }
+        return response()->json(['filePaths' => $filePaths, 'message' => "Fichiers non enregistré"], 200);
+
+
     }
 }

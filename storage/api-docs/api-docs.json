@@ -2422,6 +2422,10 @@
                                         "type": "string",
                                         "example": "Intitulé de l'evaluation"
                                     },
+                                    "enonce": {
+                                        "type": "string",
+                                        "example": "Enoncé de l'exercice"
+                                    },
                                     "description": {
                                         "type": "string",
                                         "example": "courte description"
@@ -2554,6 +2558,10 @@
                                     "abreviation": {
                                         "type": "string",
                                         "example": "Intitulé de l'evaluation"
+                                    },
+                                    "enonce": {
+                                        "type": "string",
+                                        "example": "Enoncé de l'exercice"
                                     },
                                     "description": {
                                         "type": "string",

@@ -13,6 +13,7 @@ class EvaluationLecon extends Model
         "label",
         "abreviation",
         "type_de_correction",
+        "enonce",
         "description",
         "slug",
         "is_deleted",
