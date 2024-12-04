@@ -4447,6 +4447,394 @@
                 ]
             }
         },
+        "/api/messages-defilants": {
+            "get": {
+                "tags": [
+                    "Messages Défilants"
+                ],
+                "summary": "Liste des messages défilants",
+                "description": "Retourne la liste des messages défilants",
+                "operationId": "5c3dbe4fc242eae07987d4fc98a7f09e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Messages Défilants"
+                ],
+                "summary": "Création d'un message défilant",
+                "description": "Crée un nouveau message défilant",
+                "operationId": "7334d20f9e0aa2e64f8f678a94fa4c7f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titre",
+                                    "contenu",
+                                    "type",
+                                    "date_debut",
+                                    "date_fin"
+                                ],
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Nouvelle Actualité"
+                                    },
+                                    "contenu": {
+                                        "type": "string",
+                                        "example": "Détails du message défilant"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "info"
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-01"
+                                    },
+                                    "date_fin": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/messages-defilants/{slug}": {
+            "get": {
+                "tags": [
+                    "Messages Défilants"
+                ],
+                "summary": "Récupère un message par son slug",
+                "operationId": "a7556b7c0c42c8e06cc45a32c834075e",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug du message à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Messages Défilants"
+                ],
+                "summary": "Modification d'un message défilant",
+                "description": "Modifie un message",
+                "operationId": "38ab95b9b4a0c276fa0aebb009c0b2ca",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug du message à modifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titre",
+                                    "contenu",
+                                    "type",
+                                    "date_debut",
+                                    "date_fin"
+                                ],
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "Nouvelle Actualité Modifiée"
+                                    },
+                                    "contenu": {
+                                        "type": "string",
+                                        "example": "Nouveau contenu"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "evenement"
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-02-01"
+                                    },
+                                    "date_fin": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-02-15"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Messages Défilants"
+                ],
+                "summary": "Supprime un message par son slug",
+                "operationId": "fb01fb8ddec9854180b3b64176856087",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug du message à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/parametres": {
+            "get": {
+                "tags": [
+                    "Paramètres"
+                ],
+                "summary": "Liste des paramètres",
+                "description": "Retourne la liste des paramètres",
+                "operationId": "dc35bd5b6a023d3640b7b177283af8c9",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Paramètres"
+                ],
+                "summary": "Création d'un paramètre",
+                "description": "Crée un nouveau paramètre et retourne le paramètre créé",
+                "operationId": "a6472473bc2753667c84b3596e457691",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "key",
+                                    "value"
+                                ],
+                                "properties": {
+                                    "key": {
+                                        "type": "string",
+                                        "example": "duree_minimum_lecture_cours"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "example": "10"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Durée minimum en minutes"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/parametres/{slug}": {
+            "get": {
+                "tags": [
+                    "Paramètres"
+                ],
+                "summary": "Récupère un paramètre par son slug",
+                "description": "Retourne un paramètre",
+                "operationId": "771f04d67aa374d1d6d922b08b9079e0",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug du paramètre à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Paramètres"
+                ],
+                "summary": "Modification d'un paramètre",
+                "description": "Modifie un paramètre et retourne le paramètre modifié",
+                "operationId": "dca3c5ebc3fcc1c914ef516dcaa729e0",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug du paramètre à modifier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "value": {
+                                        "type": "string",
+                                        "example": "20"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Durée minimum mise à jour"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Paramètres"
+                ],
+                "summary": "Suppression d'un paramètre par son slug",
+                "description": "Retourne le paramètre supprimé",
+                "operationId": "51f3d66299cb7ad6ccb8ccfb38764456",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Slug du paramètre à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/periodes": {
             "get": {
                 "tags": [

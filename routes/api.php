@@ -22,6 +22,8 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EvaluationLeconReponseEleveController;
+use App\Http\Controllers\MessageDefilantController;
+use App\Http\Controllers\ParametreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,6 +117,8 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'res-lecons-eleves' => EvaluationLeconReponseEleveController::class,
             'questions' => QuestionController::class,
             'questions-lecons' => QuestionLeconController::class,
+            'messages-defilants' => MessageDefilantController::class,
+            'parametres' => ParametreController::class,
             'chatgpt' => ChatController::class,
 
         ]);
