@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('message_defilants', function (Blueprint $table) {
             $table->id();
             $table->string("titre");
-            $table->string("contenu");
+            $table->longText("contenu");
             $table->string("type");
             $table->date("date_debut");
             $table->date("date_fin");
