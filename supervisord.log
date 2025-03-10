@@ -1,0 +1,97 @@
+2025-03-03 15:54:55,445 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-03 15:54:55,455 INFO supervisord started with pid 1
+2025-03-03 15:54:55,476 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-03 15:54:55,486 INFO supervisord started with pid 1
+2025-03-03 15:54:56,459 INFO spawned: 'apache' with pid 7
+2025-03-03 15:54:56,465 INFO spawned: 'queue-worker' with pid 8
+2025-03-03 15:54:56,490 INFO spawned: 'apache' with pid 7
+2025-03-03 15:54:56,495 INFO spawned: 'queue-worker' with pid 8
+2025-03-03 15:54:57,648 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 15:54:57,648 INFO success: queue-worker entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 15:54:57,650 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 15:54:57,651 INFO success: queue-worker entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 16:14:15,862 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-03 16:14:15,870 INFO supervisord started with pid 1
+2025-03-03 16:14:15,906 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-03 16:14:15,916 INFO supervisord started with pid 1
+2025-03-03 16:14:16,875 INFO spawned: 'apache' with pid 8
+2025-03-03 16:14:16,883 INFO spawned: 'horizon' with pid 9
+2025-03-03 16:14:16,921 INFO spawned: 'apache' with pid 7
+2025-03-03 16:14:16,927 INFO spawned: 'horizon' with pid 8
+2025-03-03 16:14:18,052 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 16:14:18,053 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 16:14:18,065 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 16:14:18,066 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 16:20:02,862 INFO reaped unknown pid 84 (terminated by SIGKILL)
+2025-03-03 16:20:02,863 INFO reaped unknown pid 87 (terminated by SIGKILL)
+2025-03-03 16:20:04,895 INFO reaped unknown pid 90 (terminated by SIGKILL)
+2025-03-03 16:20:05,182 INFO reaped unknown pid 93 (terminated by SIGKILL)
+2025-03-03 16:20:05,898 INFO reaped unknown pid 96 (terminated by SIGKILL)
+2025-03-03 16:20:06,900 INFO reaped unknown pid 99 (terminated by SIGKILL)
+2025-03-03 16:20:07,902 INFO reaped unknown pid 102 (terminated by SIGKILL)
+2025-03-03 16:20:07,903 INFO reaped unknown pid 105 (terminated by SIGKILL)
+2025-03-03 16:20:08,905 INFO reaped unknown pid 109 (terminated by SIGKILL)
+2025-03-03 16:20:08,906 INFO reaped unknown pid 112 (terminated by SIGKILL)
+2025-03-03 16:20:09,908 INFO reaped unknown pid 115 (terminated by SIGKILL)
+2025-03-03 16:20:09,910 INFO reaped unknown pid 118 (terminated by SIGKILL)
+2025-03-03 16:20:11,109 INFO reaped unknown pid 121 (terminated by SIGKILL)
+2025-03-03 16:20:11,110 INFO reaped unknown pid 124 (terminated by SIGKILL)
+2025-03-03 16:20:11,891 INFO reaped unknown pid 128 (terminated by SIGKILL)
+2025-03-03 16:20:11,892 INFO reaped unknown pid 131 (terminated by SIGKILL)
+2025-03-03 17:15:06,920 INFO reaped unknown pid 134 (terminated by SIGKILL)
+2025-03-03 17:15:06,921 INFO reaped unknown pid 83 (terminated by SIGKILL)
+2025-03-03 17:15:48,506 INFO exited: horizon (exit status 0; expected)
+2025-03-03 17:15:49,510 INFO spawned: 'horizon' with pid 172
+2025-03-03 17:15:50,514 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 17:19:48,939 INFO exited: horizon (exit status 0; expected)
+2025-03-03 17:19:49,945 INFO spawned: 'horizon' with pid 240
+2025-03-03 17:19:50,949 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 17:20:07,309 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-03 17:20:07,321 INFO supervisord started with pid 1
+2025-03-03 17:20:08,325 INFO spawned: 'apache' with pid 7
+2025-03-03 17:20:08,329 INFO spawned: 'horizon' with pid 8
+2025-03-03 17:20:09,520 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 17:20:09,521 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 17:28:47,440 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-03 17:28:47,446 INFO supervisord started with pid 1
+2025-03-03 17:28:48,448 INFO spawned: 'apache' with pid 7
+2025-03-03 17:28:48,452 INFO spawned: 'horizon' with pid 8
+2025-03-03 17:28:49,568 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-03 17:28:49,568 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 11:51:17,948 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-05 11:51:17,957 INFO supervisord started with pid 1
+2025-03-05 11:51:18,277 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-05 11:51:18,285 INFO supervisord started with pid 1
+2025-03-05 11:51:18,961 INFO spawned: 'apache' with pid 7
+2025-03-05 11:51:18,964 INFO spawned: 'horizon' with pid 8
+2025-03-05 11:51:19,289 INFO spawned: 'apache' with pid 7
+2025-03-05 11:51:19,295 INFO spawned: 'horizon' with pid 8
+2025-03-05 11:51:20,351 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 11:51:20,352 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 11:51:20,467 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 11:51:20,467 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:49:02,589 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-05 15:49:02,589 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-05 15:49:02,597 INFO supervisord started with pid 1
+2025-03-05 15:49:02,598 INFO supervisord started with pid 1
+2025-03-05 15:49:03,601 INFO spawned: 'apache' with pid 7
+2025-03-05 15:49:03,601 INFO spawned: 'apache' with pid 7
+2025-03-05 15:49:03,604 INFO spawned: 'horizon' with pid 8
+2025-03-05 15:49:03,606 INFO spawned: 'horizon' with pid 8
+2025-03-05 15:49:04,760 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:49:04,760 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:49:04,761 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:49:04,762 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:52:56,472 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-05 15:52:56,477 INFO supervisord started with pid 1
+2025-03-05 15:52:56,809 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-03-05 15:52:56,816 INFO supervisord started with pid 1
+2025-03-05 15:52:57,483 INFO spawned: 'apache' with pid 7
+2025-03-05 15:52:57,489 INFO spawned: 'horizon' with pid 8
+2025-03-05 15:52:57,820 INFO spawned: 'apache' with pid 7
+2025-03-05 15:52:57,823 INFO spawned: 'horizon' with pid 8
+2025-03-05 15:52:58,613 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:52:58,614 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:52:58,943 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 15:52:58,944 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-03-05 17:13:22,898 INFO reaped unknown pid 97 (terminated by SIGKILL)

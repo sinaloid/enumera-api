@@ -5,9 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: api_wilofo
+    container_name: wilofo_api
+    restart: always
     ports:
-      - "8000:80"
+      - "8080:80"
     volumes:
       - .:/var/www/html
     environment:
@@ -16,39 +17,67 @@ services:
       - APP_KEY=${APP_KEY}
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_DATABASE=sos_db
+      - DB_DATABASE=wilofo_db
       - DB_USERNAME=root
       - DB_PASSWORD=root
     depends_on:
       - db
     networks:
-      - laravel_network
+      - wilofo_network
 
   db:
     image: mysql:8.0
-    container_name: db_wilofo
+    container_name: wilofo_db
+    restart: always
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: sos_db
-      MYSQL_USER: enumera_test
-      MYSQL_PASSWORD: enumera_test
+      MYSQL_DATABASE: wilofo_db
+      #MYSQL_USER: enumera_test
+      #MYSQL_PASSWORD: enumera_test
     volumes:
       - dbdata:/var/lib/mysql
     networks:
-      - laravel_network
+      - wilofo_network
 
   redis:
     image: redis:alpine
-    container_name: redis_wilofo
+    container_name: wilofo_redis
+    restart: always
     ports:
       - "6379:6379"
     networks:
-      - laravel_network
+      - wilofo_network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: wilofo_phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - PMA_HOST=db
+      - MYSQL_ROOT_PASSWORD=root
+      - UPLOAD_LIMIT=50M
+    ports:
+      - "8081:80"
+    networks:
+      - wilofo_network
+  worker:
+    build: .
+    container_name: wilofo_worker
+    restart: always
+    working_dir: /var/www/html
+    networks:
+      - wilofo_network
+    depends_on:
+      - redis
+    volumes:
+      - .:/var/www/html
+    command: supervisord -c /etc/supervisor/supervisord.conf
 
 networks:
-  laravel_network:
+  wilofo_network:
     driver: bridge
 
 volumes:
