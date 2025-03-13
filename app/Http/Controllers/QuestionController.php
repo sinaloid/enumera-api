@@ -83,10 +83,10 @@ class QuestionController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'question' => 'required|string|max:255',
-            'choix' => 'required|string|max:255',
+            'question' => 'required|string',
+            'choix' => 'required|string',
             'type' => 'required|string|max:255',
-            'reponses' => 'required|string|max:255',
+            'reponses' => 'required|string',
             'point' => 'required|string|max:255',
             'evaluation' => 'required|string|max:10',
 
@@ -205,10 +205,10 @@ class QuestionController extends Controller
     public function update(Request $request, $slug)
     {
         $validator = Validator::make($request->all(), [
-            'question' => 'required|string|max:255',
-            'choix' => 'required|string|max:255',
+            'question' => 'required|string',
+            'choix' => 'required|string',
             'type' => 'required|string|max:255',
-            'reponses' => 'required|string|max:255',
+            'reponses' => 'required|string',
             'point' => 'required|string|max:255',
             'evaluation' => 'required|string|max:10',
 
