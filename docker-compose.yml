@@ -21,8 +21,6 @@ services:
       - DB_DATABASE=wilofo_db
       - DB_USERNAME=root
       - DB_PASSWORD=root
-      - TELEGRAM_BOT_TOKEN=7811367126:AAG96AufIO1EwJa2SQIGkYD7dISlLZSBg80
-      - TELEGRAM_CHAT_ID=634825037
     depends_on:
       - db
       - redis
