@@ -26,8 +26,16 @@ class FailedJobTelegramNotification extends Notification
 
     public function toTelegram($notifiable)
     {
+        $chatId = config('services.telegram.chat_id'); // Utilise config() au lieu de env()
+
+        if (empty($chatId)) {
+            \Log::error('Chat ID Telegram non défini. Vérifiez .env et config/services.php.');
+            return;
+        }
+        //dd(config('services.telegram.chat_id'));
+
         return TelegramMessage::create()
-            ->to(env('TELEGRAM_CHAT_ID')) // Stocke l'ID dans .env
+            ->to($chatId)
             ->content("🚨 *Job Failed Notification* 🚨\n\n"
                 . "📌 *Job ID:* `{$this->jobId}`\n"
                 . "❌ *Error:* `{$this->error}`\n"

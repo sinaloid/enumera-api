@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Notifications\TelegramErrorNotification;
+use Illuminate\Support\Facades\Notification;
 
 class Handler extends ExceptionHandler
 {
@@ -44,7 +46,14 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+            
+            $chatId = config('services.telegram.chat_id'); // Utilise config() au lieu de env()
+            
+            // Vérifier si l'application est en production avant d'envoyer la notification
+            if (app()->environment('production')) {
+                Notification::route('telegram', $chatId)
+                    ->notify(new TelegramErrorNotification($e->getMessage()));
+            }
         });
     }
 }

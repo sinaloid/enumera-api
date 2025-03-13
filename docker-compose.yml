@@ -11,6 +11,7 @@ services:
       - "8080:80"
     volumes:
       - .:/var/www/html
+      - ./opcache.ini:/usr/local/etc/php/conf.d/opcache.ini 
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
@@ -20,8 +21,11 @@ services:
       - DB_DATABASE=wilofo_db
       - DB_USERNAME=root
       - DB_PASSWORD=root
+      - TELEGRAM_BOT_TOKEN=7811367126:AAG96AufIO1EwJa2SQIGkYD7dISlLZSBg80
+      - TELEGRAM_CHAT_ID=634825037
     depends_on:
       - db
+      - redis
     networks:
       - wilofo_network
 
@@ -38,6 +42,7 @@ services:
       #MYSQL_PASSWORD: enumera_test
     volumes:
       - dbdata:/var/lib/mysql
+      - ./mysql.cnf:/etc/mysql/conf.d/mysql.cnf 
     networks:
       - wilofo_network
 
@@ -63,6 +68,18 @@ services:
       - "8081:80"
     networks:
       - wilofo_network
+  phpredisadmin:
+    image: erikdubbelboer/phpredisadmin
+    container_name: wilofo_phpredisadmin
+    restart: always
+    depends_on:
+      - redis
+    environment:
+      - REDIS_1_HOST=redis
+    ports:
+      - "8082:80"
+    networks:
+      - wilofo_network
   worker:
     build: .
     container_name: wilofo_worker
@@ -73,7 +90,7 @@ services:
     depends_on:
       - redis
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html:cached
     command: supervisord -c /etc/supervisor/supervisord.conf
 
 networks:

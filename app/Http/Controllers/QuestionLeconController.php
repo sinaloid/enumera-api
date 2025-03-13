@@ -83,10 +83,10 @@ class QuestionLeconController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'question' => 'required|string|max:255',
-            'choix' => 'required|string|max:255',
+            'question' => 'required|string',
+            'choix' => 'required|string',
             'type' => 'required|string|max:255',
-            'reponses' => 'required|string|max:255',
+            'reponses' => 'required|string',
             'point' => 'required|string|max:255',
             'evaluation_lecon' => 'required|string|max:10',
 

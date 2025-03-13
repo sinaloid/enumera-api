@@ -13,13 +13,16 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     supervisor \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip pcntl
+    && docker-php-ext-install gd pdo pdo_mysql zip pcntl opcache
 
 # Installer Composer globalement
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copier le contenu du projet dans /var/www/html
 COPY . /var/www/html
+
+# Copier la configuration OPCache
+COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Installer les dépendances PHP de Laravel
 RUN composer install --optimize-autoloader --no-dev

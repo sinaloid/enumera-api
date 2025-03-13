@@ -49,3 +49,12 @@ Route::get('/test-email', function () {
 
     return "Email envoyé ! Vérifie ta boîte de réception.";
 });
+
+
+use App\Notifications\TelegramErrorNotification;
+
+Route::get('/test-telegram', function () {
+    throw new \Exception("Test d'erreur Telegram 🚨");
+    
+    return 'Notification envoyée sur Telegram !';
+});
