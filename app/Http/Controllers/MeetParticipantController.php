@@ -316,11 +316,11 @@ class MeetParticipantController extends Controller
             $fullName = isset($user['prenom']) ? $user['nom'].' '.$user['prenom'] : $user['nom'];
             $email = $user['email'];
             $isModerator = $user['is_moderator'] ?? false;
-
+        
             $payload = [
                 'aud' => 'jitsi',
-                'iss' => config('services.jitsi.app_id'),
-                'sub' => parse_url(config('services.jitsi.app_url'), PHP_URL_HOST),
+                'iss' => "meet-service", //config('services.jitsi.app_id'),
+                'sub' => "https://meet.enumera.tech", //parse_url(config('services.jitsi.app_url'), PHP_URL_HOST),
                 'room' => "salle-" . Str::slug($meet->titre),
                 'exp' => time() + 3600,
                 'context' => [
@@ -332,7 +332,8 @@ class MeetParticipantController extends Controller
                 ]
             ];
 
-            $token = JWT::encode($payload, config('services.jitsi.app_secret'), 'HS256');
+            //config('services.jitsi.app_secret')
+            $token = JWT::encode($payload, "base64:v9pDYiaapGV8wH++uaLLA9tdQxr3tmeUo5K45I23zGM=", 'HS256');
 
             $participant = MeetParticipant::create([
                 'meet_id'       => $meet->id,
