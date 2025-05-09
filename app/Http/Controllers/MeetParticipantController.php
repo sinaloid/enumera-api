@@ -316,12 +316,12 @@ class MeetParticipantController extends Controller
             $fullName = isset($user['prenom']) ? $user['nom'].' '.$user['prenom'] : $user['nom'];
             $email = $user['email'];
             $isModerator = $user['is_moderator'] ?? false;
-            
+
             $payload = [
                 'aud' => 'jitsi',
                 'iss' => config('services.jitsi.app_id'),
                 'sub' => parse_url(config('services.jitsi.app_url'), PHP_URL_HOST),
-                'room' => "salle-" . Str::slug($meet->titre),
+                'room' => $meet->jitsi_room_name, //"salle-" . Str::slug($meet->titre),
                 'exp' => time() + 3600,
                 'context' => [
                     'user' => [
