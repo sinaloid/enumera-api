@@ -395,14 +395,14 @@ class MeetParticipantController extends Controller
              ->filter(function ($meet) use ($user) {
                  return MeetParticipant::where([
                      'is_deleted' => false,
-                     'user_id' => $user->id,
+                     'email' => $user->email,
                      'meet_id' => $meet->id
                  ])->exists();
              })
              ->map(function ($meet) use ($user) {
                  $participant = MeetParticipant::where([
                      'is_deleted' => false,
-                     'user_id' => $user->id,
+                     'email' => $user->email,
                      'meet_id' => $meet->id
                  ])->first();
      
