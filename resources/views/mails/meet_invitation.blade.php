@@ -5,7 +5,7 @@
 <p><strong>Date :</strong> {{ $meet->scheduled_at }}</p>
 
 <p>Voici votre lien de participation :</p>
-<p><a href="https://meet.enumera.tech/{{ $meet->jitsi_meeting_link }}/?jwt={{ $participant->meet_token }}">
+<p><a href="https://meet.enumera.tech/{{ $meet->jitsi_room_name }}/?jwt={{ $participant->meet_token }}">
     Rejoindre la session
 </a></p>
 
