@@ -407,7 +407,7 @@ class MeetParticipantController extends Controller
                  ])->first();
      
                  $token = $participant->meet_token;
-                 $link = config('services.jitsi.app_url') . '/' . $meet->jitsi_room_name . '?jwt=' . $token;
+                 $link = $meet->jitsi_meeting_link . '?jwt=' . $token;
      
                  return [
                      'id' => $meet->id,
