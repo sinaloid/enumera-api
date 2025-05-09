@@ -24,6 +24,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EvaluationLeconReponseEleveController;
 use App\Http\Controllers\MessageDefilantController;
 use App\Http\Controllers\ParametreController;
+use App\Http\Controllers\MeetController;
+use App\Http\Controllers\MeetParticipantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,6 +105,12 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::post('utilisateurs/auth/image', [UtilisateurController::class, 'updateUtilisateurAuthImage']);
         Route::post('utilisateurs/auth/password', [UtilisateurController::class, 'updateUtilisateurAuthPassword']);
 
+        Route::get('meets/{meetId}/participants', [MeetParticipantController::class, 'index']);
+        Route::post('meets/{meetId}/participants', [MeetParticipantController::class, 'store']);
+        Route::post('meets/{meetId}/participants-by-email', [MeetParticipantController::class, 'store_users']);
+        Route::delete('meets/{meetId}/participants/{slug}', [MeetParticipantController::class, 'destroy']);
+        
+
         Route::resources([
             'utilisateurs' => UtilisateurController::class,
             'classes' => ClasseController::class,
@@ -120,6 +128,7 @@ Route::group(['middleware' => ['cors','json.response']], function () {
             'messages-defilants' => MessageDefilantController::class,
             'parametres' => ParametreController::class,
             'chatgpt' => ChatController::class,
+            'meets' => MeetController::class,
 
         ]);
 

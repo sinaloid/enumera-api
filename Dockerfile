@@ -18,19 +18,28 @@ RUN apt-get update && apt-get install -y \
 # Installer Composer globalement
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Définir le répertoire de travail
+WORKDIR /var/www/html
+
+# Copier uniquement les fichiers de configuration Composer
+#COPY composer.json composer.lock ./
+
 # Copier le contenu du projet dans /var/www/html
-COPY . /var/www/html
+#COPY . ./
+
+# Installer les dépendances PHP AVANT de copier tout le projet
+#RUN composer install --optimize-autoloader --no-dev
 
 # Copier la configuration OPCache
-COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+#COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
-# Installer les dépendances PHP de Laravel
-RUN composer install --optimize-autoloader --no-dev
+
 
 # Configurer les permissions pour Laravel (pour Apache)
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+#RUN chown -R www-data:www-data /var/www/html \
+#    && chmod -R 755 /var/www/html \
+#    && chmod -R 755 /var/www/html/storage \
+#    && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Changer le DocumentRoot d'Apache pour pointer vers le dossier public de Laravel
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf

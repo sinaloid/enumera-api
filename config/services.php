@@ -43,4 +43,10 @@ return [
         'chat_id' => env('TELEGRAM_CHAT_ID'),
     ],
 
+    'jitsi' => [
+        'app_id' => env('JITSI_APP_ID'),
+        'app_secret' => env('JITSI_APP_SECRET'),
+        'app*url' => env('JITSI_URL'),
+    ]
+
 ];

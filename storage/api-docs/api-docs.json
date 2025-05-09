@@ -4447,6 +4447,539 @@
                 ]
             }
         },
+        "/api/meets": {
+            "get": {
+                "tags": [
+                    "Meet Sessions"
+                ],
+                "summary": "Liste des sessions",
+                "operationId": "d7a8fea4e19f3d6593d940bde8c8aeef",
+                "responses": {
+                    "200": {
+                        "description": "Liste des sessions"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Meet Sessions"
+                ],
+                "summary": "Créer une session",
+                "operationId": "b4cb4e07e9b0bbf66f0635455f5a8879",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "scheduled_at",
+                                    "duration"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "date": {
+                                        "type": "02/05/2025"
+                                    },
+                                    "heure": {
+                                        "type": "16:12"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "scheduled_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "duration": {
+                                        "type": "integer"
+                                    },
+                                    "moderator_id": {
+                                        "type": "integer"
+                                    },
+                                    "extra_info": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Session créée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/meets/{slug}": {
+            "get": {
+                "tags": [
+                    "Meet Sessions"
+                ],
+                "summary": "Afficher une session",
+                "operationId": "34e5b7ca23cd3d3f418aececc81104ba",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la session",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Session récupérée"
+                    },
+                    "404": {
+                        "description": "Non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Meet Sessions"
+                ],
+                "summary": "Mettre à jour le statut de la session",
+                "operationId": "03b919fe9b11350333d12468e1451062",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug de la session",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "scheduled_at",
+                                    "duration",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "date": {
+                                        "type": "02/05/2025"
+                                    },
+                                    "heure": {
+                                        "type": "16:12"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "scheduled_at": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "duration": {
+                                        "type": "integer"
+                                    },
+                                    "moderator_id": {
+                                        "type": "integer"
+                                    },
+                                    "extra_info": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "planned",
+                                            "ongoing",
+                                            "completed"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Statut mis à jour"
+                    },
+                    "404": {
+                        "description": "Session non trouvée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Meet Sessions"
+                ],
+                "summary": "MettrSuppression d'une session meet",
+                "description": "Retourne l de lae meet supprimée",
+                "operationId": "4fff334862973a2dc3a7b5e8a2295201",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "slug du meet à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Meets supprimée avec succès"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slug validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Meet non trouvée"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/meets/{meetId}/participants": {
+            "get": {
+                "tags": [
+                    "Meet Participants"
+                ],
+                "summary": "Lister les participants d'une session",
+                "operationId": "7bcdf0d828351504d725fc44925a9626",
+                "parameters": [
+                    {
+                        "name": "meetId",
+                        "in": "path",
+                        "description": "ID de la session",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des participants"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Meet Participants"
+                ],
+                "summary": "Ajouter un participant à une session",
+                "operationId": "52f919aee1ef2c2a6bf71de2646292b7",
+                "parameters": [
+                    {
+                        "name": "meetId",
+                        "in": "path",
+                        "description": "ID de la session",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Participant ajouté"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/meets/{sessionId}/participants/{id}": {
+            "get": {
+                "tags": [
+                    "Meet Participants"
+                ],
+                "summary": "Afficher un participant",
+                "operationId": "46ce684154f5fc149c45deab673fca63",
+                "parameters": [
+                    {
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du participant"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Meet Participants"
+                ],
+                "summary": "Supprimer un participant",
+                "operationId": "d585ccc786d1dda9130d62b2f368166e",
+                "parameters": [
+                    {
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Participant supprimé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Meet Participants"
+                ],
+                "summary": "Mettre à jour les infos d'un participant",
+                "operationId": "8c1fe47446b9ce48c0cf89275bc50917",
+                "parameters": [
+                    {
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Participant mis à jour"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/meets/{meetId}/participants-by-email": {
+            "post": {
+                "tags": [
+                    "Meet Participants"
+                ],
+                "summary": "Ajouter des participants à une session",
+                "operationId": "c193ce7a267a876198eecfc27ebfddaf",
+                "parameters": [
+                    {
+                        "name": "meetId",
+                        "in": "path",
+                        "description": "ID de la session",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "users"
+                                ],
+                                "properties": {
+                                    "users": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "nom",
+                                                "email"
+                                            ],
+                                            "properties": {
+                                                "nom": {
+                                                    "type": "string",
+                                                    "example": "Jean Dupont"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "jean@example.com"
+                                                },
+                                                "is_moderator": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Participants ajoutés avec succès"
+                    },
+                    "404": {
+                        "description": "Meet non trouvé ou aucun participant ajouté"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/messages-defilants": {
             "get": {
                 "tags": [
