@@ -362,5 +362,58 @@ class MeetParticipantController extends Controller
         ], 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/my-meets",
+     *     tags={"Meets"},
+     *     summary="Lister les sessions virtuelles de l'utilisateur connecté",
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des sessions",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="titre", type="string", example="Cours de mathématiques"),
+     *                 @OA\Property(property="lien", type="string", example="https://meet.enumera.tech/salle-cours-de-mathematiques?jwt=...")
+     *             )
+     *         )
+     *     ),
+     *     security={{"bearerAuth":{}}}
+     * 
+     * )
+     */
+
+        public function myMeets()
+    {
+        $user = auth()->user();
+
+        //$meets = $user->meets()->withPivot('is_moderator')->get();
+        $meets = Meet::where([
+            'is_deleted' => false,
+        ])->get();
+
+        $result = $meets->map(function ($meet) use ($user) {
+            $participant = MeetParticipant::where([
+                'is_deleted' => false,
+                'user_id' => $user->id,
+                'meet_id' => $meet->id
+            ])->first();
+            if($participant){
+                $token = $participant->meet_token;
+                $link = config('services.jitsi.app_url') . '/salle-' . $meet->jitsi_room_name . '?jwt=' . $token;
+
+                return [
+                    'id' => $meet->id,
+                    'titre' => $meet->titre,
+                    'lien' => $link,
+                    'meet' => $meet
+                ];
+            }
+        });
+
+        return response()->json($result);
+    }
 
 }

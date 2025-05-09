@@ -4980,6 +4980,49 @@
                 ]
             }
         },
+        "/api/my-meets": {
+            "get": {
+                "tags": [
+                    "Meets"
+                ],
+                "summary": "Lister les sessions virtuelles de l'utilisateur connecté",
+                "operationId": "5f4663f3ff63e2f720393a250dd1d96d",
+                "responses": {
+                    "200": {
+                        "description": "Liste des sessions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "titre": {
+                                                "type": "string",
+                                                "example": "Cours de mathématiques"
+                                            },
+                                            "lien": {
+                                                "type": "string",
+                                                "example": "https://meet.enumera.tech/salle-cours-de-mathematiques?jwt=..."
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/messages-defilants": {
             "get": {
                 "tags": [

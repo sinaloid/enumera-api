@@ -110,6 +110,8 @@ Route::group(['middleware' => ['cors','json.response']], function () {
         Route::post('meets/{meetId}/participants-by-email', [MeetParticipantController::class, 'store_users']);
         Route::delete('meets/{meetId}/participants/{slug}', [MeetParticipantController::class, 'destroy']);
         
+        Route::get('my-meets', [MeetParticipantController::class, 'myMeets']);
+
 
         Route::resources([
             'utilisateurs' => UtilisateurController::class,
